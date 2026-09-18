@@ -1,0 +1,1119 @@
+{
+  "id": "bank_middle2_math_sample",
+  "name": "中2数学 標準問題バンク（1次関数・連立・図形）",
+  "description": "東京書籍 新しい数学2 準拠の標準シード問題セット（137問）",
+  "createdAt": "2026-09-12T02:38:18.331Z",
+  "updatedAt": "2026-09-12T02:38:18.332Z",
+  "questions": [
+    {
+      "id": "seed-q1",
+      "genre": "図形",
+      "topic": "円周角の定理",
+      "subTopic": "円に内接する四角形",
+      "tags": [
+        "頻出",
+        "入試過去問",
+        "図形問題"
+      ],
+      "difficulty": 2,
+      "estimatedSeconds": 90,
+      "questionText": "下の図において、四角形\\( ABCD \\)は円に内接している。\\( \\angle x \\)の大きさを求めよ。",
+      "answer": "\\( \\angle x = 105^\\circ \\)",
+      "explanation": "円に内接する四角形の対角の和は\\( 180^\\circ \\)であるため、\\( 180^\\circ - 75^\\circ = 105^\\circ \\)。",
+      "figureSvg": "<svg viewBox=\"0 0 160 125\" class=\"w-28 h-22\">\n      <!-- 外接円 (cx:80, cy:60, r:50) -->\n      <circle cx=\"80\" cy=\"60\" r=\"50\" fill=\"none\" stroke=\"#334155\" stroke-width=\"2\"/>\n      <!-- 円に内接する四角形 ABCD (4頂点すべて厳密に半径50の円周上) -->\n      <polygon points=\"32,46 110,20 120,90 66,108\" fill=\"#f8fafc\" stroke=\"#2563eb\" stroke-width=\"1.8\"/>\n      <!-- 各頂点マーカー -->\n      <circle cx=\"32\" cy=\"46\" r=\"2.5\" fill=\"#1e293b\"/>\n      <circle cx=\"110\" cy=\"20\" r=\"2.5\" fill=\"#1e293b\"/>\n      <circle cx=\"120\" cy=\"90\" r=\"2.5\" fill=\"#1e293b\"/>\n      <circle cx=\"66\" cy=\"108\" r=\"2.5\" fill=\"#e11d48\"/>\n      <!-- ラベル -->\n      <text x=\"20\" y=\"46\" font-size=\"10\" font-family=\"serif\" font-weight=\"bold\" fill=\"#1e293b\">A</text>\n      <text x=\"114\" y=\"18\" font-size=\"10\" font-family=\"serif\" font-weight=\"bold\" fill=\"#1e293b\">B(75°)</text>\n      <text x=\"126\" y=\"96\" font-size=\"10\" font-family=\"serif\" font-weight=\"bold\" fill=\"#1e293b\">C</text>\n      <text x=\"56\" y=\"122\" font-size=\"10\" font-family=\"serif\" font-weight=\"bold\" fill=\"#e11d48\">D(x)</text>\n    </svg>",
+      "defaultPoints": 10
+    },
+    {
+      "id": "seed-q2",
+      "genre": "図形",
+      "topic": "円周角の定理",
+      "subTopic": "中心角と円周角の比",
+      "tags": [
+        "基礎",
+        "定期テスト",
+        "図形問題"
+      ],
+      "difficulty": 1,
+      "estimatedSeconds": 60,
+      "questionText": "円\\( O \\)において、弧\\( AB \\)に対する中心角が\\( 80^\\circ \\)のとき、円周角\\( \\angle APB \\)の大きさを求めよ。",
+      "answer": "\\( \\angle APB = 40^\\circ \\)",
+      "explanation": "円周角の大きさは同じ弧に対する中心角の半分であるため、\\( 80^\\circ \\div 2 = 40^\\circ \\)。",
+      "figureSvg": "<svg viewBox=\"0 0 160 120\" class=\"w-28 h-20\">\n      <circle cx=\"80\" cy=\"60\" r=\"48\" fill=\"none\" stroke=\"#334155\" stroke-width=\"2\"/>\n      <line x1=\"80\" y1=\"60\" x2=\"42\" y2=\"82\" stroke=\"#64748b\" stroke-width=\"1.5\"/>\n      <line x1=\"80\" y1=\"60\" x2=\"118\" y2=\"82\" stroke=\"#64748b\" stroke-width=\"1.5\"/>\n      <line x1=\"80\" y1=\"12\" x2=\"42\" y2=\"82\" stroke=\"#2563eb\" stroke-width=\"1.5\"/>\n      <line x1=\"80\" y1=\"12\" x2=\"118\" y2=\"82\" stroke=\"#2563eb\" stroke-width=\"1.5\"/>\n      <circle cx=\"80\" cy=\"60\" r=\"2.5\" fill=\"#0f172a\"/>\n      <text x=\"83\" y=\"58\" font-size=\"9\" font-family=\"serif\">O</text>\n      <text x=\"76\" y=\"8\" font-size=\"10\" font-family=\"serif\" font-weight=\"bold\" fill=\"#e11d48\">P(x)</text>\n      <text x=\"32\" y=\"92\" font-size=\"10\" font-family=\"serif\" font-weight=\"bold\">A</text>\n      <text x=\"122\" y=\"92\" font-size=\"10\" font-family=\"serif\" font-weight=\"bold\">B</text>\n      <text x=\"68\" y=\"76\" font-size=\"8\" fill=\"#475569\">80°</text>\n    </svg>",
+      "defaultPoints": 10
+    },
+    {
+      "id": "seed-q3",
+      "genre": "図形",
+      "topic": "三平方の定理",
+      "subTopic": "直角三角形の斜辺計算",
+      "tags": [
+        "計算力",
+        "基礎",
+        "頻出"
+      ],
+      "difficulty": 1,
+      "estimatedSeconds": 60,
+      "questionText": "直角をはさむ2辺の長さが \\( 3 \\text{ cm}, 4 \\text{ cm} \\) の直角三角形の斜辺の長さを求めよ。",
+      "answer": "\\( 5 \\text{ cm} \\)",
+      "explanation": "三平方の定理 \\( c^2 = 3^2 + 4^2 = 9 + 16 = 25 \\) より、\\( c = 5 \\)（\\( c > 0 \\)）。",
+      "figureSvg": "<svg viewBox=\"0 0 160 120\" class=\"w-28 h-20\">\n      <polygon points=\"35,90 125,90 125,30\" fill=\"#f8fafc\" stroke=\"#334155\" stroke-width=\"2\"/>\n      <rect x=\"115\" y=\"80\" width=\"10\" height=\"10\" fill=\"none\" stroke=\"#64748b\" stroke-width=\"1\"/>\n      <text x=\"75\" y=\"106\" font-size=\"10\" font-family=\"serif\">4 cm</text>\n      <text x=\"130\" y=\"65\" font-size=\"10\" font-family=\"serif\">3 cm</text>\n      <text x=\"65\" y=\"52\" font-size=\"10\" font-family=\"serif\" font-weight=\"bold\" fill=\"#e11d48\">x cm</text>\n    </svg>",
+      "defaultPoints": 10
+    },
+    {
+      "id": "user-q1",
+      "genre": "数学",
+      "topic": "1次関数",
+      "subTopic": "1次関数の意味",
+      "tags": [
+        "中2数学",
+        "1次関数",
+        "式で表す",
+        "1次関数の判別"
+      ],
+      "difficulty": 1,
+      "estimatedSeconds": 30,
+      "questionText": "150円の箱に、1個70円のお菓子を $x$ 個つめてもらったときの代金を $y$ 円とします。$y$ を $x$ の式で表し、$y$ は $x$ の1次関数であるかどうか答えなさい。[cite: 3]",
+      "answer": "式: $y=70x+150$、1次関数といえる",
+      "explanation": "代金 $y$ は箱代150円にお菓子代 $70x$ 円を加えたものなので、$y=70x+150$ と表されます。これは $y=ax+b$（$a\\neq 0$）の形をしているため、1次関数といえます。",
+      "defaultPoints": 8
+    },
+    {
+      "id": "user-q2",
+      "genre": "数学",
+      "topic": "1次関数",
+      "subTopic": "1次関数の識別",
+      "tags": [
+        "中2数学",
+        "1次関数の定義",
+        "式の形"
+      ],
+      "difficulty": 1,
+      "estimatedSeconds": 30,
+      "questionText": "$y$ が $x$ の関数で、次の式で表されるとき、1次関数であるものをすべて選び、記号で答えなさい。[cite: 3]\\nア $y=9x+4$ イ $y=\\frac{12}{x}$ ウ $y=3-x$ エ $y=-1.5x$",
+      "answer": "ア, ウ, エ",
+      "explanation": "1次関数は $y=ax+b$（$a\\neq 0$）の形で表される関数です。ア（$a=9, b=4$）、ウ（$y=-x+3$ より $a=-1, b=3$）、エ（比例は $b=0$ の特別な1次関数で $a=-1.5$）が1次関数です。イは反比例なので1次関数ではありません。",
+      "defaultPoints": 8
+    },
+    {
+      "id": "user-q3",
+      "genre": "数学",
+      "topic": "1次関数",
+      "subTopic": "増加量と変化の割合",
+      "tags": [
+        "中2数学",
+        "xの増加量",
+        "yの増加量",
+        "表"
+      ],
+      "difficulty": 1,
+      "estimatedSeconds": 40,
+      "questionText": "関数 $y=3x+1$ において、$x$ の値が $1$ から $5$ まで変化するとき、対応する $y$ の値、および $x$ の増加量と $y$ の増加量をそれぞれ求めなさい。[cite: 3]",
+      "answer": "$x=1$ のとき $y=4$、$x=5$ のとき $y=16$、$x$ の増加量: $4$, $y$ の増加量: $12$",
+      "explanation": "$x=1$ のとき $y=3(1)+1=4$、$x=5$ のとき $y=3(5)+1=16$ です。$x$ の増加量は $5-1=4$、$y$ の増加量は $16-4=12$ となります。",
+      "defaultPoints": 8
+    },
+    {
+      "id": "user-q4",
+      "genre": "数学",
+      "topic": "1次関数",
+      "subTopic": "増加量と変化の割合",
+      "tags": [
+        "中2数学",
+        "xの増加量",
+        "yの増加量",
+        "負の傾き"
+      ],
+      "difficulty": 1,
+      "estimatedSeconds": 40,
+      "questionText": "関数 $y=-2x+7$ において、$x$ の値が $-4$ から $-1$ まで変化するとき、対応する $y$ の値、および $x$ の増加量と $y$ の増加量をそれぞれ求めなさい。[cite: 3]",
+      "answer": "$x=-4$ のとき $y=15$、$x=-1$ のとき $y=9$、$x$ の増加量: $3$, $y$ の増加量: $-6$",
+      "explanation": "$x=-4$ のとき $y=-2(-4)+7=15$、$x=-1$ のとき $y=-2(-1)+7=9$ です。$x$ の増加量は $-1-(-4)=3$、$y$ の増加量は $9-15=-6$ となります。",
+      "defaultPoints": 8
+    },
+    {
+      "id": "user-q5",
+      "genre": "数学",
+      "topic": "1次関数",
+      "subTopic": "増加量と変化の割合",
+      "tags": [
+        "中2数学",
+        "xの増加量",
+        "yの増加量"
+      ],
+      "difficulty": 1,
+      "estimatedSeconds": 40,
+      "questionText": "関数 $y=-x-4$ において、$x$ の値が $-2$ から $3$ まで変化するとき、対応する $y$ の値、および $x$ の増加量と $y$ の増加量をそれぞれ求めなさい。[cite: 3]",
+      "answer": "$x=-2$ のとき $y=-2$、$x=3$ のとき $y=-7$、$x$ の増加量: $5$, $y$ の増加量: $-5$",
+      "explanation": "$x=-2$ のとき $y=-(-2)-4=-2$、$x=3$ のとき $y=-(3)-4=-7$ です。$x$ の増加量は $3-(-2)=5$、$y$ の増加量は $-7-(-2)=-5$ となります。",
+      "defaultPoints": 8
+    },
+    {
+      "id": "user-q6",
+      "genre": "数学",
+      "topic": "1次関数",
+      "subTopic": "変化の割合",
+      "tags": [
+        "中2数学",
+        "変化の割合",
+        "傾き"
+      ],
+      "difficulty": 1,
+      "estimatedSeconds": 20,
+      "questionText": "次の1次関数の変化の割合をそれぞれ答えなさい。[cite: 3]\\n(1) $y=5x-4$\\n(2) $y=-\\frac{1}{6}x+8$",
+      "answer": "(1) $5$ (2) $-\\frac{1}{6}$",
+      "explanation": "1次関数 $y=ax+b$ の変化の割合は一定で、$x$ の係数 $a$ に等しくなります。",
+      "defaultPoints": 8
+    },
+    {
+      "id": "user-q7",
+      "genre": "数学",
+      "topic": "1次関数",
+      "subTopic": "増加量の計算",
+      "tags": [
+        "中2数学",
+        "変化の割合",
+        "yの増加量"
+      ],
+      "difficulty": 1,
+      "estimatedSeconds": 30,
+      "questionText": "1次関数 $y=-2x+9$ で、次の場合の $y$ の増加量をそれぞれ求めなさい。[cite: 3]\\n(1) $x$ の増加量が $1$ のとき\\n(2) $x$ の増加量が $5$ のとき",
+      "answer": "(1) $-2$ (2) $-10$",
+      "explanation": "($y$ の増加量) = (変化の割合) $\\times$ ($x$ の増加量) です。変化の割合は $-2$ なので、(1) $-2 \\times 1 = -2$、(2) $-2 \\times 5 = -10$ となります。",
+      "defaultPoints": 8
+    },
+    {
+      "id": "user-q8",
+      "genre": "数学",
+      "topic": "1次関数",
+      "subTopic": "増加量の計算",
+      "tags": [
+        "中2数学",
+        "変化の割合",
+        "分数係数",
+        "yの増加量"
+      ],
+      "difficulty": 1,
+      "estimatedSeconds": 30,
+      "questionText": "1次関数 $y=\\frac{2}{3}x-1$ で、次の場合の $y$ の増加量をそれぞれ求めなさい。[cite: 3]\\n(1) $x$ の増加量が $1$ のとき\\n(2) $x$ の増加量が $6$ のとき",
+      "answer": "(1) $\\frac{2}{3}$ (2) $4$",
+      "explanation": "変化の割合は $\\frac{2}{3}$ です。(1) $\\frac{2}{3} \\times 1 = \\frac{2}{3}$、(2) $\\frac{2}{3} \\times 6 = 4$ となります。",
+      "defaultPoints": 8
+    },
+    {
+      "id": "user-q9",
+      "genre": "数学",
+      "topic": "1次関数",
+      "subTopic": "反比例の変化の割合",
+      "tags": [
+        "中1数学",
+        "中2数学",
+        "反比例",
+        "変化の割合"
+      ],
+      "difficulty": 2,
+      "estimatedSeconds": 40,
+      "questionText": "反比例の関係 $y=\\frac{12}{x}$ で、$x$ の値が $3$ から $6$ まで増加したときの変化の割合を求めなさい。[cite: 3]",
+      "answer": "$-\\frac{2}{3}$",
+      "explanation": "$x=3$ のとき $y=\\frac{12}{3}=4$、$x=6$ のとき $y=\\frac{12}{6}=2$ です。$x$ の増加量は $6-3=3$、$y$ の増加量は $2-4=-2$ となるので、変化の割合は $\\frac{-2}{3}=-\\frac{2}{3}$ です。",
+      "defaultPoints": 10
+    },
+    {
+      "id": "user-q10",
+      "genre": "数学",
+      "topic": "1次関数",
+      "subTopic": "1次関数のグラフの性質",
+      "tags": [
+        "中2数学",
+        "平行",
+        "切片",
+        "穴埋め"
+      ],
+      "difficulty": 1,
+      "estimatedSeconds": 30,
+      "questionText": "次の文の空欄にあてはまる数式・言葉・座標を答えなさい。[cite: 3]\\n「1次関数 $y=-4x-6$ のグラフは、$y=-4x$ のグラフに [ ① ] で、$y$ 軸上の点 ( [ ② ], [ ③ ] ) を通る直線である。」",
+      "answer": "① 平行 ② 0 ③ -6",
+      "explanation": "1次関数 $y=ax+b$ のグラフは、比例 $y=ax$ のグラフと平行で、$y$ 軸との交点（切片）$(0, b)$ を通る直線となります。",
+      "defaultPoints": 8
+    },
+    {
+      "id": "user-q11",
+      "genre": "数学",
+      "topic": "1次関数",
+      "subTopic": "傾きと切片",
+      "tags": [
+        "中2数学",
+        "傾き",
+        "切片",
+        "グラフの傾き"
+      ],
+      "difficulty": 1,
+      "estimatedSeconds": 30,
+      "questionText": "次の1次関数のグラフの傾きと切片をいいなさい。また、その直線は右上がり、右下がりのどちらになりますか。[cite: 3]\\n(1) $y=-6x+5$\\n(2) $y=\\frac{7}{2}x-4$",
+      "answer": "(1) 傾き: $-6$, 切片: $5$, 右下がり\\n(2) 傾き: $\\frac{7}{2}$, 切片: $-4$, 右上がり",
+      "explanation": "$y=ax+b$ において、傾きは $a$、切片は $b$ です。傾き $a>0$ のときは右上がり、$a<0$ のときは右下がりになります。",
+      "defaultPoints": 8
+    },
+    {
+      "id": "user-q12",
+      "genre": "数学",
+      "topic": "1次関数",
+      "subTopic": "傾きと座標の進み方",
+      "tags": [
+        "中2数学",
+        "傾き",
+        "座標の変化"
+      ],
+      "difficulty": 1,
+      "estimatedSeconds": 25,
+      "questionText": "1次関数 $y=\\frac{4}{3}x-5$ のグラフ上の点は、右へ $6$ 進むと上へどれだけ進みますか。[cite: 3]",
+      "answer": "$8$",
+      "explanation": "傾きが $\\frac{4}{3}$ なので、$x$ が $6$ 増加すると、$y$ は $6 \\times \\frac{4}{3} = 8$ 増加します。",
+      "defaultPoints": 8
+    },
+    {
+      "id": "user-q13",
+      "genre": "数学",
+      "topic": "1次関数",
+      "subTopic": "1次関数の変域",
+      "tags": [
+        "中2数学",
+        "変域",
+        "グラフ"
+      ],
+      "difficulty": 1,
+      "estimatedSeconds": 30,
+      "questionText": "1次関数 $y=4x-3$ において、$x$ の変域が $1 \\le x \\le 2$ のときの $y$ の変域を求めなさい。[cite: 3]",
+      "answer": "$1 \\le y \\le 5$",
+      "explanation": "傾き $4>0$ より $x$ が増加すると $y$ も増加します。$x=1$ のとき $y=4(1)-3=1$、$x=2$ のとき $y=4(2)-3=5$。よって $1 \\le y \\le 5$ です。",
+      "defaultPoints": 8
+    },
+    {
+      "id": "user-q14",
+      "genre": "数学",
+      "topic": "1次関数",
+      "subTopic": "1次関数の変域",
+      "tags": [
+        "中2数学",
+        "変域",
+        "負の傾き"
+      ],
+      "difficulty": 1,
+      "estimatedSeconds": 30,
+      "questionText": "1次関数 $y=-x+5$ において、$x$ の変域が $-1 \\le x \\le 3$ のときの $y$ の変域を求めなさい。[cite: 3]",
+      "answer": "$2 \\le y \\le 6$",
+      "explanation": "傾き $-1<0$ より $x$ が最大のとき $y$ は最小、$x$ が最小のとき $y$ は最大となります。$x=-1$ のとき $y=-(-1)+5=6$、$x=3$ のとき $y=-(3)+5=2$。よって $2 \\le y \\le 6$ です。",
+      "defaultPoints": 8
+    },
+    {
+      "id": "user-q15",
+      "genre": "数学",
+      "topic": "1次関数",
+      "subTopic": "1次関数の変域",
+      "tags": [
+        "中2数学",
+        "変域",
+        "分数傾き"
+      ],
+      "difficulty": 1,
+      "estimatedSeconds": 30,
+      "questionText": "1次関数 $y=\\frac{2}{5}x+2$ において、$x$ の変域が $-5 \\le x \\le 5$ のときの $y$ の変域を求めなさい。[cite: 3]",
+      "answer": "$0 \\le y \\le 4$",
+      "explanation": "$x=-5$ のとき $y=\\frac{2}{5}(-5)+2=0$、$x=5$ のとき $y=\\frac{2}{5}(5)+2=4$。傾きが正なので $0 \\le y \\le 4$ となります。",
+      "defaultPoints": 8
+    },
+    {
+      "id": "user-q16",
+      "genre": "数学",
+      "topic": "1次関数",
+      "subTopic": "1次関数の変域",
+      "tags": [
+        "中2数学",
+        "変域",
+        "負の分数傾き"
+      ],
+      "difficulty": 1,
+      "estimatedSeconds": 30,
+      "questionText": "1次関数 $y=-\\frac{3}{2}x-1$ において、$x$ の変域が $-4 \\le x \\le -2$ のときの $y$ の変域を求めなさい。[cite: 3]",
+      "answer": "$2 \\le y \\le 5$",
+      "explanation": "$x=-4$ のとき $y=-\\frac{3}{2}(-4)-1=5$、$x=-2$ のとき $y=-\\frac{3}{2}(-2)-1=2$。よって $2 \\le y \\le 5$ となります。",
+      "defaultPoints": 8
+    },
+    {
+      "id": "user-q17",
+      "genre": "数学",
+      "topic": "1次関数",
+      "subTopic": "直線の式を求める（グラフ）",
+      "tags": [
+        "中2数学",
+        "直線の式",
+        "グラフ読み取り"
+      ],
+      "difficulty": 2,
+      "estimatedSeconds": 60,
+      "questionText": "座標平面上の直線(1)〜(4)について、それぞれの直線の式を求めなさい。[cite: 3]\\n(1) 切片 $(0, 1)$ を通り、点 $(2, 5)$ を通る直線\\n(2) 切片 $(0, 1)$ を通り、点 $(3, -2)$ を通る直線\\n(3) 切片 $(0, -3)$ を通り、点 $(4, -1)$ を通る直線\\n(4) 切片 $(0, -1)$ を通り、点 $(-4, 0)$ を通る直線",
+      "answer": "(1) $y=2x+1$ (2) $y=-x+1$ (3) $y=\\frac{1}{2}x-3$ (4) $y=-\\frac{1}{4}x-1$",
+      "explanation": "切片 $(0, b)$ から $b$ を求め、もう1つの格子点との座標差から傾き $a=\\frac{y_2-y_1}{x_2-x_1}$ を計算して $y=ax+b$ に代入します。",
+      "defaultPoints": 10
+    },
+    {
+      "id": "user-q18",
+      "genre": "数学",
+      "topic": "1次関数",
+      "subTopic": "直線の式を求める（傾きと1点）",
+      "tags": [
+        "中2数学",
+        "直線の式",
+        "傾きと1点"
+      ],
+      "difficulty": 1,
+      "estimatedSeconds": 30,
+      "questionText": "グラフの傾きが $-5$ で、点 $(1, -2)$ を通る1次関数の式を求めなさい。[cite: 3]",
+      "answer": "$y=-5x+3$",
+      "explanation": "傾きが $-5$ なので $y=-5x+b$。点 $(1, -2)$ を代入して $-2=-5(1)+b \\implies b=3$。よって $y=-5x+3$ です。",
+      "defaultPoints": 8
+    },
+    {
+      "id": "user-q19",
+      "genre": "数学",
+      "topic": "1次関数",
+      "subTopic": "直線の式を求める（傾きと1点）",
+      "tags": [
+        "中2数学",
+        "直線の式",
+        "分数の傾き"
+      ],
+      "difficulty": 1,
+      "estimatedSeconds": 30,
+      "questionText": "グラフの傾きが $\\frac{3}{4}$ で、点 $(8, -1)$ を通る1次関数の式を求めなさい。[cite: 3]",
+      "answer": "$y=\\frac{3}{4}x-7$",
+      "explanation": "$y=\\frac{3}{4}x+b$ に $(8, -1)$ を代入して $-1=\\frac{3}{4}(8)+b \\implies -1=6+b \\implies b=-7$。よって $y=\\frac{3}{4}x-7$ です。",
+      "defaultPoints": 8
+    },
+    {
+      "id": "user-q20",
+      "genre": "数学",
+      "topic": "1次関数",
+      "subTopic": "直線の式を求める（切片と1点）",
+      "tags": [
+        "中2数学",
+        "直線の式",
+        "切片と1点"
+      ],
+      "difficulty": 1,
+      "estimatedSeconds": 30,
+      "questionText": "グラフの切片が $-2$ で、点 $(4, 2)$ を通る1次関数の式を求めなさい。[cite: 3]",
+      "answer": "$y=x-2$",
+      "explanation": "切片が $-2$ なので $y=ax-2$。点 $(4, 2)$ を代入して $2=4a-2 \\implies 4a=4 \\implies a=1$。よって $y=x-2$ です。",
+      "defaultPoints": 8
+    },
+    {
+      "id": "user-q21",
+      "genre": "数学",
+      "topic": "1次関数",
+      "subTopic": "直線の式を求める（変化の割合と1点）",
+      "tags": [
+        "中2数学",
+        "直線の式",
+        "変化の割合"
+      ],
+      "difficulty": 1,
+      "estimatedSeconds": 30,
+      "questionText": "変化の割合が $-3$ で、$x=-1$ のとき $y=7$ である1次関数の式を求めなさい。[cite: 3]",
+      "answer": "$y=-3x+4$",
+      "explanation": "変化の割合が傾きを表すので $y=-3x+b$。$x=-1, y=7$ を代入して $7=-3(-1)+b \\implies 7=3+b \\implies b=4$。よって $y=-3x+4$ です。",
+      "defaultPoints": 8
+    },
+    {
+      "id": "user-q22",
+      "genre": "数学",
+      "topic": "1次関数",
+      "subTopic": "直線の式を求める（変化の割合と1点）",
+      "tags": [
+        "中2数学",
+        "直線の式",
+        "変化の割合"
+      ],
+      "difficulty": 1,
+      "estimatedSeconds": 30,
+      "questionText": "変化の割合が $\\frac{1}{4}$ で、$x=8$ のとき $y=-3$ である1次関数の式を求めなさい。[cite: 3]",
+      "answer": "$y=\\frac{1}{4}x-5$",
+      "explanation": "$y=\\frac{1}{4}x+b$ に $x=8, y=-3$ を代入して $-3=\\frac{1}{4}(8)+b \\implies -3=2+b \\implies b=-5$。よって $y=\\frac{1}{4}x-5$ です。",
+      "defaultPoints": 8
+    },
+    {
+      "id": "user-q23",
+      "genre": "数学",
+      "topic": "1次関数",
+      "subTopic": "直線の式を求める（平行な直線）",
+      "tags": [
+        "中2数学",
+        "直線の式",
+        "平行線"
+      ],
+      "difficulty": 1,
+      "estimatedSeconds": 30,
+      "questionText": "直線 $y=4x-1$ に平行で、点 $(3, 4)$ を通る1次関数の式を求めなさい。[cite: 3]",
+      "answer": "$y=4x-8$",
+      "explanation": "平行な直線は傾きが等しいので傾きは $4$ です。$y=4x+b$ に $(3, 4)$ を代入して $4=4(3)+b \\implies b=-8$。よって $y=4x-8$ です。",
+      "defaultPoints": 8
+    },
+    {
+      "id": "user-q24",
+      "genre": "数学",
+      "topic": "1次関数",
+      "subTopic": "直線の式を求める（平行な直線）",
+      "tags": [
+        "中2数学",
+        "直線の式",
+        "平行線"
+      ],
+      "difficulty": 1,
+      "estimatedSeconds": 30,
+      "questionText": "直線 $y=-\\frac{2}{3}x+1$ に平行で、点 $(-6, 0)$ を通る1次関数の式を求めなさい。[cite: 3]",
+      "answer": "$y=-\\frac{2}{3}x-4$",
+      "explanation": "平行なので傾きは $-\\frac{2}{3}$ です。$y=-\\frac{2}{3}x+b$ に $(-6, 0)$ を代入して $0=-\\frac{2}{3}(-6)+b \\implies 0=4+b \\implies b=-4$。よって $y=-\\frac{2}{3}x-4$ です。",
+      "defaultPoints": 8
+    },
+    {
+      "id": "user-q25",
+      "genre": "数学",
+      "topic": "1次関数",
+      "subTopic": "2点を通る直線の式（傾き代入法）",
+      "tags": [
+        "中2数学",
+        "2点を通る直線",
+        "傾き"
+      ],
+      "difficulty": 2,
+      "estimatedSeconds": 45,
+      "questionText": "グラフが2点 $(-2, 1)$, $(3, -4)$ を通る1次関数の式を、傾きを求めてから1点の座標の値を代入する方法で求めなさい。[cite: 3]",
+      "answer": "$x$ の増加量: $5$, $y$ の増加量: $-5$, 式: $y=-x-1$",
+      "explanation": "$x$ の増加量は $3-(-2)=5$、$y$ の増加量は $-4-1=-5$。傾き $a=\\frac{-5}{5}=-1$。$y=-x+b$ に $(-2, 1)$ を代入して $1=-(-2)+b \\implies b=-1$。よって $y=-x-1$ です。",
+      "defaultPoints": 10
+    },
+    {
+      "id": "user-q26",
+      "genre": "数学",
+      "topic": "1次関数",
+      "subTopic": "2点を通る直線の式（連立方程式法）",
+      "tags": [
+        "中2数学",
+        "連立方程式",
+        "直線の式"
+      ],
+      "difficulty": 2,
+      "estimatedSeconds": 45,
+      "questionText": "グラフが2点 $(2, 6)$, $(-1, -6)$ を通る1次関数の式を、連立方程式を利用する方法で求めなさい。[cite: 3]",
+      "answer": "連立方程式: $\\begin{cases}2a+b=6 \\\\ -a+b=-6\\end{cases}$、式: $y=4x-2$",
+      "explanation": "$y=ax+b$ に各点を代入すると、$2a+b=6$ と $-a+b=-6$ が得られます。上の式から下の式を引くと $3a=12 \\implies a=4$。代入して $b=-2$。よって $y=4x-2$ です。",
+      "defaultPoints": 10
+    },
+    {
+      "id": "user-q27",
+      "genre": "数学",
+      "topic": "1次関数",
+      "subTopic": "2点を通る直線の式",
+      "tags": [
+        "中2数学",
+        "直線の式",
+        "2点"
+      ],
+      "difficulty": 2,
+      "estimatedSeconds": 40,
+      "questionText": "次の2点 $(-3, 5)$, $(-1, 9)$ を通る1次関数の式を求めなさい。[cite: 3]",
+      "answer": "$y=2x+11$",
+      "explanation": "傾き $a=\\frac{9-5}{-1-(-3)}=\\frac{4}{2}=2$。$y=2x+b$ に $(-1, 9)$ を代入して $9=2(-1)+b \\implies b=11$。よって $y=2x+11$ です。",
+      "defaultPoints": 10
+    },
+    {
+      "id": "user-q28",
+      "genre": "数学",
+      "topic": "1次関数",
+      "subTopic": "2点を通る直線の式",
+      "tags": [
+        "中2数学",
+        "直線の式",
+        "2点"
+      ],
+      "difficulty": 2,
+      "estimatedSeconds": 40,
+      "questionText": "次の2点 $(4, 5)$, $(-2, -2)$ を通る1次関数の式を求めなさい。[cite: 3]",
+      "answer": "$y=\\frac{7}{6}x+\\frac{1}{3}$",
+      "explanation": "傾き $a=\\frac{-2-5}{-2-4}=\\frac{-7}{-6}=\\frac{7}{6}$。$y=\\frac{7}{6}x+b$ に $(4, 5)$ を代入して $5=\\frac{7}{6}(4)+b \\implies 5=\\frac{14}{3}+b \\implies b=\\frac{1}{3}$。よって $y=\\frac{7}{6}x+\\frac{1}{3}$ です。",
+      "defaultPoints": 10
+    },
+    {
+      "id": "user-q29",
+      "genre": "数学",
+      "topic": "1次関数",
+      "subTopic": "2点を通る直線の式",
+      "tags": [
+        "中2数学",
+        "直線の式",
+        "2点"
+      ],
+      "difficulty": 1,
+      "estimatedSeconds": 30,
+      "questionText": "次の2点 $(-1, -4)$, $(0, -1)$ を通る1次関数の式を求めなさい。[cite: 3]",
+      "answer": "$y=3x-1$",
+      "explanation": "$(0, -1)$ より切片 $b=-1$。傾き $a=\\frac{-1-(-4)}{0-(-1)}=\\frac{3}{1}=3$。よって $y=3x-1$ です。",
+      "defaultPoints": 8
+    },
+    {
+      "id": "user-q30",
+      "genre": "数学",
+      "topic": "1次関数",
+      "subTopic": "2点を通る直線の式",
+      "tags": [
+        "中2数学",
+        "直線の式",
+        "2点"
+      ],
+      "difficulty": 2,
+      "estimatedSeconds": 40,
+      "questionText": "次の2点 $(-3, 6)$, $(6, 0)$ を通る1次関数の式を求めなさい。[cite: 3]",
+      "answer": "$y=-\\frac{2}{3}x+4$",
+      "explanation": "傾き $a=\\frac{0-6}{6-(-3)}=\\frac{-6}{9}=-\\frac{2}{3}$。$y=-\\frac{2}{3}x+b$ に $(6, 0)$ を代入して $0=-\\frac{2}{3}(6)+b \\implies b=4$。よって $y=-\\frac{2}{3}x+4$ です。",
+      "defaultPoints": 10
+    },
+    {
+      "id": "user-q31",
+      "genre": "数学",
+      "topic": "1次関数",
+      "subTopic": "2点を通る直線の式",
+      "tags": [
+        "中2数学",
+        "直線の式",
+        "2点"
+      ],
+      "difficulty": 2,
+      "estimatedSeconds": 40,
+      "questionText": "次の2点 $(2, -1)$, $(-2, -7)$ を通る1次関数の式を求めなさい。[cite: 3]",
+      "answer": "$y=\\frac{3}{2}x-4$",
+      "explanation": "傾き $a=\\frac{-7-(-1)}{-2-2}=\\frac{-6}{-4}=\\frac{3}{2}$。$y=\\frac{3}{2}x+b$ に $(2, -1)$ を代入して $-1=\\frac{3}{2}(2)+b \\implies b=-4$。よって $y=\\frac{3}{2}x-4$ です。",
+      "defaultPoints": 10
+    },
+    {
+      "id": "user-q32",
+      "genre": "数学",
+      "topic": "1次関数",
+      "subTopic": "2点を通る直線の式",
+      "tags": [
+        "中2数学",
+        "直線の式",
+        "条件から決定"
+      ],
+      "difficulty": 2,
+      "estimatedSeconds": 40,
+      "questionText": "$x=-1$ のとき $y=-4$、$x=2$ のとき $y=5$ である1次関数の式を求めなさい。[cite: 3]",
+      "answer": "$y=3x-1$",
+      "explanation": "2点 $(-1, -4), (2, 5)$ を通るので、傾き $a=\\frac{5-(-4)}{2-(-1)}=\\frac{9}{3}=3$。$y=3x+b$ に $(2, 5)$ を代入して $5=3(2)+b \\implies b=-1$。よって $y=3x-1$ です。",
+      "defaultPoints": 10
+    },
+    {
+      "id": "user-q33",
+      "genre": "数学",
+      "topic": "1次関数",
+      "subTopic": "2点を通る直線の式",
+      "tags": [
+        "中2数学",
+        "直線の式",
+        "条件から決定"
+      ],
+      "difficulty": 2,
+      "estimatedSeconds": 40,
+      "questionText": "$x=-2$ のとき $y=9$、$x=6$ のとき $y=-11$ である1次関数の式を求めなさい。[cite: 3]",
+      "answer": "$y=-\\frac{5}{2}x+4$",
+      "explanation": "2点 $(-2, 9), (6, -11)$ を通るので、傾き $a=\\frac{-11-9}{6-(-2)}=\\frac{-20}{8}=-\\frac{5}{2}$。$y=-\\frac{5}{2}x+b$ に $(-2, 9)$ を代入して $9=-\\frac{5}{2}(-2)+b \\implies 9=5+b \\implies b=4$。よって $y=-\\frac{5}{2}x+4$ です。",
+      "defaultPoints": 10
+    },
+    {
+      "id": "user-q34",
+      "genre": "数学",
+      "topic": "2元1次方程式と1次関数",
+      "subTopic": "2元1次方程式のグラフの変形",
+      "tags": [
+        "中2数学",
+        "2元1次方程式",
+        "方程式のグラフ"
+      ],
+      "difficulty": 1,
+      "estimatedSeconds": 30,
+      "questionText": "次の方程式を $y$ について解き、グラフの傾きと切片を答えなさい。[cite: 3]\\n(1) $5x-y=2$\\n(2) $8x+4y=4$\\n(3) $x-y+5=0$\\n(4) $2x-3y=6$\\n(5) $2x+y-4=0$",
+      "answer": "(1) $y=5x-2$（傾き: $5$, 切片: $-2$）\\n(2) $y=-2x+1$（傾き: $-2$, 切片: $1$）\\n(3) $y=x+5$（傾き: $1$, 切片: $5$）\\n(4) $y=\\frac{2}{3}x-2$（傾き: $\\frac{2}{3}$, 切片: $-2$）\\n(5) $y=-2x+4$（傾き: $-2$, 切片: $4$）",
+      "explanation": "それぞれ $y=ax+b$ の形に変形して傾きと切片を求めます。",
+      "defaultPoints": 8
+    },
+    {
+      "id": "user-q35",
+      "genre": "数学",
+      "topic": "2元1次方程式と1次関数",
+      "subTopic": "2元1次方程式のグラフの変形",
+      "tags": [
+        "中2数学",
+        "2元1次方程式",
+        "方程式のグラフ"
+      ],
+      "difficulty": 2,
+      "estimatedSeconds": 35,
+      "questionText": "次の方程式を $y$ について解き、グラフの傾きと切片を答えなさい。[cite: 3]\\n(6) $x+3y=-12$\\n(7) $5x-4y=0$\\n(8) $4x-3y=6$\\n(9) $3x+2y-6=0$\\n(10) $4x-5y-10=0$",
+      "answer": "(6) $y=-\\frac{1}{3}x-4$（傾き: $-\\frac{1}{3}$, 切片: $-4$）\\n(7) $y=\\frac{5}{4}x$（傾き: $\\frac{5}{4}$, 切片: $0$）\\n(8) $y=\\frac{4}{3}x-2$（傾き: $\\frac{4}{3}$, 切片: $-2$）\\n(9) $y=-\\frac{3}{2}x+3$（傾き: $-\\frac{3}{2}$, 切片: $3$）\\n(10) $y=\\frac{4}{5}x-2$（傾き: $\\frac{4}{5}$, 切片: $-2$）",
+      "explanation": "それぞれ $y=ax+b$ の形に変形して傾きと切片を求めます。",
+      "defaultPoints": 10
+    },
+    {
+      "id": "user-q36",
+      "genre": "数学",
+      "topic": "2元1次方程式と1次関数",
+      "subTopic": "軸に平行な直線の方程式",
+      "tags": [
+        "中2数学",
+        "x=k",
+        "y=k",
+        "軸に平行"
+      ],
+      "difficulty": 1,
+      "estimatedSeconds": 25,
+      "questionText": "次の方程式の表す直線は、それぞれどのような直線ですか。[cite: 3]\\n(1) $y=-5$\\n(2) $x=4$\\n(3) $2y-4=0$\\n(4) $6x+18=0$\\n(5) $\\frac{1}{3}y+1=0$",
+      "answer": "(1) 点 $(0, -5)$ を通り $x$ 軸に平行な直線\\n(2) 点 $(4, 0)$ を通り $y$ 軸に平行な直線\\n(3) $y=2$（点 $(0, 2)$ を通り $x$ 軸に平行な直線）\\n(4) $x=-3$（点 $(-3, 0)$ を通り $y$ 軸に平行な直線）\\n(5) $y=-3$（点 $(0, -3)$ を通り $x$ 軸に平行な直線）",
+      "explanation": "$y=k$ は $x$ 軸に平行（$y$ 軸に垂直）な直線、$x=k$ は $y$ 軸に平行（$x$ 軸に垂直）な直線を表します。",
+      "defaultPoints": 8
+    },
+    {
+      "id": "user-q37",
+      "genre": "数学",
+      "topic": "2元1次方程式と1次関数",
+      "subTopic": "連立方程式とグラフの交点",
+      "tags": [
+        "中2数学",
+        "連立方程式の解",
+        "交点の座標"
+      ],
+      "difficulty": 2,
+      "estimatedSeconds": 45,
+      "questionText": "連立方程式 $\\begin{cases}x-2y=6 \\\\ 2x+y=2\\end{cases}$ の解を求めなさい。[cite: 3]",
+      "answer": "$x=2, y=-2$",
+      "explanation": "第2式より $y=2-2x$。第1式に代入して $x-2(2-2x)=6 \\implies 5x-4=6 \\implies 5x=10 \\implies x=2$。$y=2-4=-2$。グラフの交点は $(2, -2)$ となります。",
+      "defaultPoints": 10
+    },
+    {
+      "id": "user-q38",
+      "genre": "数学",
+      "topic": "2元1次方程式と1次関数",
+      "subTopic": "連立方程式とグラフの交点",
+      "tags": [
+        "中2数学",
+        "連立方程式の解",
+        "交点の座標"
+      ],
+      "difficulty": 2,
+      "estimatedSeconds": 45,
+      "questionText": "連立方程式 $\\begin{cases}3x-2y=2 \\\\ x-2y=-6\\end{cases}$ の解を求めなさい。[cite: 3]",
+      "answer": "$x=4, y=5$",
+      "explanation": "上の式から下の式を引くと $2x=8 \\implies x=4$。第2式に代入して $4-2y=-6 \\implies 2y=10 \\implies y=5$。グラフの交点は $(4, 5)$ となります。",
+      "defaultPoints": 10
+    },
+    {
+      "id": "user-q39",
+      "genre": "数学",
+      "topic": "2元1次方程式と1次関数",
+      "subTopic": "2直線の交点と軸との交点",
+      "tags": [
+        "中2数学",
+        "交点の座標",
+        "x軸との交点"
+      ],
+      "difficulty": 2,
+      "estimatedSeconds": 60,
+      "questionText": "図(1)で、直線 $\\ell: y=-2x+4$ と直線 $m: y=\\frac{1}{2}x-1$ の交点 $\\mathrm{P}$ の座標、および直線 $m$ と $x$ 軸との交点 $\\mathrm{A}$ の座標を求めなさい。[cite: 3]",
+      "answer": "点 $\\mathrm{P}(2, 0)$、点 $\\mathrm{A}(2, 0)$",
+      "explanation": "$-2x+4 = \\frac{1}{2}x-1 \\implies \\frac{5}{2}x=5 \\implies x=2$。$y=0$。交点 $\\mathrm{P}$ は $(2, 0)$ です。また直線 $m$ と $x$ 軸の交点 $\\mathrm{A}$ も $y=0$ のとき $x=2$ なので $(2, 0)$ で一致します。",
+      "defaultPoints": 10
+    },
+    {
+      "id": "user-q40",
+      "genre": "数学",
+      "topic": "2元1次方程式と1次関数",
+      "subTopic": "2直線の交点と軸との交点",
+      "tags": [
+        "中2数学",
+        "交点の座標",
+        "x軸との交点"
+      ],
+      "difficulty": 2,
+      "estimatedSeconds": 60,
+      "questionText": "図(2)で、直線 $\\ell: y=-x-1$ と直線 $m: y=\\frac{1}{5}x+1$ の交点 $\\mathrm{P}$ の座標、および直線 $\\ell$ と $x$ 軸との交点 $\\mathrm{A}$ の座標を求めなさい。[cite: 3]",
+      "answer": "点 $\\mathrm{P}\\left(-\\frac{5}{3}, \\frac{2}{3}\\right)$、点 $\\mathrm{A}(-1, 0)$",
+      "explanation": "$-x-1=\\frac{1}{5}x+1 \\implies -\\frac{6}{5}x=2 \\implies x=-\\frac{5}{3}$。$y=-(-\\frac{5}{3})-1=\\frac{2}{3}$。よって $\\mathrm{P}\\left(-\\frac{5}{3}, \\frac{2}{3}\\right)$。直線 $\\ell$ の $x$ 切片は $y=0$ を代入して $x=-1$ なので $\\mathrm{A}(-1, 0)$ です。",
+      "defaultPoints": 10
+    },
+    {
+      "id": "user-q41",
+      "genre": "数学",
+      "topic": "2元1次方程式と1次関数",
+      "subTopic": "2直線の交点と軸との交点",
+      "tags": [
+        "中2数学",
+        "交点の座標",
+        "x軸との交点"
+      ],
+      "difficulty": 2,
+      "estimatedSeconds": 60,
+      "questionText": "図(3)で、直線 $\\ell: y=-\\frac{2}{3}x+3$ と直線 $m: y=2x-3$ の交点 $\\mathrm{P}$ の座標、および直線 $m$ と $x$ 軸との交点 $\\mathrm{A}$ の座標を求めなさい。[cite: 3]",
+      "answer": "点 $\\mathrm{P}\\left(\\frac{9}{4}, \\frac{3}{2}\\right)$、点 $\\mathrm{A}\\left(\\frac{3}{2}, 0\\right)$",
+      "explanation": "$-\\frac{2}{3}x+3=2x-3 \\implies \\frac{8}{3}x=6 \\implies x=\\frac{9}{4}$。$y=2(\\frac{9}{4})-3=\\frac{3}{2}$。直線 $m$ の $x$ 軸との交点は $2x-3=0 \\implies x=\\frac{3}{2}$ です。",
+      "defaultPoints": 10
+    },
+    {
+      "id": "user-q42",
+      "genre": "数学",
+      "topic": "2元1次方程式と1次関数",
+      "subTopic": "2直線の交点と軸との交点",
+      "tags": [
+        "中2数学",
+        "交点の座標",
+        "x軸との交点"
+      ],
+      "difficulty": 2,
+      "estimatedSeconds": 60,
+      "questionText": "図(4)で、直線 $\\ell: y=-3x-2$ と直線 $m: y=\\frac{1}{2}x-2$ の交点 $\\mathrm{P}$ の座標、および直線 $\\ell$ と $x$ 軸との交点 $\\mathrm{A}$ の座標を求めなさい。[cite: 3]",
+      "answer": "点 $\\mathrm{P}(0, -2)$、点 $\\mathrm{A}\\left(-\\frac{2}{3}, 0\\right)$",
+      "explanation": "$-3x-2 = \\frac{1}{2}x-2 \\implies -\\frac{7}{2}x=0 \\implies x=0$。$y=-2$。よって交点 $\\mathrm{P}$ は $(0, -2)$。直線 $\\ell$ と $x$ 軸との交点は $y=0$ より $-3x-2=0 \\implies x=-\\frac{2}{3}$ です。",
+      "defaultPoints": 10
+    },
+    {
+      "id": "user-q43",
+      "genre": "数学",
+      "topic": "2元1次関数と方程式",
+      "subTopic": "交点・面積・面積の2等分線",
+      "tags": [
+        "中2数学",
+        "発展",
+        "交点の決定",
+        "三角形の面積",
+        "面積の2等分"
+      ],
+      "difficulty": 3,
+      "estimatedSeconds": 120,
+      "questionText": "直線 $2x+5y=14$ と直線 $ax-y=-6$ との交点を $\\mathrm{P}$ とします。点 $\\mathrm{P}$ の $y$ 座標が $-3$ であるとき、次の問に答えなさい。[cite: 3]\\n(1) 点 $\\mathrm{P}$ の座標を求めなさい。\\n(2) $a$ の値を求めなさい。\\n(3) 2つの直線と $y$ 軸とで囲まれた三角形の面積を求めなさい。\\n(4) 点 $\\mathrm{P}$ を通り、(3)の三角形の面積を2等分する直線の式を求めなさい。",
+      "answer": "(1) $\\left(\\frac{29}{2}, -3\\right)$\\n(2) $a=-\\frac{18}{29}$\\n(3) $\\frac{116}{5}$ (または $23.2$)\\n(4) $y=-\\frac{74}{145}x+\\frac{22}{5}$",
+      "explanation": "(1) $2x+5(-3)=14 \\implies 2x=29 \\implies x=\\frac{29}{2}$。よって $\\mathrm{P}\\left(\\frac{29}{2}, -3\\right)$。\\n(2) $a\\left(\\frac{29}{2}\\right)-(-3)=-6 \\implies \\frac{29}{2}a=-9 \\implies a=-\\frac{18}{29}$。\\n(3) 各直線の $y$ 切片は、$2x+5y=14$ より $y=\\frac{14}{5}$、$ax-y=-6$ より $y=6$。底辺の長さは $6-\\frac{14}{5}=\\frac{16}{5}$。高さは $\\mathrm{P}$ の $x$ 座標 $\\frac{29}{2}$ なので、面積は $\\frac{1}{2} \\times \\frac{16}{5} \\times \\frac{29}{2} = \\frac{116}{5}$。\\n(4) 面積を2等分するには、$y$ 軸上の底辺の中点 $\\left(0, \\frac{6+14/5}{2}\\right)=\\left(0, \\frac{22}{5}\\right)$ を通ればよい。傾きは $\\frac{-3-22/5}{29/2-0} = -\\frac{74}{145}$。よって $y=-\\frac{74}{145}x+\\frac{22}{5}$ です。",
+      "defaultPoints": 12
+    },
+    {
+      "id": "user-q44",
+      "genre": "数学",
+      "topic": "1次関数の利用",
+      "subTopic": "散布図と1次関数のモデル化",
+      "tags": [
+        "中2数学",
+        "1次関数の利用",
+        "推測"
+      ],
+      "difficulty": 2,
+      "estimatedSeconds": 60,
+      "questionText": "浴そうにお湯を入れていきます。お湯を入れ始めてから $x$ 分後の湯量を $y$ Lとします。[cite: 3]\\n(1) プロットされた点の近くを通る直線が2点 $(0, 90)$, $(3, 108)$ を通るとするとき、$y$ を $x$ の式で表しなさい。[cite: 3]\\n(2) 浴そうの中のお湯の量が $300$ Lになるのは、お湯を入れ始めてから何分後と推測できますか。[cite: 3]",
+      "answer": "(1) $y=6x+90$ (2) $35$分後",
+      "explanation": "(1) 切片は $90$。傾きは $\\frac{108-90}{3-0}=\\frac{18}{3}=6$ なので $y=6x+90$。\\n(2) $y=300$ を代入して $300=6x+90 \\implies 6x=210 \\implies x=35$ 分後です。",
+      "defaultPoints": 10
+    },
+    {
+      "id": "user-q45",
+      "genre": "数学",
+      "topic": "1次関数の利用",
+      "subTopic": "速さと1次関数（往復運動）",
+      "tags": [
+        "中2数学",
+        "1次関数の利用",
+        "ダイヤグラム",
+        "速さ"
+      ],
+      "difficulty": 2,
+      "estimatedSeconds": 60,
+      "questionText": "てっぺいさんは午前9時30分にA町を出発してB町まで歩いて往復しました。出発してから $x$ 分後にA町から $y$ kmの地点にいるとして表したグラフがあります（$x=30$ でB町2.5km地点に到着、$x=30\\sim 60$ は滞在、$x=110$ でA町に帰着）。[cite: 3]\\n(1) B町からの帰りに、A町まで $2$ kmの地点を通るのは出発してから何分後ですか。[cite: 3]\\n(2) 行きと帰りの速さはそれぞれ時速何kmですか。[cite: 3]\\n(3) B町を出発してからA町に着くまでの $x, y$ の関係を式に表しなさい。[cite: 3]",
+      "answer": "(1) $70$分後\\n(2) 行き: 時速 $5$ km, 帰り: 時速 $3$ km\\n(3) $y=-\\frac{1}{20}x+\\frac{11}{2}$ （または $y=-0.05x+5.5$、ただし $60 \\le x \\le 110$）",
+      "explanation": "(1) 帰りのグラフは $(60, 2.5)$ と $(110, 0)$ を通る直線 $y=-\\frac{1}{20}x+5.5$。$y=2$ を代入して $2=-\\frac{1}{20}x+5.5 \\implies \\frac{1}{20}x=3.5 \\implies x=70$ 分後。\\n(2) 行きは30分（0.5時間）で2.5km進むので $2.5 \\div 0.5 = 5$ km/h。帰りは50分（$\\frac{5}{6}$ 時間）で2.5km戻るので $2.5 \\div \\frac{5}{6} = 3$ km/h。\\n(3) $(60, 2.5)$ と $(110, 0)$ を通るので、傾きは $\\frac{0-2.5}{110-60} = -\\frac{1}{20}$。$y=-\\frac{1}{20}(x-110) \\implies y=-\\frac{1}{20}x+\\frac{11}{2}$ です。",
+      "defaultPoints": 10
+    },
+    {
+      "id": "user-q46",
+      "genre": "数学",
+      "topic": "1次関数の利用",
+      "subTopic": "速さと1次関数（追いつき）",
+      "tags": [
+        "中2数学",
+        "1次関数の利用",
+        "ダイヤグラム",
+        "追いつき"
+      ],
+      "difficulty": 2,
+      "estimatedSeconds": 90,
+      "questionText": "ゆいさんは午前10時に家を出発し、図書館（300m地点、5分〜8分滞在）に寄ってから800m離れた駅に向かいました。グラフより、8分〜18分（駅到着）は傾き50で進んでいます。姉は分速150mの自転車で追いかけ、午前10時17分に追いつきました。[cite: 3]\\n(1) 姉が家を出発した時刻を求めなさい。[cite: 3]\\n(2) 姉について、$x$ と $y$ の関係を式に表しなさい。[cite: 3]\\n(3) 姉が午前10時(1)と同じ時刻に出発し、分速100mで進んだとすると、ゆいさんが駅に着くまでに追いつくことができますか。[cite: 3]",
+      "answer": "(1) 午前10時12分（$x=12$）\\n(2) $y=150x-1800$ ($12 \\le x \\le 17$)\\n(3) 追いつくことができない",
+      "explanation": "(1) ゆいさんの17分での位置は $y=50(17-8)+300=750$ m。姉は $750$ m走るのに $750 \\div 150 = 5$ 分かかるので、出発は $17-5=12$ 分（午前10時12分）。\\n(2) 傾き150で $(12, 0)$ を通るため $y=150(x-12) = 150x-1800$。\\n(3) ゆいさんが駅（800m）に着くのは $800=50(x-8)+300 \\implies 50(x-8)=500 \\implies x=18$（午前10時18分）。姉が分速100mだと18分の時点で $100 \\times (18-12) = 600$ m地点におり、ゆいさんが駅に着くまでに追いつけません。",
+      "defaultPoints": 10
+    },
+    {
+      "id": "user-q47",
+      "genre": "数学",
+      "topic": "1次関数",
+      "subTopic": "動点と面積",
+      "tags": [
+        "中2数学",
+        "動点",
+        "1次関数の利用",
+        "場合分け"
+      ],
+      "difficulty": 2,
+      "estimatedSeconds": 90,
+      "questionText": "長方形 $\\mathrm{ABCD}$（$\\mathrm{AD}=6\\text{ cm}, \\mathrm{AB}=2\\text{ cm}$）があり、点 $\\mathrm{P}$ は毎秒 $1\\text{ cm}$ の速さで $\\mathrm{A}$ を出発して $\\mathrm{B}, \\mathrm{C}$ を通って $\\mathrm{D}$ まで動きます。出発してから $x$ 秒後の $\\triangle\\mathrm{APD}$ の面積を $y\\text{ cm}^2$ とします。[cite: 3]\\n(1) 次の各区間について $x$ の変域を答え、$y$ を $x$ の式で表しなさい。[cite: 3]\\n① 点 $\\mathrm{P}$ が辺 $\\mathrm{AB}$ 上を動くとき\\n② 点 $\\mathrm{P}$ が辺 $\\mathrm{BC}$ 上を動くとき\\n③ 点 $\\mathrm{P}$ が辺 $\\mathrm{CD}$ 上を動くとき\\n(2) $\\triangle\\mathrm{APD}$ の面積が $3\\text{ cm}^2$ となるのは、点 $\\mathrm{P}$ が $\\mathrm{A}$ を出発してから何秒後ですか。[cite: 3]",
+      "answer": "(1) ① 変域: $0 \\le x \\le 2$, 式: $y=3x$\\n② 変域: $2 \\le x \\le 8$, 式: $y=6$\\n③ 変域: $8 \\le x \\le 10$, 式: $y=-3x+30$\\n(2) $1$秒後 と $9$秒後",
+      "explanation": "(1) ① $\\mathrm{P}$ が $\\mathrm{AB}$ 上にあるとき、底辺 $\\mathrm{AD}=6$、高さ $\\mathrm{AP}=x$ より $y=\\frac{1}{2} \\times 6 \\times x = 3x$。\\n② $\\mathrm{P}$ が $\\mathrm{BC}$ 上にあるとき、高さは常に $\\mathrm{AB}=2$ で一定なので $y=\\frac{1}{2} \\times 6 \\times 2 = 6$。\\n③ $\\mathrm{P}$ が $\\mathrm{CD}$ 上にあるとき、$\\mathrm{PD}=10-x$ なので $y=\\frac{1}{2} \\times 6 \\times (10-x) = -3x+30$。\\n(2) $y=3$ となるのは、①のとき $3x=3 \\implies x=1$。③のとき $-3x+30=3 \\implies 3x=27 \\implies x=9$。よって $1$秒後と $9$秒後です。",
+      "defaultPoints": 10
+    },
+    {
+      "id": "user-q48",
+      "genre": "数学",
+      "topic": "平行と合同",
+      "subTopic": "多角形の内角の和（証明のしくみ）",
+      "tags": [
+        "中2数学",
+        "多角形の内角の和",
+        "穴埋め"
+      ],
+      "difficulty": 1,
+      "estimatedSeconds": 40,
+      "questionText": "多角形の内角の和の求め方の説明における空欄にあてはまる数・式・文字を答えなさい。[cite: 3]\\n「四角形は4個、五角形は [ ア ] 個、六角形は [ イ ] 個、七角形は [ ウ ] 個の三角形に分けられる。同じように考えると、$n$ 角形は内部の1つの点から頂点にひいた線分によって、 [ エ ] 個の三角形に分けられる。したがって、$n$ 角形の内角の和は $180^\\circ \\times n - [ オ ] = 180^\\circ \\times (n-2)$ によって求められる。」[cite: 3]",
+      "answer": "ア: 5, イ: 6, ウ: 7, エ: n, オ: 360°",
+      "explanation": "内部の1点と各頂点を結ぶと $n$ 角形は $n$ 個の三角形に分割されます。点Oの周りの角 $360^\\circ$ を引くことで、内角の和 $180^\\circ \\times n - 360^\\circ = 180^\\circ \\times (n-2)$ が導かれます。",
+      "defaultPoints": 8
+    },
+    {
+      "id": "user-q49",
+      "genre": "数学",
+      "topic": "平行と合同",
+      "subTopic": "対頂角と直線の角",
+      "tags": [
+        "中2数学",
+        "対頂角",
+        "角度計算"
+      ],
+      "difficulty": 1,
+      "estimatedSeconds": 30,
+      "questionText": "3直線が1点で交わっています。$\\angle a, \\angle b, \\angle c, \\angle d$ の大きさをそれぞれ求めなさい（$80^\\circ$ と $45^\\circ$ の角が与えられています）。[cite: 3]",
+      "answer": "$\\angle a=55^\\circ, \\angle b=80^\\circ, \\angle c=45^\\circ, \\angle d=55^\\circ$",
+      "explanation": "対頂角は等しいので $\\angle b=80^\\circ$、$\\angle c=45^\\circ$ です。直線の角の和は $180^\\circ$ なので、$\\angle a = 180^\\circ - (80^\\circ + 45^\\circ) = 55^\\circ$。対頂角より $\\angle d = \\angle a = 55^\\circ$ です。",
+      "figureSvg": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 200 200\" width=\"200\" height=\"200\"><line x1=\"20\" y1=\"125\" x2=\"180\" y2=\"80\" stroke=\"black\" stroke-width=\"2\"/><line x1=\"40\" y1=\"30\" x2=\"160\" y2=\"170\" stroke=\"black\" stroke-width=\"2\"/><line x1=\"50\" y1=\"170\" x2=\"150\" y2=\"30\" stroke=\"black\" stroke-width=\"2\"/><text x=\"95\" y=\"60\" font-size=\"12\">80°</text><text x=\"65\" y=\"120\" font-size=\"12\">45°</text><text x=\"75\" y=\"95\" font-size=\"12\">a</text><text x=\"95\" y=\"140\" font-size=\"12\">b</text><text x=\"115\" y=\"110\" font-size=\"12\">c</text><text x=\"115\" y=\"80\" font-size=\"12\">d</text></svg>",
+      "defaultPoints": 8
+    },
+    {
+      "id": "user-q50",
+      "genre": "数学",
+      "topic": "平行と合同",
+      "subTopic": "平行線と角",
+      "tags": [
+        "中2数学",
+        "平行線",
+        "同位角",
+        "錯角"
+      ],
+      "difficulty": 2,
+      "estimatedSeconds": 45,
+      "questionText": "$\\ell \\parallel m$ のとき、次の各図における $\\angle x, \\angle y$ の大きさをそれぞれ求めなさい。[cite: 3]\\n(1) $70^\\circ, 65^\\circ$ が与えられた図\\n(2) $105^\\circ, 95^\\circ$ が与えられた図\\n(3) $140^\\circ, 30^\\circ$ が与えられた図\\n(4) $80^\\circ, 45^\\circ$ が与えられた図",
+      "answer": "(1) $\\angle x = 70^\\circ, \\angle y = 65^\\circ$\\n(2) $\\angle x = 75^\\circ, \\angle y = 95^\\circ$\\n(3) $\\angle x = 40^\\circ, \\angle y = 70^\\circ$\\n(4) $\\angle x = 55^\\circ, \\angle y = 100^\\circ$",
+      "explanation": "平行線の錯角・同位角が等しい性質や、対頂角、三角形の内角の和を用いて各角度を求めます。",
+      "defaultPoints": 10
+    },
+    {
+      "id": "user-q51",
+      "genre": "数学",
+      "topic": "平行と合同",
+      "subTopic": "三角形の内角と外角",
+      "tags": [
+        "中2数学",
+        "三角形の内角と外角",
+        "角度計算"
+      ],
+      "difficulty": 1,
+      "estimatedSeconds": 25,
+      "questionText": "次の図で、$\\angle x$ の大きさを求めなさい。[cite: 3]\\n(1) 内角が $55^\\circ, 40^\\circ$ の三角形の外角 $\\angle x$\\n(2) 外角が $122^\\circ$、内角の1つが $63^\\circ$ のときのもう1つの内角 $\\angle x$",
+      "answer": "(1) $\\angle x = 95^\\circ$ (2) $\\angle x = 59^\\circ$",
+      "explanation": "(1) 三角形の外角は、それと隣り合わない2つの内角の和に等しいので $\\angle x = 55^\\circ + 40^\\circ = 95^\\circ$。\\n(2) $\\angle x + 63^\\circ = 122^\\circ \\implies \\angle x = 122^\\circ - 63^\\circ = 59^\\circ$ です。",
+      "defaultPoints": 8
+    },
+    {
+      "id": "user-q52",
+      "genre": "数学",
+      "topic": "平行と合同",
+      "subTopic": "四角形・五角形の内角と外角",
+      "tags": [
+        "中2数学",
+        "多角形の内角と外角",
+        "角度計算"
+      ],
+      "difficulty": 2,
+      "estimatedSeconds": 40,
+      "questionText": "次の図で、$\\angle x$ の大きさを求めなさい。[cite: 3]\\n(1) 四角形で他の3つの内角が $100^\\circ, 85^\\circ, 79^\\circ$\\n(2) 五角形で他の角（外角含む）が $50^\\circ, 60^\\circ, 55^\\circ, 146^\\circ$",
+      "answer": "(1) $\\angle x = 96^\\circ$ (2) $\\angle x = 111^\\circ$",
+      "explanation": "(1) 四角形の内角の和は $360^\\circ$ なので、$\\angle x = 360^\\circ - (100^\\circ + 85^\\circ + 79^\\circ) = 360^\\circ - 264^\\circ = 96^\\circ$。\\n(2) 外角の和が $360^\\circ$ であることを利用するか、各頂点の内角の和から算出します。",
+      "defaultPoints": 10
+    },
+    {
+      "id": "user-q53",
+      "genre": "数学",
+      "topic": "平行と合同",
+      "subTopic": "多角形の内角と外角の計算",
+      "tags": [
+        "中2数学",
+        "内角の和",
+        "正多角形"
+      ],
+      "difficulty": 1,
+      "estimatedSeconds": 30,
+      "questionText": "次の問に答えなさい。[cite: 3]\\n(1) 内角の和が $2160^\\circ$ である多角形は何角形ですか。[cite: 3]\\n(2) 正十二角形の1つの内角の大きさを求めなさい。[cite: 3]",
+      "answer": "(1) 十四角形 (2) $150^\\circ$",
+      "explanation": "(1) $180^\\circ \\times (n-2) = 2160^\\circ \\implies n-2 = 12 \\implies n = 14$。十四角形です。\\n(2) 正十二角形の1つの外角は $\\frac{360^\\circ}{12} = 30^\\circ$。よって1つの内角は $180^\\circ - 30^\\circ = 150^\\circ$ です。",
+      "defaultPoints": 8
+    },
+    {
+      "id": "user-q54",
+      "genre": "数学",
+      "topic": "平行と合同",
+      "subTopic": "平行線と折れ線の角",
+      "tags": [
+        "中2数学",
+        "平行線",
+        "補助線",
+        "折れ線"
+      ],
+      "difficulty": 2,
+      "estimatedSeconds": 45,
+      "questionText": "次の図で、$\\angle x$ の大きさを求めなさい。ただし(1)〜(3)は $\\ell \\parallel m$ とします。[cite: 3]\\n(1) 上向き折れ線（$70^\\circ, 60^\\circ$）\\n(2) 凹型折れ線（$100^\\circ, 145^\\circ$）\\n(3) 複数折れ線（$80^\\circ, 140^\\circ$）\\n(4) 三角形内部の折れ線（$35^\\circ, 40^\\circ, 30^\\circ$）",
+      "answer": "(1) $\\angle x = 130^\\circ$ (2) $\\angle x = 65^\\circ$ (3) $\\angle x = 40^\\circ$ (4) $\\angle x = 105^\\circ$",
+      "explanation": "屈折点を通る平行な補助線を引くか、ブーメラン型（凹四角形）の公式（$\\angle x = 35^\\circ + 40^\\circ + 30^\\circ = 105^\\circ$）等を用いて解きます。",
+      "defaultPoints": 10
+    },
+    {
+      "id": "user-q55",
+      "genre": "数学",
+      "topic": "平行と合同",
+      "subTopic": "合同な図形の性質",
+      "tags": [
+        "中2数学",
+        "合同記号",
+        "対応する辺と角"
+      ],
+      "difficulty": 1,
+      "estimatedSeconds": 35,
+      "questionText": "四角形 $\\mathrm{ABCD}$ と四角形 $\\mathrm{EFGH}$ は合同です（$\\mathrm{AB}=3\\text{ cm}, \\mathrm{BC}=5\\text{ cm}, \\mathrm{CD}=2\\text{ cm}, \\angle\\mathrm{B}=70^\\circ, \\angle\\mathrm{C}=60^\\circ$）。次の問に答えなさい。[cite: 3]\\n(1) 合同であることを記号を用いて表しなさい。[cite: 3]\\n(2) 辺 $\\mathrm{EH}$ の長さを求めなさい。[cite: 3]\\n(3) $\\angle\\mathrm{H}$ の大きさを求めなさい。[cite: 3]",
+      "answer": "(1) 四角形 $\\mathrm{ABCD} \\equiv$ 四角形 $\\mathrm{EFGH}$\\n(2) 辺 $\\mathrm{AD}$ の長さに等しい（図より対応する長さ）\\n(3) $\\angle\\mathrm{D}$ の大きさに等しい",
+      "explanation": "合同な図形では対応する頂点の順に記号 $\\equiv$ を使って表し、対応する辺の長さや内角の大きさは等しくなります。",
+      "defaultPoints": 8
+    },
+    {
+      "id": "user-q56",
+      "genre": "数学",
+      "topic": "平行と合同",
+      "subTopic": "合同の条件の判定",
+      "tags": [
+        "中2数学",
+        "合同条件",
+        "図形の決定"
+      ],
+      "difficulty": 1,
+      "estimatedSeconds": 30,
+      "questionText": "次の $\\triangle\\mathrm{ABC}$ と $\\triangle\\mathrm{DEF}$ は、かならず合同であるといえますか。[cite: 3]\\n(1) 等しい2辺の長さが $8\\text{ cm}$ になるようにかいた二等辺三角形 $\\mathrm{ABC}$ と二等辺三角形 $\\mathrm{DEF}$[cite: 3]\\n(2) 1辺の長さが $10\\text{ cm}$ になるようにかいた正三角形 $\\mathrm{ABC}$ と正三角形 $\\mathrm{DEF}$[cite: 3]\\n(3) 3つの内角が $90^\\circ, 20^\\circ, 70^\\circ$ になるようにかいた直角三角形 $\\mathrm{ABC}$ と直角三角形 $\\mathrm{DEF}$[cite: 3]",
+      "answer": "(1) いえない (2) いえる (3) いえない",
+      "explanation": "(1) 頂角（あるいは底辺）の大きさが定まらないため形が決まりません。\\n(2) 正三角形はすべての辺が等しく内角もすべて $60^\\circ$ で等しいため、3組の辺がそれぞれ等しく必ず合同になります。\\n(3) 角が等しいだけでは拡大・縮小の関係（相似）になり、大きさ（辺の長さ）が等しいとは限りません。",
+      "defaultPoints": 8
+    },
+    {
+      "id": "user-q57",
+      "genre": "数学",
+      "topic": "平行と合同",
+      "subTopic": "三角形の合同条件の選択",
+      "tags": [
+        "中2数学",
+        "三角形の合同条件"
+      ],
+      "difficulty": 1,
+      "estimatedSeconds": 30,
+      "questionText": "与えられた図の三角形から合同な三角形の組を見つけ、使った合同条件を答えなさい。[cite: 3]",
+      "answer": "合同な三角形の組、合同条件: 2組の辺とその間の角がそれぞれ等しい（または1組の辺とその両端の角がそれぞれ等しい）",
+      "explanation": "三角形の合同条件（3組の辺／2組の辺とその間の角／1組の辺とその両端の角）にあてはまる組を正しく選択します。",
+      "defaultPoints": 8
+    },
+    {
+      "id": "user-q58",
+      "genre": "数学",
+      "topic": "平行と合同",
+      "subTopic": "三角形の合同の記述",
+      "tags": [
+        "中2数学",
+        "合同記号",
+        "合同条件"
+      ],
+      "difficulty": 2,
+      "estimatedSeconds": 45,
+      "questionText": "次の図で、合同な三角形の組を見つけ、記号 $\\equiv$ を使って表しなさい。また、そのときに使った合同条件をいいなさい。[cite: 3]\\n(1) $\\mathrm{AB}=\\mathrm{CB}, \\mathrm{AD}=\\mathrm{CD}$ の四角形 $\\mathrm{ABCD}$[cite: 3]\\n(2) $\\mathrm{AD}=\\mathrm{AE}, \\angle\\mathrm{ADB}=\\angle\\mathrm{AEC}$[cite: 3]",
+      "answer": "(1) $\\triangle\\mathrm{ABD} \\equiv \\triangle\\mathrm{CBD}$（合同条件: 3組の辺がそれぞれ等しい）\\n(2) $\\triangle\\mathrm{ABD} \\equiv \\triangle\\mathrm{ACE}$（合同条件: 1組の辺とその両端の角がそれぞれ等しい）",
+      "explanation": "(1) 共通な辺 $\\mathrm{BD}=\\mathrm{BD}$ より3組の辺がそれぞれ等しくなります。\\n(2) 共通な角 $\\angle\\mathrm{A}=\\angle\\mathrm{A}$ より1組の辺とその両端の角がそれぞれ等しくなります。",
+      "defaultPoints": 10
+    },
+    {
+      "id": "user-q59",
+      "genre": "数学",
+      "topic": "平行と合同",
+      "subTopic": "仮定と結論",
+      "tags": [
+        "中2数学",
+        "仮定と結論",
+        "証明の基本"
+      ],
+      "difficulty": 1,
+      "estimatedSeconds": 30,
+      "questionText": "次のことがらについて、それぞれ仮定と結論をいいなさい。[cite: 3]\\n(1) $a=b$ ならば $a+c=b+c$ である。[cite: 3]\\n(2) $x=3, y=4$ ならば $5x-2y=7$ である。[cite: 3]\\n(3) 四角形 $\\mathrm{ABCD}$ が正方形のとき、$\\angle\\mathrm{A}=90^\\circ$ である。[cite: 3]",
+      "answer": "(1) 仮定: $a=b$, 結論: $a+c=b+c$\\n(2) 仮定: $x=3, y=4$, 結論: $5x-2y=7$\\n(3) 仮定: 四角形 $\\mathrm{ABCD}$ が正方形である, 結論: $\\angle\\mathrm{A}=90^\\circ$",
+      "explanation": "「〜ならば（〜のとき）」にあたる部分が仮定、「…である」にあたる部分が結論です。",
+      "defaultPoints": 8
+    },
+    {
+      "id": "user-q60",
+      "genre": "数学",
+      "topic": "平行と合同",
+      "subTopic": "ブーメラン型四角形の証明の根拠",
+      "tags": [
+        "中2数学",
+        "証明の根拠",
+        "平行線の性質",
+        "外角の性質"
+      ],
+      "difficulty": 1,
+      "estimatedSeconds": 35,
+      "questionText": "凹四角形において $\\angle d = \\angle a + \\angle b + \\angle c$ となることの証明で、根拠となることがらの空欄にあてはまる言葉を答えなさい。[cite: 3]\\n① 平行線の [ ア ] は等しい。\\n② 平行線の [ イ ] は等しい。\\n③ 三角形の [ ウ ] は、それととなり合わない2つの [ エ ] の和に等しい。[cite: 3]",
+      "answer": "① 錯角 ② 錯角（または同位角） ③ ウ: 外角, エ: 内角",
+      "explanation": "補助線により平行線をつくった場合は錯角・同位角が根拠となり、三角形を延長して作った交点に着目する場合は外角の性質が根拠となります。",
+      "defaultPoints": 8
+    },
+    {
+      "id": "user-q61",
+      "genre": "数学",
+      "topic": "平行と合同",
+      "subTopic": "台形の延長線と中点による合同の証明",
+      "tags": [
+        "中2数学",
+        "合同の証明",
+        "台形",
+        "中点",
+        "平行線の錯角"
+      ],
+      "difficulty": 2,
+      "estimatedSeconds": 90,
+      "questionText": "$\\mathrm{AD} \\parallel \\mathrm{BC}$ の台形 $\\mathrm{ABCD}$ があります。辺 $\\mathrm{DC}$ の中点を $\\mathrm{M}$ とし、$\\mathrm{AM}$ の延長と辺 $\\mathrm{BC}$ の延長との交点を $\\mathrm{E}$ とするとき、$\\mathrm{AM}=\\mathrm{EM}$ となることを証明しなさい。[cite: 3]",
+      "answer": "（証明）$\\triangle\\mathrm{ADM}$ と $\\triangle\\mathrm{ECM}$ において、点 $\\mathrm{M}$ は辺 $\\mathrm{DC}$ の中点だから $\\mathrm{DM}=\\mathrm{CM} \\cdots ①$。対頂角は等しいから $\\angle\\mathrm{AMD}=\\angle\\mathrm{EMC} \\cdots ②$。$\\mathrm{AD} \\parallel \\mathrm{BC}$ より平行線の錯角は等しいから $\\angle\\mathrm{ADM}=\\angle\\mathrm{ECM} \\cdots ③$。①, ②, ③より、1組の辺とその両端の角がそれぞれ等しいから $\\triangle\\mathrm{ADM} \\equiv \\triangle\\mathrm{ECM}$。合同な図形の対応する辺の長さは等しいので、$\\mathrm{AM}=\\mathrm{EM}$ である。",
+      "explanation": "中点による等辺と対頂角、平行線の錯角に着目して $\\triangle\\mathrm{ADM} \\equiv \\triangle\\mathrm{ECM}$ を証明し、結論を導きます。",
+      "figureSvg": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 240 180\" width=\"240\" height=\"180\"><polygon points=\"50,20 130,20 150,140 20,140\" fill=\"none\" stroke=\"black\" stroke-width=\"2\"/><line x1=\"130\" y1=\"20\" x2=\"220\" y2=\"140\" stroke=\"black\" stroke-width=\"1.5\"/><line x1=\"50\" y1=\"20\" x2=\"220\" y2=\"140\" stroke=\"black\" stroke-width=\"2\"/><line x1=\"150\" y1=\"140\" x2=\"220\" y2=\"140\" stroke=\"black\" stroke-width=\"2\"/><text x=\"40\" y=\"18\" font-size=\"12\">A</text><text x=\"132\" y=\"18\" font-size=\"12\">D</text><text x=\"10\" y=\"145\" font-size=\"12\">B</text><text x=\"145\" y=\"155\" font-size=\"12\">C</text><text x=\"225\" y=\"145\" font-size=\"12\">E</text><text x=\"145\" y=\"80\" font-size=\"12\">M</text></svg>",
+      "defaultPoints": 10
+    }
+  ]
+}

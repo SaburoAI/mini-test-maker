@@ -1,0 +1,1471 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>AI ミニテストメーカー - UXパターン比較（A:カート / B:スロット自動充填 / C:類題ガチャ）</title>
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <!-- Lucide Icons -->
+  <script src="https://unpkg.com/lucide@latest"></script>
+  <!-- KaTeX for LaTeX rendering -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.css">
+  <script src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/contrib/auto-render.min.js"></script>
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Noto+Sans+JP:wght@400;500;600;700&family=Noto+Serif+JP:wght@500;700&display=swap" rel="stylesheet">
+
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: {
+            sans: ['"Noto Sans JP"', 'Inter', 'sans-serif'],
+            serif: ['"Noto Serif JP"', 'serif'],
+          }
+        }
+      }
+    }
+  </script>
+
+  <style>
+    /* A4用紙実寸アスペクト比プレビュー（余白を詰めたプロ組版） */
+    .a4-sheet {
+      width: 210mm;
+      min-height: 297mm;
+      background: white;
+      box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1), 0 8px 10px -6px rgba(0, 0, 0, 0.1);
+      margin: 0 auto;
+      padding: 10mm 12mm; /* 上下左右の余白をタイトに最適化 */
+      box-sizing: border-box;
+      position: relative;
+    }
+
+    /* 印刷時のCSS */
+    @media print {
+      body { background: white !important; margin: 0 !important; padding: 0 !important; }
+      .no-print, .preview-action-btn { display: none !important; }
+      .print-container { padding: 0 !important; background: white !important; }
+      .a4-sheet {
+        box-shadow: none !important;
+        margin: 0 !important;
+        width: 100% !important;
+        min-height: auto !important;
+        padding: 9mm 11mm !important;
+        page-break-after: always;
+        break-after: page;
+      }
+    }
+
+    /* 2段組レイアウト（カラム間隔もタイト化） */
+    .print-columns {
+      column-count: 2;
+      column-gap: 6mm;
+      column-rule: 1px dashed #cbd5e1;
+    }
+
+    .question-block {
+      break-inside: avoid;
+      page-break-inside: avoid;
+    }
+
+    .swap-highlight {
+      animation: flash-highlight 0.6s ease-out;
+    }
+    @keyframes flash-highlight {
+      0% { background-color: rgba(99, 102, 241, 0.25); transform: scale(0.99); }
+      100% { background-color: transparent; transform: scale(1); }
+    }
+  </style>
+</head>
+<body class="bg-slate-100 text-slate-800 font-sans min-h-screen flex flex-col">
+
+  <!-- ==================== グローバルヘッダー & UXパターン切替タブ ==================== -->
+  <header class="no-print bg-slate-900 text-white border-b border-slate-800 sticky top-0 z-40 px-6 py-2 flex items-center justify-between shadow-md">
+    <div class="flex items-center gap-3">
+      <div class="w-8 h-8 rounded-lg bg-indigo-600 flex items-center justify-center font-bold text-white shadow-sm">
+        <i data-lucide="layers" class="w-5 h-5"></i>
+      </div>
+      <div>
+        <div class="flex items-center gap-2">
+          <h1 class="font-bold text-base tracking-tight text-white">AI ミニテストメーカー</h1>
+          <span class="text-[10px] px-2 py-0.5 rounded-full bg-indigo-900/90 text-indigo-200 border border-indigo-700 font-semibold">パターンB採用</span>
+        </div>
+        <p class="text-[11px] text-slate-400">問題プール蓄積 × サブ論点(st) × 余白極小タイト組版 × プレビュー上直接削除</p>
+      </div>
+    </div>
+
+    <!-- UXパターン切り替えタブ -->
+    <div class="flex items-center bg-slate-800 p-1 rounded-lg border border-slate-700 shadow-inner">
+      <button id="nav-pattern-b" onclick="switchPattern('B')" class="px-3 py-1 rounded-md text-xs font-bold transition flex items-center gap-1.5 bg-indigo-600 text-white shadow-sm">
+        <i data-lucide="zap" class="w-3.5 h-3.5 text-amber-300"></i>
+        <span>パターンB: スロット自動充填＆スワップ</span>
+        <span class="text-[9px] bg-indigo-800 text-indigo-200 px-1 py-0.2 rounded font-bold">採用</span>
+      </button>
+
+      <button id="nav-pattern-a" onclick="switchPattern('A')" class="px-3 py-1 rounded-md text-xs font-semibold text-slate-300 hover:text-white hover:bg-slate-700/60 transition flex items-center gap-1.5">
+        <i data-lucide="shopping-cart" class="w-3.5 h-3.5 text-sky-400"></i>
+        <span>パターンA: カート選択</span>
+      </button>
+
+      <button id="nav-pattern-c" onclick="switchPattern('C')" class="px-3 py-1 rounded-md text-xs font-semibold text-slate-300 hover:text-white hover:bg-slate-700/60 transition flex items-center gap-1.5">
+        <i data-lucide="dices" class="w-3.5 h-3.5 text-emerald-400"></i>
+        <span>パターンC: 類題ガチャ</span>
+      </button>
+    </div>
+
+    <!-- 右側アクションボタン -->
+    <div class="flex items-center gap-2">
+      <button onclick="autoAllocate100()" class="flex items-center gap-1 px-3 py-1.5 text-xs font-medium rounded-md bg-indigo-700 hover:bg-indigo-600 text-white transition shadow-xs">
+        <i data-lucide="calculator" class="w-3.5 h-3.5"></i>
+        <span>100点均等割</span>
+      </button>
+      <button onclick="window.print()" class="flex items-center gap-1 px-3.5 py-1.5 text-xs font-semibold rounded-md bg-emerald-600 hover:bg-emerald-500 text-white transition shadow-xs">
+        <i data-lucide="printer" class="w-3.5 h-3.5"></i>
+        <span>印刷 / PDF出力</span>
+      </button>
+    </div>
+  </header>
+
+  <!-- ==================== 3ステップ役割案内バナー ==================== -->
+  <div class="no-print bg-slate-800/95 text-slate-200 px-6 py-2 text-xs border-b border-slate-700 grid grid-cols-12 gap-4 items-center">
+    <div class="col-span-4 flex items-center gap-2">
+      <span class="px-2 py-0.5 rounded bg-sky-900 text-sky-200 font-bold text-[10px] shrink-0">STEP 1: 問題を探す</span>
+      <span class="text-[11px] text-slate-300 truncate">左カラム: AIで蓄積したプールから単元・タグで探す</span>
+    </div>
+    <div class="col-span-4 flex items-center gap-2 border-l border-slate-700 pl-4">
+      <span class="px-2 py-0.5 rounded bg-indigo-900 text-indigo-200 font-bold text-[10px] shrink-0">STEP 2: テストを組む</span>
+      <span class="text-[11px] text-slate-300 truncate">中央カラム: 枠に自動配備・スワップ・編集・削除</span>
+    </div>
+    <div class="col-span-4 flex items-center gap-2 border-l border-slate-700 pl-4">
+      <span class="px-2 py-0.5 rounded bg-emerald-900 text-emerald-200 font-bold text-[10px] shrink-0">STEP 3: プレビュー</span>
+      <span class="text-[11px] text-slate-300 truncate">右カラム: 余白極小A4紙面・紙面からも直接削除可能</span>
+    </div>
+  </div>
+
+  <!-- ==================== メインワークスペース（3ペイン構成） ==================== -->
+  <div class="flex-1 flex overflow-hidden">
+
+    <!-- ====================================================================== -->
+    <!-- 【カラム1】左ペイン: 問題プール (Question Bank: 問題を探して追加するUI) -->
+    <!-- ====================================================================== -->
+    <div class="no-print w-[380px] shrink-0 border-r border-slate-300 bg-slate-50 flex flex-col h-[calc(100vh-90px)] overflow-hidden">
+      
+      <!-- カラム役割明示ヘッダー -->
+      <div class="px-3 py-2 bg-sky-900 text-white flex items-center justify-between shadow-xs">
+        <div class="flex items-center gap-1.5">
+          <div class="w-5 h-5 rounded bg-sky-700 flex items-center justify-center text-[11px] font-bold text-sky-200">1</div>
+          <span class="font-bold text-xs">問題プール（ストックから探す）</span>
+        </div>
+        <button onclick="openAiIngestModal()" class="text-[10px] bg-sky-800 hover:bg-sky-700 text-sky-100 px-2 py-0.5 rounded border border-sky-600 flex items-center gap-1">
+          <i data-lucide="plus" class="w-3 h-3"></i>
+          <span>Mini-JSON取込</span>
+        </button>
+      </div>
+
+      <!-- 検索・フィルターバー -->
+      <div class="p-3 bg-white border-b border-slate-200 space-y-2">
+        <div class="relative">
+          <input type="text" id="pool-search-input" oninput="filterPoolQuestions()" placeholder="単元・サブ論点・#タグで検索..." class="w-full text-xs pl-7 pr-3 py-1.5 border border-slate-300 rounded-md outline-none focus:ring-1 focus:ring-sky-500">
+          <i data-lucide="search" class="w-3.5 h-3.5 text-slate-400 absolute left-2 top-2"></i>
+        </div>
+
+        <!-- ジャンルフィルター -->
+        <div class="flex items-center gap-1 text-[11px] overflow-x-auto pb-0.5">
+          <button onclick="setFilterGenre('all')" class="genre-tag active px-2 py-0.5 rounded bg-sky-600 text-white font-medium">すべて</button>
+          <button onclick="setFilterGenre('図形')" class="genre-tag px-2 py-0.5 rounded bg-slate-200 hover:bg-slate-300 text-slate-700 font-medium">幾何/図形</button>
+          <button onclick="setFilterGenre('計算')" class="genre-tag px-2 py-0.5 rounded bg-slate-200 hover:bg-slate-300 text-slate-700 font-medium">計算/方程式</button>
+          <button onclick="setFilterGenre('理科')" class="genre-tag px-2 py-0.5 rounded bg-slate-200 hover:bg-slate-300 text-slate-700 font-medium">理科/気象</button>
+          <button onclick="setFilterGenre('社会')" class="genre-tag px-2 py-0.5 rounded bg-slate-200 hover:bg-slate-300 text-slate-700 font-medium">社会/地理</button>
+        </div>
+
+        <!-- タグフィルター -->
+        <div class="flex items-center gap-1 text-[10px] overflow-x-auto text-slate-600 pt-1 border-t border-slate-100">
+          <span class="text-slate-400 shrink-0 font-medium">人気タグ:</span>
+          <button onclick="filterByTag('頻出')" class="px-1.5 py-0.2 rounded bg-amber-50 hover:bg-amber-100 text-amber-800 border border-amber-200">#頻出</button>
+          <button onclick="filterByTag('基礎')" class="px-1.5 py-0.2 rounded bg-emerald-50 hover:bg-emerald-100 text-emerald-800 border border-emerald-200">#基礎</button>
+          <button onclick="filterByTag('計算力')" class="px-1.5 py-0.2 rounded bg-indigo-50 hover:bg-indigo-100 text-indigo-800 border border-indigo-200">#計算力</button>
+          <button onclick="filterByTag('要暗記')" class="px-1.5 py-0.2 rounded bg-rose-50 hover:bg-rose-100 text-rose-800 border border-rose-200">#要暗記</button>
+          <button onclick="filterByTag('')" class="text-slate-400 hover:text-slate-700 underline text-[9px] ml-1">解除</button>
+        </div>
+      </div>
+
+      <!-- 問題プール一覧リスト -->
+      <div class="flex-1 overflow-y-auto p-2.5 space-y-2.5" id="pool-questions-list">
+        <!-- JSで動的生成 -->
+      </div>
+
+      <div class="p-2 bg-slate-100 border-t border-slate-200 text-[10px] text-slate-500 flex items-center justify-between">
+        <span>短縮キー: g, t, st, tg, d, s, q, a, e, svg</span>
+        <span id="pool-count-badge" class="text-sky-700 font-bold">12問 ストック中</span>
+      </div>
+    </div>
+
+    <!-- ====================================================================== -->
+    <!-- 【カラム2】中央ペイン: テスト編成（追加した問題を管理・編集・削除するUI）-->
+    <!-- ====================================================================== -->
+    <div class="no-print w-[430px] shrink-0 border-r border-slate-300 bg-white flex flex-col h-[calc(100vh-90px)] overflow-hidden">
+      
+      <!-- カラム役割明示ヘッダー -->
+      <div class="px-3 py-2 bg-indigo-900 text-white flex items-center justify-between shadow-xs">
+        <div class="flex items-center gap-1.5">
+          <div class="w-5 h-5 rounded bg-indigo-700 flex items-center justify-center text-[11px] font-bold text-indigo-200">2</div>
+          <span class="font-bold text-xs">テスト編成スロット（追加した問題を管理・調整）</span>
+        </div>
+        <div class="text-[10px] text-indigo-200 flex items-center gap-1">
+          <i data-lucide="sliders" class="w-3 h-3"></i>
+          <span>配点・順序・編集・削除</span>
+        </div>
+      </div>
+
+      <!-- テスト概要・配点ステータス -->
+      <div class="p-3 bg-slate-50 border-b border-slate-200">
+        <div class="flex items-center justify-between mb-1.5">
+          <div class="flex items-center gap-1.5">
+            <span class="text-xs font-bold text-slate-700">合計配点:</span>
+            <span id="center-score-badge" class="px-2 py-0.2 rounded-full text-[11px] font-bold bg-emerald-100 text-emerald-800 border border-emerald-300">
+              100点 (ジャスト)
+            </span>
+          </div>
+          <div class="text-[11px] text-slate-500">
+            目安時間: <strong id="center-time-label" class="text-indigo-600 font-bold">18分</strong> / 20分
+          </div>
+        </div>
+
+        <!-- 進行ゲージ -->
+        <div class="w-full bg-slate-200 h-1.5 rounded-full overflow-hidden flex">
+          <div id="center-progress" class="bg-indigo-600 h-full transition-all duration-300" style="width: 100%;"></div>
+        </div>
+
+        <div class="mt-2 flex items-center gap-2">
+          <input type="text" id="test-title-input" value="中3数学・理科 20分確認テスト（円周角・関数・天気）" oninput="updateTitle(this.value)" class="w-full text-xs border border-slate-300 rounded px-2 py-1 font-semibold text-slate-800">
+        </div>
+      </div>
+
+      <!-- メイン編成エリア（パターンに応じた描画） -->
+      <div class="flex-1 overflow-y-auto p-3 space-y-3 bg-slate-100/60" id="center-pattern-container">
+        <!-- JSでパターンA, B, CごとのUIを描画 -->
+      </div>
+    </div>
+
+    <!-- ====================================================================== -->
+    <!-- 【カラム3】右ペイン: A4実寸プレビュー（紙面からも直接削除可能）        -->
+    <!-- ====================================================================== -->
+    <div class="flex-1 bg-slate-300/80 print-container overflow-y-auto p-4 flex flex-col items-center">
+      
+      <!-- プレビュー切替ヘッダー (no-print) -->
+      <div class="no-print bg-white/95 backdrop-blur rounded-lg border border-slate-300 p-1.5 mb-3 flex items-center justify-between gap-4 shadow-sm sticky top-0 z-20 w-full max-w-[210mm]">
+        <div class="flex items-center gap-2">
+          <div class="flex items-center gap-1.5">
+            <div class="w-5 h-5 rounded bg-emerald-700 flex items-center justify-center text-[11px] font-bold text-emerald-200">3</div>
+            <span class="text-xs font-bold text-slate-800">完成プレビュー</span>
+          </div>
+          <span class="text-[10px] bg-emerald-50 text-emerald-700 border border-emerald-200 px-2 py-0.5 rounded font-medium">
+            💡 紙面の各問題にホバーで直接「削除」可能
+          </span>
+        </div>
+
+        <div class="flex items-center gap-2">
+          <button id="tab-student" onclick="setSheetMode('student')" class="px-3 py-1 text-xs font-bold rounded bg-indigo-600 text-white flex items-center gap-1 transition shadow-xs">
+            <i data-lucide="file-edit" class="w-3.5 h-3.5"></i>
+            <span>問題用紙（生徒用）</span>
+          </button>
+          <button id="tab-teacher" onclick="setSheetMode('teacher')" class="px-3 py-1 text-xs font-bold rounded text-slate-600 hover:bg-slate-100 flex items-center gap-1 transition">
+            <i data-lucide="check-check" class="w-3.5 h-3.5 text-emerald-600"></i>
+            <span>模範解答・解説編</span>
+          </button>
+          <div class="h-4 w-px bg-slate-300"></div>
+          <span class="text-[11px] text-slate-500 flex items-center gap-1">
+            <i data-lucide="printer" class="w-3 h-3 text-slate-400"></i>
+            余白極小タイト組版
+          </span>
+        </div>
+      </div>
+
+      <!-- A4用紙本体（余白を極限まで詰めたタイト設計） -->
+      <div class="a4-sheet text-slate-900 shadow-xl rounded-xs" id="paper-sheet">
+        
+        <!-- 用紙ヘッダー（高さを圧縮） -->
+        <div class="border-b-2 border-slate-900 pb-1.5 mb-2.5">
+          <div class="flex items-center justify-between">
+            <div>
+              <div class="flex items-center gap-2 mb-0.5">
+                <span class="text-[9px] tracking-wider font-bold uppercase bg-slate-900 text-white px-1.5 py-0.2 rounded">小テスト</span>
+                <span class="text-[11px] text-slate-600 font-medium" id="paper-time-limit">【制限時間: 20分 / 100点満点】</span>
+                <span id="teacher-badge" class="hidden text-[11px] font-bold text-emerald-700 bg-emerald-50 border border-emerald-300 px-1.5 py-0.2 rounded">模範解答編</span>
+              </div>
+              <h2 class="text-sm font-bold font-serif text-slate-900 tracking-tight" id="paper-title">中3数学・理科 20分確認テスト（円周角・関数・天気）</h2>
+            </div>
+
+            <!-- 受験者記入枠（コンパクト化） -->
+            <div class="flex border border-slate-800 text-xs divide-x divide-slate-800 rounded-xs">
+              <div class="px-2 py-0.5 min-w-[45px] text-center bg-slate-50 font-medium text-slate-600 text-[9px]">組 番</div>
+              <div class="px-3 py-0.5 min-w-[110px] font-medium text-slate-500 text-[9px]">氏名：</div>
+              <div class="px-2 py-0.5 min-w-[50px] text-center bg-slate-50">
+                <div class="text-[7px] text-slate-500 leading-none">得点</div>
+                <div class="font-bold text-xs text-slate-900">/ 100</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- 用紙コンテンツ（2段組・タイト行間） -->
+        <div class="print-columns text-[11px] leading-snug" id="paper-content">
+          <!-- JSで動的描画 -->
+        </div>
+
+        <!-- フッター -->
+        <div class="absolute bottom-2 left-6 right-6 flex items-center justify-between text-[8px] text-slate-400 border-t border-slate-200 pt-0.5">
+          <span>AI Mini Test Maker - Compact 20min Print Engine</span>
+          <span>1 / 1</span>
+        </div>
+      </div>
+      
+      <div class="h-6"></div>
+    </div>
+  </div>
+
+  <!-- ==================== 問題編集モーダル (no-print) ==================== -->
+  <div id="edit-question-modal" class="no-print fixed inset-0 bg-slate-900/60 backdrop-blur-xs flex items-center justify-center z-50 hidden">
+    <div class="bg-white rounded-xl shadow-2xl max-w-lg w-full mx-4 overflow-hidden border border-slate-200 flex flex-col">
+      <div class="px-5 py-3 bg-slate-900 text-white flex items-center justify-between">
+        <div class="flex items-center gap-2">
+          <i data-lucide="edit-3" class="w-4 h-4 text-indigo-400"></i>
+          <h3 class="text-xs font-bold">問題データの編集（アプリ上で直接手直し）</h3>
+        </div>
+        <button onclick="closeEditModal()" class="text-slate-400 hover:text-white"><i data-lucide="x" class="w-4 h-4"></i></button>
+      </div>
+      <div class="p-4 space-y-3 text-xs flex-1 overflow-y-auto">
+        <div>
+          <label class="block text-[11px] font-bold text-slate-700 mb-1">問題文 (LaTeX数式は \\( ... \\) )</label>
+          <textarea id="edit-q-text" rows="3" class="w-full text-xs border border-slate-300 rounded p-2 focus:ring-1 focus:ring-indigo-500 outline-none"></textarea>
+        </div>
+        <div class="grid grid-cols-2 gap-2">
+          <div>
+            <label class="block text-[11px] font-bold text-slate-700 mb-1">模範解答</label>
+            <input type="text" id="edit-q-answer" class="w-full text-xs border border-slate-300 rounded p-1.5 focus:ring-1 focus:ring-indigo-500 outline-none">
+          </div>
+          <div>
+            <label class="block text-[11px] font-bold text-slate-700 mb-1">配点</label>
+            <input type="number" id="edit-q-points" class="w-full text-xs border border-slate-300 rounded p-1.5 focus:ring-1 focus:ring-indigo-500 outline-none">
+          </div>
+        </div>
+        <div>
+          <label class="block text-[11px] font-bold text-slate-700 mb-1">解説文</label>
+          <textarea id="edit-q-explanation" rows="2" class="w-full text-xs border border-slate-300 rounded p-1.5 focus:ring-1 focus:ring-indigo-500 outline-none"></textarea>
+        </div>
+        <div class="grid grid-cols-2 gap-2">
+          <div>
+            <label class="block text-[11px] font-bold text-slate-700 mb-1">サブ論点 (st)</label>
+            <input type="text" id="edit-q-subtopic" class="w-full text-xs border border-slate-300 rounded p-1.5 focus:ring-1 focus:ring-indigo-500 outline-none">
+          </div>
+          <div>
+            <label class="block text-[11px] font-bold text-slate-700 mb-1">タグ (カンマ区切り)</label>
+            <input type="text" id="edit-q-tags" placeholder="頻出, 基礎, 計算力" class="w-full text-xs border border-slate-300 rounded p-1.5 focus:ring-1 focus:ring-indigo-500 outline-none">
+          </div>
+        </div>
+      </div>
+      <div class="px-5 py-2.5 bg-slate-50 border-t border-slate-200 flex items-center justify-end gap-2">
+        <button onclick="closeEditModal()" class="px-3 py-1.5 text-xs text-slate-600 hover:bg-slate-200 rounded">キャンセル</button>
+        <button onclick="saveEditedQuestion()" class="px-4 py-1.5 text-xs font-bold bg-indigo-600 hover:bg-indigo-700 text-white rounded flex items-center gap-1">
+          <i data-lucide="check" class="w-3.5 h-3.5"></i>
+          <span>変更を保存</span>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ==================== Mini-JSON 教材一括取込モーダル (no-print) ==================== -->
+  <div id="ai-ingest-modal" class="no-print fixed inset-0 bg-slate-900/60 backdrop-blur-xs flex items-center justify-center z-50 hidden">
+    <div class="bg-white rounded-xl shadow-2xl max-w-xl w-full mx-4 overflow-hidden border border-slate-200">
+      <div class="px-5 py-3 bg-slate-900 text-white flex items-center justify-between">
+        <div class="flex items-center gap-2">
+          <i data-lucide="sparkles" class="w-4 h-4 text-amber-400"></i>
+          <h3 class="text-xs font-bold">短縮キー型JSON (Mini-JSON) 一括インポート</h3>
+        </div>
+        <button onclick="closeAiIngestModal()" class="text-slate-400 hover:text-white"><i data-lucide="x" class="w-4 h-4"></i></button>
+      </div>
+      <div class="p-4 space-y-3 text-xs">
+        <div class="bg-indigo-50 border border-indigo-200 rounded p-2 text-[11px] text-slate-700">
+          <span class="font-bold text-indigo-900">外部AI用コピペプロンプト（タグ `tg` 対応）:</span>
+          <pre class="mt-1 bg-white p-1.5 rounded border border-indigo-100 font-mono text-[10px] select-all whitespace-pre-wrap">以下の教材内容から問題を抽出し、以下の短縮JSON配列のみで出力してください（マークダウンや挨拶不要）。
+[{"g":"ジャンル","t":"メイン単元","st":"サブ論点","tg":["タグ1","タグ2"],"d":難易度1~3,"s":秒数,"q":"問題文(TeX対応)","a":"解答","e":"解説","svg":"図形のみSVG"}]</pre>
+        </div>
+        <textarea id="ingest-raw-text" rows="6" class="w-full font-mono text-xs border border-slate-300 rounded p-2 focus:ring-1 focus:ring-indigo-500 outline-none" placeholder='[
+  {
+    "g": "図形",
+    "t": "円周角の定理",
+    "st": "円に内接する四角形",
+    "tg": ["頻出", "入試過去問"],
+    "d": 2,
+    "s": 90,
+    "q": "下の図で四角形ABCDは円に内接している。∠xを求めよ。",
+    "a": "105°",
+    "e": "対角の和は180°であるため。",
+    "svg": "<svg>...</svg>"
+  }
+]'></textarea>
+        <div class="flex justify-end gap-2 pt-1">
+          <button onclick="closeAiIngestModal()" class="px-3 py-1.5 text-slate-600 hover:bg-slate-100 rounded">キャンセル</button>
+          <button onclick="executeAiIngest()" class="px-4 py-1.5 bg-indigo-600 hover:bg-indigo-700 text-white rounded font-bold flex items-center gap-1">
+            <i data-lucide="arrow-down-to-dot" class="w-3.5 h-3.5"></i>
+            <span>プールへ一括蓄積</span>
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ==================== JavaScript ロジック ==================== -->
+  <script>
+    let questionPool = [
+      {
+        id: "pool-geo-1",
+        genre: "図形",
+        topic: "円周角の定理",
+        subTopic: "中心角と円周角の関係",
+        tags: ["頻出", "基礎"],
+        difficulty: 2,
+        estimatedSeconds: 90,
+        questionText: "下の図において、点\\( O \\)は円の中心である。\\( \\angle x \\)の大きさを求めよ。",
+        answer: "\\( \\angle x = 36^\\circ \\)",
+        explanation: "弧に対する円周角は中心角の半分であるため、\\( 72^\\circ \\div 2 = 36^\\circ \\)。",
+        defaultPoints: 10,
+        figureSvg: `<svg viewBox="0 0 140 100" class="w-24 h-18 stroke-slate-800 fill-none stroke-2 shrink-0">
+          <circle cx="70" cy="50" r="38" stroke-width="1.3" />
+          <circle cx="70" cy="50" r="1.8" class="fill-slate-900" />
+          <text x="73" y="48" class="text-[9px] font-sans fill-slate-800 stroke-none font-bold">O</text>
+          <polygon points="70,12 40,76 100,76" stroke-width="1.1" />
+          <line x1="70" y1="50" x2="40" y2="76" stroke-width="1" stroke-dasharray="2 2" />
+          <line x1="70" y1="50" x2="100" y2="76" stroke-width="1" stroke-dasharray="2 2" />
+          <text x="67" y="9" class="text-[8px] font-sans fill-slate-800 stroke-none">A</text>
+          <text x="30" y="82" class="text-[8px] font-sans fill-slate-800 stroke-none">B</text>
+          <text x="103" y="82" class="text-[8px] font-sans fill-slate-800 stroke-none">C</text>
+          <text x="66" y="27" class="text-[8px] font-sans fill-rose-600 stroke-none font-bold">x</text>
+          <text x="64" y="65" class="text-[7px] font-sans fill-indigo-700 stroke-none font-semibold">72°</text>
+        </svg>`
+      },
+      {
+        id: "pool-geo-2",
+        genre: "図形",
+        topic: "円周角の定理",
+        subTopic: "円に内接する四角形",
+        tags: ["頻出", "入試過去問"],
+        difficulty: 3,
+        estimatedSeconds: 120,
+        questionText: "下の図で四角形\\( ABCD \\)は円に内接している。\\( \\angle x \\)の大きさを求めよ。",
+        answer: "\\( \\angle x = 105^\\circ \\)",
+        explanation: "円に内接する四角形の対角の和は\\( 180^\\circ \\)であるから、\\( 180^\\circ - 75^\\circ = 105^\\circ \\)。",
+        defaultPoints: 12,
+        figureSvg: `<svg viewBox="0 0 140 100" class="w-24 h-18 stroke-slate-800 fill-none stroke-2 shrink-0">
+          <circle cx="70" cy="50" r="38" stroke-width="1.3" />
+          <polygon points="48,20 95,24 104,70 44,80" stroke-width="1.2" />
+          <text x="40" y="16" class="text-[8px] font-sans fill-slate-800 stroke-none">A</text>
+          <text x="100" y="21" class="text-[8px] font-sans fill-slate-800 stroke-none">B</text>
+          <text x="108" y="76" class="text-[8px] font-sans fill-slate-800 stroke-none">C</text>
+          <text x="35" y="86" class="text-[8px] font-sans fill-slate-800 stroke-none">D</text>
+          <text x="54" y="32" class="text-[8px] font-sans fill-indigo-700 stroke-none">75°</text>
+          <text x="90" y="68" class="text-[8px] font-sans fill-rose-600 stroke-none font-bold">x</text>
+        </svg>`
+      },
+      {
+        id: "pool-geo-3",
+        genre: "図形",
+        topic: "円周角の定理",
+        subTopic: "直径と円周角(直角)",
+        tags: ["基礎", "要暗記"],
+        difficulty: 1,
+        estimatedSeconds: 60,
+        questionText: "線分\\( AB \\)を直径とする円において、円周上の点\\( P \\)に対する\\( \\angle APB \\)の大きさは何度か。",
+        answer: "\\( 90^\\circ \\)",
+        explanation: "半円の弧に対する円周角は常に直角（90度）となります。",
+        defaultPoints: 8,
+        figureSvg: `<svg viewBox="0 0 130 80" class="w-22 h-14 stroke-slate-800 fill-none stroke-2 shrink-0">
+          <path d="M 20,55 A 42,42 0 0,1 110,55 Z" stroke-width="1.3" />
+          <line x1="20" y1="55" x2="68" y2="16" stroke-width="1.1" />
+          <line x1="110" y1="55" x2="68" y2="16" stroke-width="1.1" />
+          <text x="10" y="58" class="text-[8px] font-sans fill-slate-800 stroke-none font-bold">A</text>
+          <text x="115" y="58" class="text-[8px] font-sans fill-slate-800 stroke-none font-bold">B</text>
+          <text x="68" y="10" class="text-[8px] font-sans fill-slate-800 stroke-none font-bold">P</text>
+          <rect x="63" y="21" width="5" height="5" stroke-width="0.8" class="stroke-indigo-600" />
+        </svg>`
+      },
+      {
+        id: "pool-calc-1",
+        genre: "計算",
+        topic: "二次方程式",
+        subTopic: "因数分解による解法",
+        tags: ["計算力", "基礎"],
+        difficulty: 1,
+        estimatedSeconds: 60,
+        questionText: "二次方程式 \\( x^2 - 7x + 12 = 0 \\) を解きなさい。",
+        answer: "\\( x = 3, \\, 4 \\)",
+        explanation: "因数分解すると \\( (x - 3)(x - 4) = 0 \\) より求まる。",
+        defaultPoints: 8
+      },
+      {
+        id: "pool-calc-2",
+        genre: "計算",
+        topic: "二次方程式",
+        subTopic: "解の公式の利用",
+        tags: ["計算力", "頻出"],
+        difficulty: 2,
+        estimatedSeconds: 90,
+        questionText: "二次方程式 \\( 2x^2 + 5x - 1 = 0 \\) を解の公式を用いて解きなさい。",
+        answer: "\\( x = \\frac{-5 \\pm \\sqrt{33}}{4} \\)",
+        explanation: "\\( x = \\frac{-5 \\pm \\sqrt{5^2 - 4 \\times 2 \\times (-1)}}{2 \\times 2} = \\frac{-5 \\pm \\sqrt{33}}{4} \\)",
+        defaultPoints: 10
+      },
+      {
+        id: "pool-calc-3",
+        genre: "計算",
+        topic: "平方根",
+        subTopic: "分母の有理化と加減",
+        tags: ["計算力", "要暗記"],
+        difficulty: 2,
+        estimatedSeconds: 60,
+        questionText: "次の式を簡単にせよ: \\( \\frac{6}{\\sqrt{3}} - \\sqrt{12} \\)",
+        answer: "\\( 0 \\)",
+        explanation: "\\( \\frac{6\\sqrt{3}}{3} - 2\\sqrt{3} = 2\\sqrt{3} - 2\\sqrt{3} = 0 \\)",
+        defaultPoints: 8
+      },
+      {
+        id: "pool-sci-1",
+        genre: "理科",
+        topic: "気象観測",
+        subTopic: "気圧の単位と等圧線",
+        tags: ["要暗記", "基礎"],
+        difficulty: 1,
+        estimatedSeconds: 45,
+        questionText: "気圧（大気圧）の単位で、記号「\\( \\mathrm{hPa} \\)」で表されるものは何か。",
+        answer: "ヘクトパスカル",
+        explanation: "1hPa = 100Pa",
+        defaultPoints: 6
+      },
+      {
+        id: "pool-sci-2",
+        genre: "理科",
+        topic: "雲のでき方",
+        subTopic: "露点と飽和水蒸気量",
+        tags: ["頻出", "ミス多発"],
+        difficulty: 2,
+        estimatedSeconds: 90,
+        questionText: "空気中の水蒸気が冷やされて水滴に変わり始める温度を何というか。",
+        answer: "露点",
+        explanation: "湿度が100%に達したときの温度です。",
+        defaultPoints: 8
+      },
+      {
+        id: "pool-sci-3",
+        genre: "理科",
+        topic: "前線と天気の変化",
+        subTopic: "寒冷前線の特徴",
+        tags: ["頻出", "図解あり"],
+        difficulty: 2,
+        estimatedSeconds: 75,
+        questionText: "寒気が暖気を押し上げながら進み、積乱雲を伴って狭い範囲に激しい雨を降らせる前線は何か。",
+        answer: "寒冷前線",
+        explanation: "通過後は北寄りの風に変わり気温が下がります。",
+        defaultPoints: 8
+      },
+      {
+        id: "pool-soc-1",
+        genre: "社会",
+        topic: "アジア州",
+        subTopic: "モンスーンと稲作",
+        tags: ["基礎", "地理用語"],
+        difficulty: 1,
+        estimatedSeconds: 45,
+        questionText: "アジアで夏と冬で風向きが大きく変化し、雨の量に影響を与える風を何というか。",
+        answer: "季節風（モンスーン）",
+        explanation: "夏は海洋から、冬はユーラシア大陸から吹きます。",
+        defaultPoints: 6
+      },
+      {
+        id: "pool-soc-2",
+        genre: "社会",
+        topic: "ヨーロッパ州",
+        subTopic: "地域統合と共通通貨",
+        tags: ["時事", "頻出"],
+        difficulty: 1,
+        estimatedSeconds: 45,
+        questionText: "ヨーロッパの国々が経済・政治の結びつきを強めるために結成した組織の略称は何か。",
+        answer: "EU（ヨーロッパ連合）",
+        explanation: "共通通貨ユーロの導入や国境検査の撤廃が進められました。",
+        defaultPoints: 6
+      },
+      {
+        id: "pool-soc-3",
+        genre: "社会",
+        topic: "北アメリカ州",
+        subTopic: "適地適作と大規模農業",
+        tags: ["頻出", "農産物"],
+        difficulty: 2,
+        estimatedSeconds: 60,
+        questionText: "アメリカ合衆国でみられる、各地域の気候や土壌に適した作物を専門的に栽培する農業を何というか。",
+        answer: "適地適作",
+        explanation: "とうもろこし地帯（コーンベルト）や綿花地帯など。",
+        defaultPoints: 6
+      }
+    ];
+
+    let currentTest = {
+      title: "中3数学・理科 20分確認テスト（円周角・関数・天気）",
+      timeLimit: 20,
+      targetScore: 100,
+      sections: [
+        {
+          id: "sec-1",
+          sectionNumber: 1,
+          title: "大問1 平面図形と円周角の定理",
+          targetGenre: "図形",
+          questions: []
+        },
+        {
+          id: "sec-2",
+          sectionNumber: 2,
+          title: "大問2 方程式と計算の基礎",
+          targetGenre: "計算",
+          questions: []
+        },
+        {
+          id: "sec-3",
+          sectionNumber: 3,
+          title: "大問3 気象と天気の変化",
+          targetGenre: "理科",
+          questions: []
+        }
+      ]
+    };
+
+    let activePattern = 'B';
+    let currentSheetMode = 'student';
+    let activeGenreFilter = 'all';
+    let activeTagFilter = '';
+    let editingContext = null;
+
+    function initDefaultData() {
+      currentTest.sections[0].questions = [ getPoolById("pool-geo-1"), getPoolById("pool-geo-3") ];
+      currentTest.sections[1].questions = [ getPoolById("pool-calc-1"), getPoolById("pool-calc-3") ];
+      currentTest.sections[2].questions = [ getPoolById("pool-sci-1"), getPoolById("pool-sci-2"), getPoolById("pool-sci-3") ];
+      autoAllocate100();
+    }
+
+    function getPoolById(id) {
+      const q = questionPool.find(item => item.id === id);
+      return q ? JSON.parse(JSON.stringify(q)) : null;
+    }
+
+    function switchPattern(pattern) {
+      activePattern = pattern;
+      ['A', 'B', 'C'].forEach(p => {
+        const btn = document.getElementById(`nav-pattern-${p.toLowerCase()}`);
+        if (p === pattern) {
+          btn.className = "px-3 py-1 rounded-md text-xs font-bold transition flex items-center gap-1.5 bg-indigo-600 text-white shadow-sm";
+        } else {
+          btn.className = "px-3 py-1 rounded-md text-xs font-semibold text-slate-300 hover:text-white hover:bg-slate-700/60 transition flex items-center gap-1.5";
+        }
+      });
+
+      renderCenterPanel();
+      lucide.createIcons();
+    }
+
+    // --- 左ペイン：問題プール描画 ---
+    function renderPoolList() {
+      const list = document.getElementById('pool-questions-list');
+      list.innerHTML = '';
+
+      const query = (document.getElementById('pool-search-input')?.value || '').toLowerCase();
+
+      const filtered = questionPool.filter(q => {
+        const matchesGenre = activeGenreFilter === 'all' || q.genre === activeGenreFilter;
+        const matchesTag = !activeTagFilter || (q.tags && q.tags.includes(activeTagFilter));
+        const matchesQuery = !query || 
+          q.questionText.toLowerCase().includes(query) || 
+          q.topic.toLowerCase().includes(query) || 
+          (q.subTopic && q.subTopic.toLowerCase().includes(query)) ||
+          (q.tags && q.tags.some(t => t.toLowerCase().includes(query))) ||
+          q.answer.toLowerCase().includes(query);
+        return matchesGenre && matchesTag && matchesQuery;
+      });
+
+      document.getElementById('pool-count-badge').textContent = `${filtered.length}問 ストック中`;
+
+      filtered.forEach(q => {
+        const card = document.createElement('div');
+        card.className = "bg-white p-2.5 rounded-lg border border-slate-200 hover:border-sky-400 hover:shadow-xs transition text-xs space-y-1.5 relative group";
+        
+        const diffStars = "★".repeat(q.difficulty) + "☆".repeat(3 - q.difficulty);
+
+        card.innerHTML = `
+          <div class="flex items-start justify-between gap-1">
+            <div>
+              <div class="flex items-center gap-1.5 flex-wrap">
+                <span class="px-1.5 py-0.2 rounded text-[10px] font-bold ${getGenreBadgeClass(q.genre)}">${q.genre}</span>
+                <span class="font-bold text-slate-800 text-[11px]">${q.topic}</span>
+              </div>
+              <div class="mt-0.5 flex items-center gap-1 flex-wrap">
+                ${q.subTopic ? `
+                  <span class="text-[9px] bg-slate-100 text-slate-700 px-1 rounded font-medium border border-slate-200">
+                    論点: ${q.subTopic}
+                  </span>
+                ` : ''}
+                ${(q.tags || []).map(tag => `
+                  <span class="text-[9px] bg-amber-50 text-amber-800 border border-amber-200 px-1 rounded">#${tag}</span>
+                `).join('')}
+              </div>
+            </div>
+            <div class="flex flex-col items-end text-[9px] text-slate-400 shrink-0">
+              <span class="text-amber-500 font-mono">${diffStars}</span>
+              <span>目安 ${q.estimatedSeconds}秒</span>
+            </div>
+          </div>
+
+          <div class="text-slate-900 leading-snug font-serif text-[11px]">
+            ${escapeHtml(q.questionText)}
+          </div>
+
+          ${q.figureSvg ? `
+            <div class="bg-slate-50 p-1 rounded border border-slate-100 flex items-center justify-center">
+              ${q.figureSvg}
+            </div>
+          ` : ''}
+
+          <div class="pt-1 border-t border-slate-100 flex items-center justify-between">
+            <div class="flex items-center gap-1">
+              <span class="text-[10px] text-emerald-700 font-medium truncate max-w-[120px]">答: ${escapeHtml(q.answer)}</span>
+              <button onclick="openEditModalForPool('${q.id}')" class="text-slate-400 hover:text-indigo-600 p-0.5" title="この問題を直接手直し">
+                <i data-lucide="edit-2" class="w-3 h-3"></i>
+              </button>
+            </div>
+
+            <div class="flex items-center gap-1">
+              ${currentTest.sections.map((sec, sIdx) => `
+                <button onclick="addToSection('${q.id}', ${sIdx})" class="px-2 py-0.5 rounded bg-sky-50 hover:bg-sky-600 hover:text-white text-sky-700 text-[9px] font-bold border border-sky-200 transition" title="大問${sIdx+1}に追加">
+                  +大問${sIdx+1}
+                </button>
+              `).join('')}
+            </div>
+          </div>
+        `;
+        list.appendChild(card);
+      });
+
+      renderMathInElement(list, {
+        delimiters: [
+          {left: "\\(", right: "\\)", display: false},
+          {left: "$$", right: "$$", display: true}
+        ]
+      });
+      lucide.createIcons();
+    }
+
+    function getGenreBadgeClass(genre) {
+      if (genre === '図形') return 'bg-purple-100 text-purple-800';
+      if (genre === '計算') return 'bg-blue-100 text-blue-800';
+      if (genre === '理科') return 'bg-emerald-100 text-emerald-800';
+      if (genre === '社会') return 'bg-amber-100 text-amber-800';
+      return 'bg-slate-100 text-slate-700';
+    }
+
+    function setFilterGenre(genre) {
+      activeGenreFilter = genre;
+      document.querySelectorAll('.genre-tag').forEach(el => {
+        if (el.textContent.includes(genre) || (genre === 'all' && el.textContent.includes('すべて'))) {
+          el.className = "genre-tag active px-2 py-0.5 rounded bg-sky-600 text-white font-medium";
+        } else {
+          el.className = "genre-tag px-2 py-0.5 rounded bg-slate-200 hover:bg-slate-300 text-slate-700 font-medium";
+        }
+      });
+      renderPoolList();
+    }
+
+    function filterByTag(tag) {
+      activeTagFilter = tag;
+      renderPoolList();
+    }
+
+    function filterPoolQuestions() {
+      renderPoolList();
+    }
+
+    // --- 中央ペイン描画 ---
+    function renderCenterPanel() {
+      const container = document.getElementById('center-pattern-container');
+      container.innerHTML = '';
+
+      if (activePattern === 'A') {
+        renderCenterPatternA(container);
+      } else if (activePattern === 'B') {
+        renderCenterPatternB(container);
+      } else {
+        renderCenterPatternC(container);
+      }
+
+      updateStatusBars();
+      renderPaper();
+      renderMathInElement(container, {
+        delimiters: [
+          {left: "\\(", right: "\\)", display: false},
+          {left: "$$", right: "$$", display: true}
+        ]
+      });
+      lucide.createIcons();
+    }
+
+    // ==========================================
+    // パターンB: スロット自動充填 ＆ スワップ方式（★採用）
+    // ==========================================
+    function renderCenterPatternB(container) {
+      const autoBar = document.createElement('div');
+      autoBar.className = "bg-gradient-to-r from-indigo-50 to-purple-50 border border-indigo-200 p-2.5 rounded-lg shadow-xs";
+      autoBar.innerHTML = `
+        <div class="flex items-center justify-between mb-1.5">
+          <div class="flex items-center gap-1.5">
+            <span class="w-5 h-5 rounded-full bg-indigo-600 text-white flex items-center justify-center font-bold text-xs shadow-xs">
+              <i data-lucide="sparkles" class="w-3 h-3 text-amber-300"></i>
+            </span>
+            <div>
+              <div class="text-xs font-bold text-indigo-950">スロット最適化エンジン</div>
+              <div class="text-[9px] text-slate-500">20分（100点満点）に合わせてサブ論点(st)の重複を自動回避</div>
+            </div>
+          </div>
+        </div>
+        <div class="flex items-center gap-2">
+          <button onclick="smartAutoFillAll()" class="flex-1 py-1 px-2.5 rounded bg-indigo-600 hover:bg-indigo-700 text-white text-xs font-bold shadow-xs transition flex items-center justify-center gap-1">
+            <i data-lucide="wand-2" class="w-3 h-3"></i>
+            <span>プールから最適問題を一括充填</span>
+          </button>
+          <button onclick="autoAllocate100()" class="py-1 px-2.5 rounded bg-white border border-indigo-300 text-indigo-700 hover:bg-indigo-50 text-xs font-semibold shadow-2xs transition">
+            100点均等割
+          </button>
+        </div>
+      `;
+      container.appendChild(autoBar);
+
+      // スロット一覧
+      currentTest.sections.forEach((sec, sIdx) => {
+        const secBox = document.createElement('div');
+        secBox.className = "bg-white rounded-lg border border-slate-200 shadow-xs overflow-hidden";
+
+        const secPoints = sec.questions.reduce((sum, q) => sum + (Number(q.defaultPoints) || 0), 0);
+
+        secBox.innerHTML = `
+          <div class="px-3 py-1.5 bg-slate-50 border-b border-slate-200 flex items-center justify-between">
+            <div class="flex items-center gap-1.5">
+              <span class="font-bold text-xs bg-indigo-100 text-indigo-800 px-1.5 py-0.2 rounded">大問 ${sec.sectionNumber}</span>
+              <span class="text-xs font-bold text-slate-800">${sec.title}</span>
+            </div>
+            <span class="text-[10px] text-slate-500 font-mono">計 ${secPoints}点 (${sec.questions.length}問)</span>
+          </div>
+
+          <div class="p-2 space-y-1.5">
+            ${sec.questions.length === 0 ? `
+              <div class="py-3 text-center text-slate-400 text-xs border border-dashed border-slate-200 rounded">
+                問題がありません。左のプールから追加するか一括充填を押してください
+              </div>
+            ` : sec.questions.map((q, qIdx) => `
+              <div id="slot-item-${sIdx}-${qIdx}" class="p-2 rounded-lg border border-slate-200 bg-slate-50/50 hover:bg-white transition text-xs relative group shadow-2xs">
+                
+                <div class="flex items-start justify-between gap-1 mb-1">
+                  <div class="flex items-center gap-1.5 flex-wrap">
+                    <span class="font-bold text-indigo-700 text-xs shrink-0">(${qIdx+1})</span>
+                    ${q.subTopic ? `
+                      <span class="text-[9px] font-semibold text-indigo-800 bg-indigo-50 border border-indigo-200 px-1.5 py-0.2 rounded">
+                        論点: ${q.subTopic}
+                      </span>
+                    ` : ''}
+                    ${(q.tags || []).map(tag => `
+                      <span class="text-[9px] bg-amber-50 text-amber-800 border border-amber-200 px-1 rounded">#${tag}</span>
+                    `).join('')}
+                  </div>
+                  
+                  <div class="flex items-center gap-1 shrink-0">
+                    <input type="number" min="1" max="50" value="${q.defaultPoints}" onchange="updateQuestionPoint(${sIdx}, ${qIdx}, this.value)" class="w-10 text-center font-bold text-xs border border-slate-300 rounded py-0.5">
+                    <span class="text-[10px] text-slate-400">点</span>
+                  </div>
+                </div>
+
+                <div class="text-slate-800 font-serif leading-snug pl-3.5 mb-1">${escapeHtml(q.questionText)}</div>
+                <div class="text-[10px] text-emerald-700 font-medium pl-3.5 mb-1">答: ${escapeHtml(q.answer)}</div>
+
+                ${q.figureSvg ? `
+                  <div class="my-1 bg-white p-1 rounded border border-slate-100 max-w-[130px] mx-auto scale-90">
+                    ${q.figureSvg}
+                  </div>
+                ` : ''}
+
+                <div class="pt-1 border-t border-slate-200/80 flex items-center justify-between text-[10px]">
+                  <span class="text-slate-400 font-mono text-[9px]">${q.topic}</span>
+                  <div class="flex items-center gap-1.5">
+                    <button onclick="swapQuestionWithRandomPool(${sIdx}, ${qIdx})" class="px-2 py-0.5 rounded bg-indigo-100 hover:bg-indigo-600 hover:text-white text-indigo-700 font-bold transition flex items-center gap-1 shadow-2xs">
+                      <i data-lucide="refresh-cw" class="w-3 h-3"></i>
+                      <span>差し替え</span>
+                    </button>
+                    <button onclick="openEditModalForSection(${sIdx}, ${qIdx})" class="px-2 py-0.5 rounded bg-slate-100 hover:bg-slate-200 text-slate-700 font-medium transition flex items-center gap-1 border border-slate-200">
+                      <i data-lucide="edit-3" class="w-3 h-3"></i>
+                      <span>編集</span>
+                    </button>
+                    <button onclick="removeFromSection(${sIdx}, ${qIdx})" class="px-2 py-0.5 rounded bg-rose-50 hover:bg-rose-600 hover:text-white text-rose-600 font-medium transition flex items-center gap-1 border border-rose-200">
+                      <i data-lucide="trash-2" class="w-3 h-3"></i>
+                      <span>削除</span>
+                    </button>
+                  </div>
+                </div>
+              </div>
+            `).join('')}
+
+            <div class="flex justify-end pt-0.5">
+              <button onclick="addSlotToSection(${sIdx})" class="text-[10px] font-semibold text-indigo-600 hover:text-indigo-800 flex items-center gap-1">
+                <i data-lucide="plus" class="w-3 h-3"></i>
+                <span>この大問に空きスロットを追加</span>
+              </button>
+            </div>
+          </div>
+        `;
+        container.appendChild(secBox);
+      });
+    }
+
+    // ==========================================
+    // パターンA: カートピックアップ方式
+    // ==========================================
+    function renderCenterPatternA(container) {
+      const headerBox = document.createElement('div');
+      headerBox.className = "bg-sky-50 border border-sky-200 p-2 rounded-lg text-xs flex items-center justify-between";
+      headerBox.innerHTML = `
+        <div class="flex items-center gap-1.5 text-sky-900 font-medium">
+          <i data-lucide="shopping-cart" class="w-3.5 h-3.5 text-sky-600"></i>
+          <span>左の問題プールから「+大問」を押して追加してください</span>
+        </div>
+        <button onclick="clearAllTestQuestions()" class="text-[10px] text-rose-600 hover:underline">全クリア</button>
+      `;
+      container.appendChild(headerBox);
+
+      currentTest.sections.forEach((sec, sIdx) => {
+        const secBox = document.createElement('div');
+        secBox.className = "bg-white rounded-lg border border-slate-200 shadow-xs overflow-hidden";
+        const secPoints = sec.questions.reduce((sum, q) => sum + (Number(q.defaultPoints) || 0), 0);
+        
+        secBox.innerHTML = `
+          <div class="px-3 py-1.5 bg-slate-50 border-b border-slate-200 flex items-center justify-between">
+            <span class="font-bold text-xs text-slate-800">大問 ${sec.sectionNumber}: ${sec.title}</span>
+            <span class="text-[10px] text-slate-500 font-mono">計 ${secPoints}点 (${sec.questions.length}問)</span>
+          </div>
+          <div class="p-2 space-y-1.5 divide-y divide-slate-100">
+            ${sec.questions.length === 0 ? `
+              <div class="py-3 text-center text-slate-400 text-xs border border-dashed border-slate-200 rounded">
+                問題がありません
+              </div>
+            ` : sec.questions.map((q, qIdx) => `
+              <div class="pt-1 flex items-start justify-between gap-2 text-xs">
+                <div class="flex items-start gap-1 flex-1">
+                  <span class="font-bold text-slate-400">(${qIdx+1})</span>
+                  <div>
+                    <span class="text-slate-800">${escapeHtml(q.questionText)}</span>
+                    <div class="text-[10px] text-emerald-700 font-medium">答: ${escapeHtml(q.answer)}</div>
+                  </div>
+                </div>
+                <div class="flex items-center gap-1.5 shrink-0">
+                  <input type="number" value="${q.defaultPoints}" onchange="updateQuestionPoint(${sIdx}, ${qIdx}, this.value)" class="w-10 text-center text-xs border border-slate-200 rounded py-0.5">
+                  <span class="text-[10px] text-slate-400">点</span>
+                  <button onclick="removeFromSection(${sIdx}, ${qIdx})" class="px-1.5 py-0.5 rounded bg-rose-50 text-rose-600 hover:bg-rose-600 hover:text-white border border-rose-200 flex items-center gap-0.5 text-[10px]">
+                    <i data-lucide="trash-2" class="w-3 h-3"></i>
+                    <span>削除</span>
+                  </button>
+                </div>
+              </div>
+            `).join('')}
+          </div>
+        `;
+        container.appendChild(secBox);
+      });
+    }
+
+    // ==========================================
+    // パターンC: 類題 ＆ 難易度ガチャ方式
+    // ==========================================
+    function renderCenterPatternC(container) {
+      const banner = document.createElement('div');
+      banner.className = "bg-emerald-50 border border-emerald-200 p-2 rounded-lg text-xs";
+      banner.innerHTML = `
+        <div class="flex items-center gap-1.5 text-emerald-900 font-bold mb-0.5">
+          <i data-lucide="dices" class="w-3.5 h-3.5 text-emerald-600"></i>
+          <span>類題・難易度ガチャモード</span>
+        </div>
+        <p class="text-[10px] text-slate-600">各問の「🎲 類題（数値替え）」「⬆️ 難易度+1」「⬇️ 難易度-1」を押してバリエーションを瞬時に生成できます。</p>
+      `;
+      container.appendChild(banner);
+
+      currentTest.sections.forEach((sec, sIdx) => {
+        const secBox = document.createElement('div');
+        secBox.className = "bg-white rounded-lg border border-slate-200 shadow-xs overflow-hidden";
+        
+        secBox.innerHTML = `
+          <div class="px-3 py-1.5 bg-slate-50 border-b border-slate-200 flex items-center justify-between">
+            <span class="font-bold text-xs text-slate-800">大問 ${sec.sectionNumber}: ${sec.title}</span>
+            <span class="text-[10px] text-slate-500">${sec.questions.length}問</span>
+          </div>
+          <div class="p-2 space-y-1.5">
+            ${sec.questions.map((q, qIdx) => {
+              const diffStars = "★".repeat(q.difficulty || 2) + "☆".repeat(3 - (q.difficulty || 2));
+              return `
+                <div class="p-2 rounded-lg border border-emerald-100 bg-white shadow-2xs space-y-1.5 text-xs">
+                  <div class="flex items-start justify-between">
+                    <div>
+                      <span class="font-bold text-emerald-700">(${qIdx+1}) ${q.topic}</span>
+                      ${q.subTopic ? `<span class="text-[9px] bg-slate-100 text-slate-600 px-1 rounded ml-1">${q.subTopic}</span>` : ''}
+                    </div>
+                    <span class="text-amber-500 font-mono text-[9px] font-bold">難易度: ${diffStars}</span>
+                  </div>
+                  <div class="text-slate-800 font-serif leading-snug">${escapeHtml(q.questionText)}</div>
+                  <div class="text-[10px] text-emerald-700 font-medium">答: ${escapeHtml(q.answer)}</div>
+
+                  <div class="pt-1 border-t border-slate-100 flex items-center justify-between">
+                    <span class="text-[10px] text-slate-400">${q.defaultPoints}点</span>
+                    <div class="flex items-center gap-1">
+                      <button onclick="mutateQuestionVariant(${sIdx}, ${qIdx}, 'similar')" class="px-2 py-0.5 rounded bg-emerald-100 hover:bg-emerald-600 hover:text-white text-emerald-800 text-[9px] font-bold transition flex items-center gap-1">
+                        <i data-lucide="shuffle" class="w-2.5 h-2.5"></i>
+                        <span>🎲 類題</span>
+                      </button>
+                      <button onclick="mutateQuestionVariant(${sIdx}, ${qIdx}, 'harder')" class="px-2 py-0.5 rounded bg-rose-50 hover:bg-rose-600 hover:text-white text-rose-700 text-[9px] font-bold transition">
+                        ⬆️ 難度+1
+                      </button>
+                      <button onclick="mutateQuestionVariant(${sIdx}, ${qIdx}, 'easier')" class="px-2 py-0.5 rounded bg-sky-50 hover:bg-sky-600 hover:text-white text-sky-700 text-[9px] font-bold transition">
+                        ⬇️ 難度-1
+                      </button>
+                      <button onclick="removeFromSection(${sIdx}, ${qIdx})" class="px-1.5 py-0.5 rounded bg-rose-50 text-rose-600 hover:bg-rose-600 hover:text-white border border-rose-200 text-[9px] flex items-center gap-0.5">
+                        <i data-lucide="trash-2" class="w-3 h-3"></i>
+                        <span>削除</span>
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              `;
+            }).join('')}
+          </div>
+        `;
+        container.appendChild(secBox);
+      });
+    }
+
+    function smartAutoFillAll() {
+      const geoPool = questionPool.filter(q => q.genre === "図形");
+      currentTest.sections[0].questions = [
+        JSON.parse(JSON.stringify(geoPool[0])),
+        JSON.parse(JSON.stringify(geoPool[1] || geoPool[0]))
+      ];
+
+      const calcPool = questionPool.filter(q => q.genre === "計算");
+      currentTest.sections[1].questions = [
+        JSON.parse(JSON.stringify(calcPool[0])),
+        JSON.parse(JSON.stringify(calcPool[1] || calcPool[0]))
+      ];
+
+      const sciPool = questionPool.filter(q => q.genre === "理科");
+      currentTest.sections[2].questions = [
+        JSON.parse(JSON.stringify(sciPool[0])),
+        JSON.parse(JSON.stringify(sciPool[1])),
+        JSON.parse(JSON.stringify(sciPool[2]))
+      ];
+
+      autoAllocate100();
+      renderCenterPanel();
+    }
+
+    function swapQuestionWithRandomPool(sIdx, qIdx) {
+      const currentQ = currentTest.sections[sIdx].questions[qIdx];
+      const targetGenre = currentTest.sections[sIdx].targetGenre || currentQ.genre;
+
+      let candidates = questionPool.filter(q => q.genre === targetGenre && q.id !== currentQ.id);
+      if (candidates.length === 0) {
+        candidates = questionPool.filter(q => q.id !== currentQ.id);
+      }
+
+      if (candidates.length > 0) {
+        const nextQ = candidates[Math.floor(Math.random() * candidates.length)];
+        const oldPoints = currentQ.defaultPoints;
+        const cloned = JSON.parse(JSON.stringify(nextQ));
+        cloned.defaultPoints = oldPoints;
+
+        currentTest.sections[sIdx].questions[qIdx] = cloned;
+        renderCenterPanel();
+
+        setTimeout(() => {
+          const el = document.getElementById(`slot-item-${sIdx}-${qIdx}`);
+          if (el) el.classList.add('swap-highlight');
+        }, 50);
+      }
+    }
+
+    function openEditModalForSection(sIdx, qIdx) {
+      editingContext = { type: 'section', sIdx, qIdx };
+      const q = currentTest.sections[sIdx].questions[qIdx];
+      populateEditModal(q);
+    }
+
+    function openEditModalForPool(poolId) {
+      editingContext = { type: 'pool', poolId };
+      const q = questionPool.find(item => item.id === poolId);
+      populateEditModal(q);
+    }
+
+    function populateEditModal(q) {
+      if (!q) return;
+      document.getElementById('edit-q-text').value = q.questionText || '';
+      document.getElementById('edit-q-answer').value = q.answer || '';
+      document.getElementById('edit-q-points').value = q.defaultPoints || 10;
+      document.getElementById('edit-q-explanation').value = q.explanation || '';
+      document.getElementById('edit-q-subtopic').value = q.subTopic || '';
+      document.getElementById('edit-q-tags').value = (q.tags || []).join(', ');
+      document.getElementById('edit-question-modal').classList.remove('hidden');
+    }
+
+    function closeEditModal() {
+      document.getElementById('edit-question-modal').classList.add('hidden');
+      editingContext = null;
+    }
+
+    function saveEditedQuestion() {
+      if (!editingContext) return;
+
+      const newText = document.getElementById('edit-q-text').value.trim();
+      const newAns = document.getElementById('edit-q-answer').value.trim();
+      const newPoints = Number(document.getElementById('edit-q-points').value) || 10;
+      const newExp = document.getElementById('edit-q-explanation').value.trim();
+      const newSub = document.getElementById('edit-q-subtopic').value.trim();
+      const rawTags = document.getElementById('edit-q-tags').value.trim();
+      const newTags = rawTags ? rawTags.split(',').map(t => t.trim()).filter(Boolean) : [];
+
+      if (editingContext.type === 'section') {
+        const target = currentTest.sections[editingContext.sIdx].questions[editingContext.qIdx];
+        target.questionText = newText;
+        target.answer = newAns;
+        target.defaultPoints = newPoints;
+        target.explanation = newExp;
+        target.subTopic = newSub;
+        target.tags = newTags;
+
+        const poolItem = questionPool.find(p => p.id === target.id);
+        if (poolItem) {
+          poolItem.questionText = newText;
+          poolItem.answer = newAns;
+          poolItem.explanation = newExp;
+          poolItem.subTopic = newSub;
+          poolItem.tags = newTags;
+        }
+      } else {
+        const poolItem = questionPool.find(p => p.id === editingContext.poolId);
+        if (poolItem) {
+          poolItem.questionText = newText;
+          poolItem.answer = newAns;
+          poolItem.defaultPoints = newPoints;
+          poolItem.explanation = newExp;
+          poolItem.subTopic = newSub;
+          poolItem.tags = newTags;
+        }
+      }
+
+      closeEditModal();
+      renderPoolList();
+      renderCenterPanel();
+    }
+
+    function mutateQuestionVariant(sIdx, qIdx, type) {
+      const q = currentTest.sections[sIdx].questions[qIdx];
+      if (type === 'similar') {
+        if (q.topic === "円周角の定理") {
+          q.questionText = "下の図において、点\\( O \\)は円の中心である。中心角が\\( 84^\\circ \\)のとき、\\( \\angle x \\)の大きさを求めよ。";
+          q.answer = "\\( \\angle x = 42^\\circ \\)";
+          q.explanation = "中心角84度の半分で42度。";
+        } else if (q.topic.includes("方程式")) {
+          q.questionText = "二次方程式 \\( x^2 - 8x + 15 = 0 \\) を解きなさい。";
+          q.answer = "\\( x = 3, \\, 5 \\)";
+          q.explanation = "\\( (x-3)(x-5)=0 \\) より求まる。";
+        } else {
+          q.questionText += "（※類題バリエーションB）";
+        }
+      } else if (type === 'harder') {
+        q.difficulty = Math.min((q.difficulty || 2) + 1, 3);
+        q.questionText = "【発展】" + q.questionText.replace("【発展】", "");
+      } else if (type === 'easier') {
+        q.difficulty = Math.max((q.difficulty || 2) - 1, 1);
+        q.questionText = q.questionText.replace("【発展】", "");
+      }
+      renderCenterPanel();
+    }
+
+    function addSlotToSection(sIdx) {
+      const poolCandidates = questionPool.filter(q => q.genre === currentTest.sections[sIdx].targetGenre);
+      const chosen = poolCandidates[0] || questionPool[0];
+      currentTest.sections[sIdx].questions.push(JSON.parse(JSON.stringify(chosen)));
+      autoAllocate100();
+      renderCenterPanel();
+    }
+
+    function addToSection(poolId, sIdx) {
+      const q = getPoolById(poolId);
+      if (q) {
+        currentTest.sections[sIdx].questions.push(q);
+        autoAllocate100();
+        renderCenterPanel();
+      }
+    }
+
+    // 削除処理（中央およびプレビューの双方から呼出し可能）
+    function removeFromSection(sIdx, qIdx) {
+      currentTest.sections[sIdx].questions.splice(qIdx, 1);
+      autoAllocate100();
+      renderCenterPanel();
+    }
+
+    function clearAllTestQuestions() {
+      currentTest.sections.forEach(s => s.questions = []);
+      autoAllocate100();
+      renderCenterPanel();
+    }
+
+    function updateQuestionPoint(sIdx, qIdx, val) {
+      currentTest.sections[sIdx].questions[qIdx].defaultPoints = Number(val) || 0;
+      updateStatusBars();
+      renderPaper();
+    }
+
+    function autoAllocate100() {
+      let totalQ = 0;
+      currentTest.sections.forEach(s => totalQ += s.questions.length);
+      if (totalQ === 0) return;
+
+      const base = Math.floor(100 / totalQ);
+      let remainder = 100 % totalQ;
+
+      currentTest.sections.forEach(s => {
+        s.questions.forEach(q => {
+          if (remainder > 0) {
+            q.defaultPoints = base + 1;
+            remainder--;
+          } else {
+            q.defaultPoints = base;
+          }
+        });
+      });
+
+      updateStatusBars();
+      renderPaper();
+    }
+
+    function updateStatusBars() {
+      let totalScore = 0;
+      let totalSeconds = 0;
+      let totalQ = 0;
+
+      currentTest.sections.forEach(s => {
+        s.questions.forEach(q => {
+          totalScore += Number(q.defaultPoints) || 0;
+          totalSeconds += Number(q.estimatedSeconds) || 60;
+          totalQ++;
+        });
+      });
+
+      const totalMinutes = Math.round(totalSeconds / 60);
+      document.getElementById('center-time-label').textContent = `${totalMinutes}分`;
+
+      const badge = document.getElementById('center-score-badge');
+      const progress = document.getElementById('center-progress');
+      const pct = Math.min(Math.max((totalScore / 100) * 100, 0), 100);
+      progress.style.width = pct + '%';
+
+      if (totalScore === 100) {
+        badge.className = "px-2 py-0.2 rounded-full text-[11px] font-bold bg-emerald-100 text-emerald-800 border border-emerald-300";
+        badge.textContent = "100点 (ジャスト)";
+        progress.className = "bg-emerald-600 h-full transition-all duration-300";
+      } else if (totalScore < 100) {
+        badge.className = "px-2 py-0.2 rounded-full text-[11px] font-bold bg-amber-100 text-amber-800 border border-amber-300";
+        badge.textContent = `${totalScore}点 (残り${100 - totalScore}点)`;
+        progress.className = "bg-amber-500 h-full transition-all duration-300";
+      } else {
+        badge.className = "px-2 py-0.2 rounded-full text-[11px] font-bold bg-rose-100 text-rose-800 border border-rose-300";
+        badge.textContent = `${totalScore}点 (${totalScore - 100}点超過)`;
+        progress.className = "bg-rose-500 h-full transition-all duration-300";
+      }
+    }
+
+    // --- 【右ペイン】A4用紙プレビュー（余白極小設計 ＆ プレビュー上直接削除ボタン搭載） ---
+    function renderPaper() {
+      document.getElementById('paper-title').textContent = currentTest.title;
+      const content = document.getElementById('paper-content');
+      content.innerHTML = '';
+
+      const teacherBadge = document.getElementById('teacher-badge');
+      if (currentSheetMode === 'teacher') {
+        teacherBadge.classList.remove('hidden');
+      } else {
+        teacherBadge.classList.add('hidden');
+      }
+
+      currentTest.sections.forEach((sec, sIdx) => {
+        if (sec.questions.length === 0) return;
+
+        const secBlock = document.createElement('div');
+        secBlock.className = "question-block mb-3";
+
+        let html = `
+          <!-- 大問タイトル（余白引き締め） -->
+          <div class="flex items-baseline justify-between border-b border-slate-800 pb-0.5 mb-1.5">
+            <h3 class="font-bold text-[11px] text-slate-900 tracking-tight font-serif">${escapeHtml(sec.title)}</h3>
+          </div>
+          <div class="space-y-2">
+        `;
+
+        sec.questions.forEach((q, qIdx) => {
+          html += `
+            <!-- 各設問ブロック（ホバーでプレビュー直接削除ボタンが出現） -->
+            <div class="question-block text-[11px] leading-snug relative group p-1 -m-1 rounded hover:bg-slate-50 transition border border-transparent hover:border-slate-200">
+              
+              <!-- ★ プレビュー上からの直接操作ツールバー（印刷時は自動非表示） ★ -->
+              <div class="no-print preview-action-btn absolute right-1 -top-1 hidden group-hover:flex items-center gap-1 bg-white/95 backdrop-blur border border-slate-300 rounded shadow-xs px-1 py-0.5 z-10">
+                <button onclick="swapQuestionWithRandomPool(${sIdx}, ${qIdx})" class="text-indigo-600 hover:text-indigo-800 p-0.5" title="差し替え">
+                  <i data-lucide="refresh-cw" class="w-3 h-3"></i>
+                </button>
+                <button onclick="openEditModalForSection(${sIdx}, ${qIdx})" class="text-slate-600 hover:text-slate-900 p-0.5" title="編集">
+                  <i data-lucide="edit-3" class="w-3 h-3"></i>
+                </button>
+                <button onclick="removeFromSection(${sIdx}, ${qIdx})" class="text-rose-500 hover:text-rose-700 p-0.5" title="この問題を削除">
+                  <i data-lucide="trash-2" class="w-3 h-3"></i>
+                </button>
+              </div>
+
+              <!-- 問題テキスト & 図形（横並びにして縦スペースを極限まで節約） -->
+              <div class="flex items-start justify-between gap-2">
+                <div class="flex-1 space-y-0.5">
+                  <div class="flex items-start gap-1">
+                    <span class="font-bold text-slate-800 shrink-0">(${qIdx + 1})</span>
+                    <span class="text-slate-900 font-serif">${escapeHtml(q.questionText)}</span>
+                    <span class="text-[9px] text-slate-400 shrink-0 font-sans">[${q.defaultPoints}点]</span>
+                  </div>
+
+                  <!-- 生徒用解答欄（タイトなインライン下線） -->
+                  ${currentSheetMode === 'student' ? `
+                    <div class="pt-0.5 flex justify-end">
+                      <div class="flex items-center gap-1">
+                        <span class="text-[8px] text-slate-500">答</span>
+                        <div class="border-b border-slate-600 w-28 h-3.5"></div>
+                      </div>
+                    </div>
+                  ` : `
+                    <div class="mt-0.5 bg-rose-50 border border-rose-200 rounded px-1.5 py-0.5 text-[9px] leading-tight">
+                      <div class="flex items-center gap-1 text-rose-800 font-bold">
+                        <span class="text-[7px] bg-rose-200 px-1 py-0.2 rounded text-rose-900">模範解答</span>
+                        <span>${escapeHtml(q.answer)}</span>
+                      </div>
+                      ${q.explanation ? `<div class="text-[8px] text-slate-600 mt-0.5 pl-1 border-l border-rose-300">${escapeHtml(q.explanation)}</div>` : ''}
+                    </div>
+                  `}
+                </div>
+
+                <!-- SVG図形（横並びで右側に小さく配置し、縦余白を一切潰さない） -->
+                ${q.figureSvg ? `
+                  <div class="shrink-0 bg-white p-0.5 rounded border border-slate-100 flex items-center justify-center">
+                    ${q.figureSvg}
+                  </div>
+                ` : ''}
+              </div>
+
+            </div>
+          `;
+        });
+
+        html += `</div>`;
+        secBlock.innerHTML = html;
+        content.appendChild(secBlock);
+      });
+
+      renderMathInElement(content, {
+        delimiters: [
+          {left: "\\(", right: "\\)", display: false},
+          {left: "$$", right: "$$", display: true}
+        ]
+      });
+      lucide.createIcons();
+    }
+
+    function setSheetMode(mode) {
+      currentSheetMode = mode;
+      const tabStudent = document.getElementById('tab-student');
+      const tabTeacher = document.getElementById('tab-teacher');
+
+      if (mode === 'student') {
+        tabStudent.className = "px-3 py-1 text-xs font-bold rounded bg-indigo-600 text-white flex items-center gap-1 transition shadow-xs";
+        tabTeacher.className = "px-3 py-1 text-xs font-bold rounded text-slate-600 hover:bg-slate-100 flex items-center gap-1 transition";
+      } else {
+        tabTeacher.className = "px-3 py-1 text-xs font-bold rounded bg-emerald-600 text-white flex items-center gap-1 transition shadow-xs";
+        tabStudent.className = "px-3 py-1 text-xs font-bold rounded text-slate-600 hover:bg-slate-100 flex items-center gap-1 transition";
+      }
+      renderPaper();
+    }
+
+    function updateTitle(val) {
+      currentTest.title = val;
+      renderPaper();
+    }
+
+    function openAiIngestModal() {
+      document.getElementById('ai-ingest-modal').classList.remove('hidden');
+    }
+    function closeAiIngestModal() {
+      document.getElementById('ai-ingest-modal').classList.add('hidden');
+    }
+    function executeAiIngest() {
+      const text = document.getElementById('ingest-raw-text').value.trim();
+      if (!text) {
+        alert("JSONを入力してください。");
+        return;
+      }
+      try {
+        const cleaned = text.replace(/```json/g, '').replace(/```/g, '').trim();
+        const parsed = JSON.parse(cleaned);
+        const list = Array.isArray(parsed) ? parsed : [parsed];
+
+        list.forEach((item, idx) => {
+          questionPool.unshift({
+            id: "pool-imported-" + Date.now() + "-" + idx,
+            genre: item.g || "一般",
+            topic: item.t || "単元未設定",
+            subTopic: item.st || "基本",
+            tags: Array.isArray(item.tg) ? item.tg : (item.tags || ["新規"]),
+            difficulty: item.d || 2,
+            estimatedSeconds: item.s || 60,
+            questionText: item.q || "問題文",
+            answer: item.a || "",
+            explanation: item.e || "",
+            figureSvg: item.svg || undefined,
+            defaultPoints: item.d === 3 ? 12 : (item.d === 2 ? 10 : 8)
+          });
+        });
+
+        closeAiIngestModal();
+        renderPoolList();
+        alert(`Mini-JSONから ${list.length}問 を問題プールに正常追加しました！`);
+      } catch (err) {
+        alert("JSONの解析に失敗しました。形式をご確認ください。\n" + err.message);
+      }
+    }
+
+    function escapeHtml(str) {
+      if (!str) return '';
+      return String(str).replace(/[&<>"']/g, m => ({
+        '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;'
+      })[m]);
+    }
+
+    window.addEventListener('DOMContentLoaded', () => {
+      initDefaultData();
+      switchPattern('B');
+      renderPoolList();
+    });
+  </script>
+</body>
+</html>

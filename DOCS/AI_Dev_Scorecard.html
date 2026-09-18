@@ -1,0 +1,553 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AI協働開発 採点表</title>
+<style>
+  :root{
+    color-scheme: light dark;
+    --bg:#F6F3EC;
+    --surface:#FFFFFF;
+    --surface-2:#EFEAE0;
+    --ink:#2B2620;
+    --ink-soft:#6E6459;
+    --rule:#DED6C7;
+    --accent:#B23A2E;
+    --accent-soft:#F3DED9;
+    --indigo:#3B5286;
+    --indigo-soft:#DFE5F0;
+    --shadow: 0 1px 2px rgba(43,38,32,0.06);
+  }
+  @media (prefers-color-scheme: dark){
+    :root:not([data-theme="light"]){
+      --bg:#1B1815;
+      --surface:#242019;
+      --surface-2:#2D2820;
+      --ink:#EFE9DF;
+      --ink-soft:#B5AA9A;
+      --rule:#3B352C;
+      --accent:#E2685A;
+      --accent-soft:#3A211D;
+      --indigo:#8EA3D0;
+      --indigo-soft:#232A3C;
+      --shadow: 0 1px 2px rgba(0,0,0,0.35);
+    }
+  }
+  :root[data-theme="dark"]{
+    --bg:#1B1815;
+    --surface:#242019;
+    --surface-2:#2D2820;
+    --ink:#EFE9DF;
+    --ink-soft:#B5AA9A;
+    --rule:#3B352C;
+    --accent:#E2685A;
+    --accent-soft:#3A211D;
+    --indigo:#8EA3D0;
+    --indigo-soft:#232A3C;
+    --shadow: 0 1px 2px rgba(0,0,0,0.35);
+  }
+
+  *{box-sizing:border-box;}
+  html,body{ margin:0; padding:0; }
+  body{
+    background:var(--bg);
+    color:var(--ink);
+    font-family:'Zen Kaku Gothic New','Hiragino Kaku Gothic ProN','Yu Gothic',sans-serif;
+    line-height:1.85;
+    font-size:16px;
+    -webkit-font-smoothing:antialiased;
+  }
+  img{ max-width:100%; }
+  h1,h2,h3{
+    font-family:'Shippori Mincho',Georgia,'Hiragino Mincho ProN',serif;
+    text-wrap:balance;
+    line-height:1.4;
+    color:var(--ink);
+    font-weight:600;
+  }
+  .mono, .num{
+    font-family:'JetBrains Mono',ui-monospace,SFMono-Regular,Consolas,monospace;
+    font-variant-numeric:tabular-nums;
+  }
+  a{ color:var(--accent); }
+
+  .wrap{
+    max-width:760px;
+    margin:0 auto;
+    padding:56px 24px 96px;
+  }
+
+  /* ---- Header ---- */
+  header{
+    margin-bottom:40px;
+  }
+  .eyebrow{
+    font-family:'JetBrains Mono',monospace;
+    font-size:12.5px;
+    letter-spacing:0.08em;
+    color:var(--ink-soft);
+    text-transform:uppercase;
+    margin-bottom:14px;
+  }
+  h1{
+    font-size:clamp(28px,5vw,38px);
+    margin:0 0 10px;
+  }
+  .lede{
+    color:var(--ink-soft);
+    font-size:16px;
+    max-width:56ch;
+  }
+  .meta-row{
+    display:flex;
+    gap:18px;
+    flex-wrap:wrap;
+    margin-top:18px;
+    font-size:13.5px;
+    color:var(--ink-soft);
+  }
+  .meta-row span{ display:inline-flex; align-items:center; gap:6px; }
+  .meta-row b{ color:var(--ink); font-weight:600; }
+
+  /* ---- Score stamp hero ---- */
+  .hero{
+    display:flex;
+    align-items:center;
+    gap:32px;
+    padding:32px;
+    background:var(--surface);
+    border:1px solid var(--rule);
+    border-radius:6px;
+    box-shadow:var(--shadow);
+    margin-bottom:44px;
+  }
+  .stamp{
+    flex:none;
+    width:132px;
+    height:132px;
+    position:relative;
+  }
+  .stamp svg{ width:100%; height:100%; display:block; }
+  .stamp-score{
+    position:absolute;
+    inset:0;
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    justify-content:center;
+  }
+  .stamp-score .n{
+    font-family:'Shippori Mincho',serif;
+    font-size:40px;
+    font-weight:800;
+    color:var(--accent);
+    line-height:1;
+  }
+  .stamp-score .d{
+    font-size:12px;
+    color:var(--ink-soft);
+    margin-top:2px;
+    letter-spacing:0.04em;
+  }
+  .hero-text h2{
+    font-size:19px;
+    margin:0 0 8px;
+  }
+  .hero-text p{
+    margin:0;
+    color:var(--ink-soft);
+    font-size:15px;
+  }
+
+  section{ margin-bottom:52px; }
+  .section-title{
+    display:flex;
+    align-items:baseline;
+    gap:12px;
+    margin-bottom:20px;
+  }
+  .section-title h2{
+    font-size:22px;
+    margin:0;
+    white-space:nowrap;
+  }
+  .section-title .rule{
+    flex:1;
+    height:1px;
+    background:var(--rule);
+  }
+  section > p.intro{
+    color:var(--ink-soft);
+    margin-top:-8px;
+    margin-bottom:24px;
+    max-width:62ch;
+  }
+
+  /* ---- Score axes ---- */
+  .axis{
+    padding:16px 0;
+    border-bottom:1px solid var(--rule);
+  }
+  .axis:last-child{ border-bottom:none; }
+  .axis-head{
+    display:flex;
+    justify-content:space-between;
+    align-items:baseline;
+    gap:16px;
+    margin-bottom:8px;
+  }
+  .axis-head .name{ font-weight:700; font-size:15.5px; }
+  .axis-head .score{
+    font-size:14px;
+    color:var(--ink-soft);
+    flex:none;
+  }
+  .axis-head .score b{ color:var(--accent); font-size:16px; }
+  .bar-track{
+    height:6px;
+    background:var(--surface-2);
+    border-radius:3px;
+    overflow:hidden;
+    margin-bottom:10px;
+  }
+  .bar-fill{
+    height:100%;
+    background:var(--indigo);
+    border-radius:3px;
+  }
+  .axis-note{
+    font-size:14.5px;
+    color:var(--ink-soft);
+  }
+  .axis-note .ref{
+    font-family:'JetBrains Mono',monospace;
+    font-size:12px;
+    background:var(--surface-2);
+    padding:1px 6px;
+    border-radius:3px;
+    color:var(--ink);
+    white-space:nowrap;
+  }
+
+  /* ---- Good points ---- */
+  .good-list{ list-style:none; padding:0; margin:0; display:grid; gap:14px; }
+  .good-list li{
+    display:grid;
+    grid-template-columns:auto 1fr;
+    gap:14px;
+    padding:14px 16px;
+    background:var(--surface);
+    border:1px solid var(--rule);
+    border-left:3px solid var(--indigo);
+    border-radius:4px;
+  }
+  .good-list .ref{
+    font-family:'JetBrains Mono',monospace;
+    font-size:12px;
+    color:var(--indigo);
+    padding-top:2px;
+    white-space:nowrap;
+  }
+  .good-list p{ margin:0; font-size:15px; }
+
+  /* ---- Mechanism deep-dives (karte cards) ---- */
+  .karte{
+    background:var(--surface);
+    border:1px solid var(--rule);
+    border-radius:6px;
+    margin-bottom:22px;
+    box-shadow:var(--shadow);
+    overflow:hidden;
+  }
+  .karte-head{
+    display:flex;
+    align-items:center;
+    gap:12px;
+    padding:16px 20px;
+    background:var(--surface-2);
+    border-bottom:1px solid var(--rule);
+  }
+  .karte-num{
+    font-family:'JetBrains Mono',monospace;
+    font-size:12px;
+    color:var(--accent);
+    border:1px solid var(--accent);
+    border-radius:999px;
+    width:26px;
+    height:26px;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    flex:none;
+  }
+  .karte-head h3{
+    font-size:17px;
+    margin:0;
+    flex:1;
+  }
+  .karte-head .ref{
+    font-family:'JetBrains Mono',monospace;
+    font-size:12px;
+    color:var(--ink-soft);
+    white-space:nowrap;
+  }
+  .karte-body{ padding:18px 20px 20px; }
+  .karte-row{ margin-bottom:14px; }
+  .karte-row:last-child{ margin-bottom:0; }
+  .karte-label{
+    font-size:12px;
+    font-weight:700;
+    letter-spacing:0.05em;
+    color:var(--accent);
+    margin-bottom:5px;
+    text-transform:uppercase;
+  }
+  .karte-row.mech .karte-label{ color:var(--indigo); }
+  .karte-row.skill .karte-label{ color:#3C7A5A; }
+  .karte-row p{ margin:0; font-size:15px; }
+  .karte-row code{
+    font-family:'JetBrains Mono',monospace;
+    font-size:0.88em;
+    background:var(--surface-2);
+    padding:1px 5px;
+    border-radius:3px;
+  }
+
+  /* ---- Roadmap checklist ---- */
+  .roadmap{ list-style:none; padding:0; margin:0; counter-reset:step; }
+  .roadmap li{
+    counter-increment:step;
+    position:relative;
+    padding:16px 16px 16px 54px;
+    border-bottom:1px solid var(--rule);
+  }
+  .roadmap li:last-child{ border-bottom:none; }
+  .roadmap li::before{
+    content:counter(step);
+    position:absolute;
+    left:0;
+    top:14px;
+    width:32px;
+    height:32px;
+    border:1.5px solid var(--accent);
+    color:var(--accent);
+    border-radius:50%;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    font-family:'JetBrains Mono',monospace;
+    font-size:13px;
+    font-weight:700;
+  }
+  .roadmap p{ margin:0; font-size:15px; }
+  .roadmap strong{ font-weight:700; }
+
+  footer{
+    margin-top:64px;
+    padding-top:20px;
+    border-top:1px solid var(--rule);
+    font-size:13px;
+    color:var(--ink-soft);
+  }
+
+  @media (max-width:600px){
+    .hero{ flex-direction:column; text-align:center; }
+    .axis-head{ flex-direction:column; align-items:flex-start; gap:4px; }
+  }
+
+  @media print{
+    body{ background:#fff; color:#000; }
+    .karte, .hero, .good-list li{ box-shadow:none; }
+  }
+</style>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Shippori+Mincho:wght@500;600;800&family=Zen+Kaku+Gothic+New:wght@400;500;700&family=JetBrains+Mono:wght@400;500;700&display=swap">
+</head>
+<body>
+<div class="wrap">
+
+  <header>
+    <div class="eyebrow">mini-test-maker &middot; DOCS/Quiz_Maker_Implementation_Log.md 精読</div>
+    <h1>AI協働開発 採点表</h1>
+    <p class="lede">2026年9月4日〜9月11日、全32エントリの開発日誌をもとに、AIパートナーとの協働開発を7軸で採点し、仕組みレベルまで踏み込んだ技術フィードバックをまとめた。</p>
+    <div class="meta-row">
+      <span>対象期間 <b>2026/09/04 &ndash; 09/11</b></span>
+      <span>ログ件数 <b class="num">32</b></span>
+      <span>総合スコア <b class="num">82 / 100</b></span>
+    </div>
+  </header>
+
+  <div class="hero">
+    <div class="stamp">
+      <svg viewBox="0 0 132 132">
+        <circle cx="66" cy="66" r="58" fill="none" stroke="var(--accent)" stroke-width="4" opacity="0.85"/>
+        <circle cx="66" cy="66" r="50" fill="none" stroke="var(--accent)" stroke-width="1.5" opacity="0.4"/>
+      </svg>
+      <div class="stamp-score">
+        <div class="n num">82</div>
+        <div class="d">/ 100点</div>
+      </div>
+    </div>
+    <div class="hero-text">
+      <h2>初速の空回り一回を除けば、対話駆動・後方互換規律に優れた高速開発</h2>
+      <p>スキーマ拡張・UX転換のたびにユーザーとすり合わせ、後方互換を一度も壊さなかった設計規律は高水準。一方で「ビルドが通る」ことと「実際に正しく動く」ことの間に3件のギャップがあり、ユーザーの手元で発覚した。この下の「仕組み精読」がその原因と、次に活かすための技術的な理解を掘り下げる本題。</p>
+    </div>
+  </div>
+
+  <section>
+    <div class="section-title"><h2>評価軸別スコア</h2><div class="rule"></div></div>
+
+    <div class="axis">
+      <div class="axis-head"><span class="name">設計・アーキテクチャ</span><span class="score"><b class="num">9</b> / 10</span></div>
+      <div class="bar-track"><div class="bar-fill" style="width:90%"></div></div>
+      <p class="axis-note">Mini-JSONの短縮キー（<code>gr</code> <code>tb</code> <code>tg</code> <code>al</code> <code>ly</code> <code>origQ</code> <code>selIdx</code>）を8回近く追加しながら、既存データを一度も壊していない。 <span class="ref">§15 §16 §21 §22 §30</span></p>
+    </div>
+
+    <div class="axis">
+      <div class="axis-head"><span class="name">実装スループット</span><span class="score"><b class="num">9</b> / 10</span></div>
+      <div class="bar-track"><div class="bar-fill" style="width:90%"></div></div>
+      <p class="axis-note">1週間で32件。CRUD・印刷・改ページ・枝問抽出エンジンまで到達した。</p>
+    </div>
+
+    <div class="axis">
+      <div class="axis-head"><span class="name">記録・ドキュメンテーション</span><span class="score"><b class="num">9</b> / 10</span></div>
+      <div class="bar-track"><div class="bar-fill" style="width:90%"></div></div>
+      <p class="axis-note">「常にログを残せ」という指示以降、日付・要望・原因分析・実装・検証のフォーマットを一貫して維持。 <span class="ref">§17以降</span></p>
+    </div>
+
+    <div class="axis">
+      <div class="axis-head"><span class="name">対話・要件すり合わせ</span><span class="score"><b class="num">8</b> / 10</span></div>
+      <div class="bar-track"><div class="bar-fill" style="width:80%"></div></div>
+      <p class="axis-note">初日に相談なしでコマンドを叩こうとしたが即座に復帰。以降の大転換はすべて選択肢提示から着手。 <span class="ref">§2 §4</span></p>
+    </div>
+
+    <div class="axis">
+      <div class="axis-head"><span class="name">自己修正力・反省の透明性</span><span class="score"><b class="num">8</b> / 10</span></div>
+      <div class="bar-track"><div class="bar-fill" style="width:80%"></div></div>
+      <p class="axis-note">失敗を隠さず「手戻り・反省記」として言語化する姿勢が一貫している。</p>
+    </div>
+
+    <div class="axis">
+      <div class="axis-head"><span class="name">スコープ管理</span><span class="score"><b class="num">8</b> / 10</span></div>
+      <div class="bar-track"><div class="bar-fill" style="width:80%"></div></div>
+      <p class="axis-note">「最小限の改修で」という依頼に過剰実装せず対応し、余計な自動配置は素直に撤廃した。 <span class="ref">§21 §25</span></p>
+    </div>
+
+    <div class="axis">
+      <div class="axis-head"><span class="name">検証の徹底度</span><span class="score"><b class="num">6</b> / 10</span></div>
+      <div class="bar-track"><div class="bar-fill" style="width:60%"></div></div>
+      <p class="axis-note">毎回<code>npm run build</code>とスクショ確認をしているが、それでも3件のバグをユーザーが最初に発見した。以下で詳しく扱う。 <span class="ref">§10 §17 §31</span></p>
+    </div>
+  </section>
+
+  <section>
+    <div class="section-title"><h2>良かった点</h2><div class="rule"></div></div>
+    <ul class="good-list">
+      <li><span class="ref">§4</span><p>「人間は選択するだけにしたい」という抽象的な要望から、AI抜き取り→プール蓄積→人間選択という分離構造を導き、3パターンのモックを作って選ばせた提案の質が高かった。</p></li>
+      <li><span class="ref">§17 §27</span><p>window.confirmのブロック問題や印刷時のクリッピングなど、対症療法で終わらせず「なぜ起きたか」まで特定してから直している。</p></li>
+      <li><span class="ref">§25</span><p>「大問を追加した時は空にしておく」という指摘に対し、便利だと思って入れていた自動配置機能を言い訳せず撤廃した。</p></li>
+    </ul>
+  </section>
+
+  <section>
+    <div class="section-title"><h2>仕組み精読 &mdash; なぜ起きたか</h2><div class="rule"></div></div>
+    <p class="intro">「仕組みに精通したAIエンジニア」になるうえで一番効くのは、バグを直して終わりにせず、その背後にあるブラウザやランタイムの機構まで理解すること。ログに現れた6つの事象を、症状・仕組み・次に活かす視点の3段で掘り下げる。</p>
+
+    <div class="karte">
+      <div class="karte-head">
+        <span class="karte-num">1</span>
+        <h3>window.confirm はなぜブロックされたか</h3>
+        <span class="ref">§17 §18</span>
+      </div>
+      <div class="karte-body">
+        <div class="karte-row"><div class="karte-label">症状</div><p><code>window.confirm</code>による削除確認が常に<code>false</code>判定になり、削除処理が中断していた。</p></div>
+        <div class="karte-row mech"><div class="karte-label">仕組み</div><p><code>confirm</code>/<code>alert</code>/<code>prompt</code>はJSの実行を同期的に止める「ブロッキングダイアログ」で、呼び出し中はイベントループ全体が止まる。Chromeは同一タブから短時間に連続してこれらが呼ばれると「このページはこれ以上ダイアログを表示できません」として以後を無条件にブロックする仕様を持っており、拡張機能やページの状態次第でも抑止される。さらにPuppeteerのような自動操作環境ではデフォルトでダイアログに応答できず、そもそも動作しない。Reactのような非同期の再描画前提のフレームワークと、同期でスレッドを止めるAPIは設計思想が根本的に噛み合っていない。</p></div>
+        <div class="karte-row skill"><div class="karte-label">次に活きる視点</div><p>同期ブロッキング系のブラウザAPI（<code>confirm</code>/<code>alert</code>/<code>prompt</code>、同期XHR）は「レガシーで使用禁止」と最初から扱い、確認UIは常に自前のモーダルコンポーネントで設計する。イベントループの基礎（マイクロタスク・マクロタスクと、同期呼び出しがそれらをどう塞ぐか）を理解していると、この種の不具合は実装前に避けられる。</p></div>
+      </div>
+    </div>
+
+    <div class="karte">
+      <div class="karte-head">
+        <span class="karte-num">2</span>
+        <h3>不正バイト列はどこから来たか</h3>
+        <span class="ref">§31</span>
+      </div>
+      <div class="karte-body">
+        <div class="karte-row"><div class="karte-label">症状</div><p><code>lib/subItemUtils.ts</code>に不正なバイト列が混入し、開発サーバー起動時にパースエラーが発生した。</p></div>
+        <div class="karte-row mech"><div class="karte-label">仕組み</div><p>ソースファイルはUTF-8のバイト列として保存されているが、JS文字列はランタイム内部ではUTF-16で扱われる。全角括弧や丸数字のような非ASCII文字をコピー＆ペーストする経路（別エンコーディングのクリップボード、PDFからの抽出、一部のAI出力）で、Unicodeのコードポイントとしては正しくてもUTF-8のバイト列としては壊れた並びが紛れ込むことがある。ツールによってはこれを黙って置換文字（U+FFFD）に変換し、TypeScriptのコンパイラやNode.jsのファイル読み込みはそれを前提に読むため、症状が「起動時のパースエラー」という遠い場所で出る。加えて<code>[...str.matchAll(regex)]</code>のようなイテレータのスプレッドは、TypeScriptのコンパイル対象（<code>tsconfig.json</code>の<code>target</code>/<code>lib</code>）によってはダウンレベル変換がうまくいかず、実行時に落ちることがある&mdash;文字コードの問題とは別系統の罠として同時に踏んでいる。</p></div>
+        <div class="karte-row skill"><div class="karte-label">次に活きる視点</div><p>Unicodeコードポイント・UTF-8バイト列・JS内部表現(UTF-16)の3層を区別して理解しておくと、「表示は正しいのに保存すると壊れる」系の不具合の当たりが早くつく。あわせて<code>tsconfig.json</code>の<code>target</code>/<code>lib</code>が何をポリフィル・ダウンレベルするか（イテレータプロトコルなど）を一度確認しておくと、同種の実行時エラーを事前に避けられる。</p></div>
+      </div>
+    </div>
+
+    <div class="karte">
+      <div class="karte-head">
+        <span class="karte-num">3</span>
+        <h3>SVG座標は目分量ではなく制約から導く</h3>
+        <span class="ref">§10</span>
+      </div>
+      <div class="karte-body">
+        <div class="karte-row"><div class="karte-label">症状</div><p>「円に内接する四角形」の初期SVG座標が目分量で、頂点が円周上からズレていた。</p></div>
+        <div class="karte-row mech"><div class="karte-label">仕組み</div><p>円周上の点は <code>(x-cx)&sup2; + (y-cy)&sup2; = r&sup2;</code> という制約を満たす必要がある。目分量で座標を置くとこの制約は見た目上わずかにしか崩れないため、レンダリング結果を見ただけでは気づきにくい。修正では中心(80,60)・半径50の円に対し、ピタゴラス数（14&sup2;+48&sup2;=50&sup2;、30&sup2;+40&sup2;=50&sup2;）を使って整数座標を機械的に導出している&mdash;これは「円周上の格子点を求める」という典型的なテクニックで、目分量を排除して制約そのものをコードに落とし込んだ好例。</p></div>
+        <div class="karte-row skill"><div class="karte-label">次に活きる視点</div><p>座標・配点・日付計算など「守るべき制約」がある数値は、たとえ一度きりの値であっても目分量で置かず、制約を満たす式（またはそれを検算する一行）をコードとして残す。「導出できる値は導出する、推測しない」という姿勢はこの案件に限らない一般原則。</p></div>
+      </div>
+    </div>
+
+    <div class="karte">
+      <div class="karte-head">
+        <span class="karte-num">4</span>
+        <h3>「ビルドが通る」が保証する範囲とテストピラミッド</h3>
+        <span class="ref">§10 §17 §31</span>
+      </div>
+      <div class="karte-body">
+        <div class="karte-row"><div class="karte-label">症状</div><p>毎回<code>npm run build</code>のエラー0件を確認しているにもかかわらず、3件のバグはユーザーが最初に踏んでいる。</p></div>
+        <div class="karte-row mech"><div class="karte-label">仕組み</div><p><code>tsc</code>やバンドラのビルド成功が保証するのは「型が整合している」「構文が正しい」「モジュール解決ができる」ことだけで、正規表現が意図した文字列にマッチするか、DOMが期待通り更新されるか、ブラウザ固有の挙動（印刷エンジン・ダイアログの抑止）がどう振る舞うかは一切検証しない。この案件の「検証」は実質的に型検査とスクリーンショット目視の2層のみで、その中間にあるべき「関数単体が期待通りの入出力を返すか」を機械的に固定する層（ユニットテスト）が存在しない。特に<code>parseSubItems</code>や<code>fuzzySearchMatch</code>のような正規表現主体のロジックは、入力パターンの数だけ分岐が増え、目視確認だけでは網羅しきれない。</p></div>
+        <div class="karte-row skill"><div class="karte-label">次に活きる視点</div><p>テストピラミッド（ユニット→結合→E2E/手動確認）という考え方を持ち、<code>lib/</code>配下の純粋関数のような「入力→出力が決定的」なコードから優先的にユニットテストを敷く。今回踏んだ3件のバグは、いずれも代表的な入力ケースを数行のテストとして固定していれば型検査の段階で拾えていた種類のもの。</p></div>
+      </div>
+    </div>
+
+    <div class="karte">
+      <div class="karte-head">
+        <span class="karte-num">5</span>
+        <h3>Undo実装：スナップショット方式とコマンドパターン</h3>
+        <span class="ref">§18</span>
+      </div>
+      <div class="karte-body">
+        <div class="karte-row"><div class="karte-label">症状</div><p><code>Ctrl+Z</code>のUndoを、変更直前の状態をまるごと配列に積む<code>testHistory</code>スタックで実装している。</p></div>
+        <div class="karte-row mech"><div class="karte-label">仕組み</div><p>Undo実装には大きく2方式ある。ひとつは今回採用された「スナップショット方式」で、変更のたびに状態全体のコピーを履歴に積み、戻すときはそのコピーに丸ごと差し替える。実装が単純な反面、状態が大きいほどメモリを消費する。もうひとつは「コマンドパターン」で、変更そのものではなく変更の逆操作（例：追加なら削除、削除なら復元に必要な情報）だけを履歴に積む。メモリ効率は良いが、すべての操作に逆操作を書く必要があり実装コストが高い。今回はテストデータがJSON数十問程度で状態サイズが小さいため、スナップショット方式を選んだのは規模に対して正しい判断だった。</p></div>
+        <div class="karte-row skill"><div class="karte-label">次に活きる視点</div><p>Undoを実装するたびに「このデータ規模ならどちらが妥当か」を毎回一から考えるのではなく、判断基準（状態サイズ・操作の可逆性コスト・実装工数）を一度言語化しておくと、次にUndoが必要な機能が出たときに即決できる。</p></div>
+      </div>
+    </div>
+
+    <div class="karte">
+      <div class="karte-head">
+        <span class="karte-num">6</span>
+        <h3>印刷はスクリーンとは別のレンダリングパイプライン</h3>
+        <span class="ref">§27 §28</span>
+      </div>
+      <div class="karte-body">
+        <div class="karte-row"><div class="karte-label">症状</div><p>2ページ目以降が印刷されない、B4の2in1印刷でレイアウトが崩れる、という不具合が連続して発生した。</p></div>
+        <div class="karte-row mech"><div class="karte-label">仕組み</div><p>ブラウザの印刷は「CSS Paged Media」という、画面表示とは別のレンダリング仕様に従う。親要素の<code>overflow:hidden</code>や<code>height</code>固定は画面上はスクロールで隠れているだけに見えても、印刷エンジンはページ送りの計算をする前にその制約をそのまま適用するため、2枚目以降がまるごと切り捨てられる。用紙サイズや向きは<code>@page { size: ... }</code>という別のat-ruleで制御され、通常のレイアウトCSSとは独立している。2in1縮小印刷はOS/プリンタドライバ側がA4の完成形を機械的に縮小して並べるだけなので、A4自体の寸法（<code>210mm &times; 297mm</code>）を<code>!important</code>で固定してブラウザ・アプリ側の計算揺れを排除したのが正しい対処。</p></div>
+        <div class="karte-row skill"><div class="karte-label">次に活きる視点</div><p>「画面で正しく見える」ことと「印刷で正しく出る」ことは別のレンダリング経路だと最初から意識し、印刷対応が要件に入った時点で早めに<code>@media print</code>と実際の印刷プレビュー（Ctrl+P）で検証する。CSS Paged Mediaの仕様（<code>@page</code>、<code>break-before</code>/<code>break-after</code>、<code>overflow</code>の扱い）を一度通読しておくと勘に頼らず原因特定できる。</p></div>
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <div class="section-title"><h2>次への学習ロードマップ</h2><div class="rule"></div></div>
+    <ol class="roadmap">
+      <li><p><strong>lib/配下にVitestを導入する。</strong> <code>parseSubItems</code> <code>fuzzySearchMatch</code> <code>generateSectionTitleFromQuestions</code> <code>pageUtils</code>の重み計算など、正規表現・文字列処理主体の純粋関数から着手する。まずは既に踏んだ3件のバグ（UTF-8混入、全角括弧誤検出、範囲表記の誤補正）を再現するケースをテストとして固定すると、投資対効果が高い。</p></li>
+      <li><p><strong>文字コードの基礎を一度体系的に読む。</strong> Unicodeコードポイント・UTF-8バイト列・JS内部のUTF-16表現の関係と、TypeScriptの<code>target</code>/<code>lib</code>設定が何をダウンレベルするかを押さえておく。</p></li>
+      <li><p><strong>同期ブロッキング系ブラウザAPIを「使用禁止リスト」として明文化する。</strong> <code>confirm</code>/<code>alert</code>/<code>prompt</code>や同期XHRは最初からカスタムUIで代替する方針をデフォルトにする。</p></li>
+      <li><p><strong>CSS Paged Mediaの仕様を一度通読する。</strong> <code>@page</code>、<code>break-after</code>、印刷時の<code>overflow</code>の扱いを理解しておき、印刷まわりの不具合が出た時に勘ではなく原典に当たれるようにする。</p></li>
+      <li><p><strong>Undoのスナップショット方式とコマンドパターンの使い分け基準を一度言語化する。</strong> 状態サイズ・操作の可逆性コスト・実装工数のどれを優先するかを決めておくと、次にUndoが必要になった時に即決できる。</p></li>
+      <li><p><strong>スキーマの「加算的後方互換」が通用する限界を見極めておく。</strong> フィールドの意味変更や削除が必要になった時点で加算方式は破綻するため、その時のための簡易マイグレーション戦略を今のうちに一行メモしておく。</p></li>
+    </ol>
+  </section>
+
+  <footer>
+    元データ: <code>DOCS/Quiz_Maker_Implementation_Log.md</code>（全32エントリ、2026/09/04&ndash;09/11）。§番号は日誌内の見出し番号に対応。
+  </footer>
+
+</div>
+</body>
+</html>

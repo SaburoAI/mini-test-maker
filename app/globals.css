@@ -1,26 +1,140 @@
 @import "tailwindcss";
 
-:root {
-  --background: #ffffff;
-  --foreground: #171717;
+/* A4用紙実寸アスペクト比プレビュー（余白を詰めたタイト組版） */
+.a4-sheet {
+  width: 210mm;
+  min-height: 297mm;
+  background: white;
+  box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1), 0 8px 10px -6px rgba(0, 0, 0, 0.1);
+  margin: 0 auto;
+  padding: 10mm 12mm;
+  box-sizing: border-box;
+  position: relative;
 }
 
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+/* B4見開き用紙（横向き 364mm x 257mm, 2in1見開き組版） */
+.b4-sheet {
+  width: 364mm;
+  min-height: 257mm;
+  background: white;
+  box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1), 0 8px 10px -6px rgba(0, 0, 0, 0.1);
+  margin: 0 auto;
+  padding: 8mm 10mm;
+  box-sizing: border-box;
+  position: relative;
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
+/* 2段組レイアウト（カラム間隔もタイト化） */
+.print-columns {
+  column-count: 2;
+  column-gap: 6mm;
+  column-rule: 1px dashed #cbd5e1;
+}
+
+.question-block {
+  break-inside: avoid;
+  page-break-inside: avoid;
+}
+
+/* スワップ時のハイライトアニメーション */
+.swap-highlight {
+  animation: flash-highlight 0.6s ease-out;
+}
+@keyframes flash-highlight {
+  0% { background-color: rgba(99, 102, 241, 0.25); transform: scale(0.99); }
+  100% { background-color: transparent; transform: scale(1); }
+}
+
+/* 印刷時のCSS（複数ページ対応 ＆ 2in1・B4印刷最適化） */
+@media print {
+  @page {
+    size: auto;
+    margin: 0mm;
   }
-}
 
-body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  html, body {
+    width: 100% !important;
+    height: auto !important;
+    min-height: 100% !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    background: white !important;
+    overflow: visible !important;
+    -webkit-print-color-adjust: exact !important;
+    print-color-adjust: exact !important;
+  }
+
+  /* 親コンテナのスクロールや切り捨て（overflow: hidden）を根こそぎ解除 */
+  body, main, div, section, article {
+    overflow: visible !important;
+    height: auto !important;
+  }
+
+  .no-print, .preview-action-btn {
+    display: none !important;
+  }
+
+  /* A4用紙 印刷時スタイル（1ページごとに独立した論理ページとして出力） */
+  .a4-sheet {
+    box-sizing: border-box !important;
+    width: 210mm !important;
+    max-width: 210mm !important;
+    min-height: 297mm !important;
+    height: 297mm !important;
+    max-height: 297mm !important;
+    margin: 0 auto !important;
+    padding: 10mm 12mm !important;
+    box-shadow: none !important;
+    border: none !important;
+    background: white !important;
+    page-break-inside: avoid !important;
+    break-inside: avoid !important;
+    page-break-after: always !important;
+    break-after: page !important;
+    display: flex !important;
+    flex-direction: column !important;
+    justify-content: space-between !important;
+    position: relative !important;
+  }
+
+  .a4-sheet:last-child {
+    page-break-after: auto !important;
+    break-after: auto !important;
+  }
+
+  /* B4見開き用紙 印刷時スタイル（横向き 364mm x 257mm に左P・右Pを左右等倍配置） */
+  .b4-sheet {
+    box-sizing: border-box !important;
+    zoom: 1 !important;
+    transform: none !important;
+    width: 364mm !important;
+    min-width: 364mm !important;
+    max-width: 364mm !important;
+    min-height: 257mm !important;
+    height: 257mm !important;
+    max-height: 257mm !important;
+    margin: 0 auto !important;
+    padding: 7mm 8mm !important;
+    box-shadow: none !important;
+    border: none !important;
+    background: white !important;
+    page-break-inside: avoid !important;
+    break-inside: avoid !important;
+    page-break-after: always !important;
+    break-after: page !important;
+    display: grid !important;
+    grid-template-columns: 1fr 1fr !important;
+    gap: 8mm !important;
+    position: relative !important;
+  }
+
+  .b4-sheet:last-child {
+    page-break-after: auto !important;
+    break-after: auto !important;
+  }
+
+  .question-block {
+    page-break-inside: avoid !important;
+    break-inside: avoid !important;
+  }
 }

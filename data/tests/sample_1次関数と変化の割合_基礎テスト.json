@@ -1,0 +1,256 @@
+{
+  "id": "test-default-1",
+  "title": "附属中２年　英語Lesson4　単元プレテスト",
+  "subject": "数学",
+  "totalTargetPoints": 100,
+  "sections": [
+    {
+      "id": "sec-1",
+      "title": "大問１　【三省堂】令和7年度版 「NEW CROWN」 Lesson 4-1・【三省堂】令和7年度版 「NEW CROWN」 Lesson 4-2（単語・語句のまとめ）",
+      "targetPoints": 50,
+      "questions": [
+        {
+          "id": "imported-json-1789563737391-0",
+          "grade": "中2",
+          "textbook": "東京書籍 新しい数学",
+          "genre": "英語",
+          "topic": "【三省堂】令和7年度版 「NEW CROWN」 Lesson 4-1",
+          "subTopic": "単語・語句のまとめ",
+          "tags": [
+            "単語",
+            "意味",
+            "つづり"
+          ],
+          "difficulty": 1,
+          "estimatedSeconds": 60,
+          "questionText": "次の表の空所(1)〜(3)に適する英語または日本語を書きなさい。\n・billion：( ① )\n・directly：( ② )\n・more than：( ③ )",
+          "answer": "① 10億 ② 直接に ③ …より多くの[…以上]",
+          "answerLabels": [
+            "①",
+            "②",
+            "③"
+          ],
+          "answerLayout": "inline",
+          "explanation": "教科書p.45-47の新出単語・重要表現です[cite: 1]。",
+          "defaultPoints": 12,
+          "originalQuestionText": "次の表の空所(1)〜(14)に適する英語または日本語を書きなさい。\n・店、商店：( ① )\n・郵便、郵便箱：( ② )\n・chart：( ③ )\n・pie chart：( ④ )\n・billion：( ⑤ )\n・drinking water：( ⑥ )\n・池：( ⑦ )\n・presentation：( ⑧ )\n・…すべきである：( ⑨ )\n・きたない、汚れた：( ⑩ )\n・directly：( ⑪ )\n・…より：( ⑫ )\n・事務所、…局：( ⑬ )\n・more than：( ⑭ )",
+          "originalAnswer": "① store [shop] ② mail [mailbox] ③ 図、表 ④ 円グラフ ⑤ 10億 ⑥ 飲料水 ⑦ pond ⑧ 発表、プレゼンテーション ⑨ should ⑩ dirty ⑪ 直接に ⑫ than ⑬ office ⑭ …より多くの[…以上]",
+          "selectedSubItemIndices": [
+            4,
+            10,
+            13
+          ]
+        },
+        {
+          "id": "imported-json-1789563737391-1",
+          "grade": "中2",
+          "textbook": "東京書籍 新しい数学",
+          "genre": "英語",
+          "topic": "【三省堂】令和7年度版 「NEW CROWN」 Lesson 4-2",
+          "subTopic": "単語・語句のまとめ",
+          "tags": [
+            "単語",
+            "意味",
+            "つづり"
+          ],
+          "difficulty": 1,
+          "estimatedSeconds": 60,
+          "questionText": "次の空所に適する英語または日本語を書きなさい。\n・million：( ① )\n・available：( ② )\n・理解する、わかる：( ③ )",
+          "answer": "① 100万 ② 利用できる、入手できる ③ understand",
+          "answerLabels": [
+            "①",
+            "②",
+            "③"
+          ],
+          "explanation": "教科書p.48-49の新出単語・重要表現です[cite: 1]。",
+          "defaultPoints": 11,
+          "originalQuestionText": "次の空所に適する英語または日本語を書きなさい。\n・一歩、進歩：( ① )\n・事態、情勢：( ② )\n・laundry：( ③ )\n・tap：( ④ )\n・million：( ⑤ )\n・重要性、大切さ：( ⑥ )\n・available：( ⑦ )\n・everywhere：( ⑧ )\n・想像する、心に思い描く：( ⑨ )\n・理解する、わかる：( ⑩ )",
+          "originalAnswer": "① step ② situation ③ 洗濯（物） ④ 蛇口、水道の栓 ⑤ 100万 ⑥ importance ⑦ 利用できる、入手できる ⑧ いたる所で[に]、どこでも ⑨ imagine ⑩ understand",
+          "selectedSubItemIndices": [
+            4,
+            6,
+            9
+          ]
+        },
+        {
+          "id": "imported-json-1789563737391-2",
+          "grade": "中2",
+          "textbook": "東京書籍 新しい数学",
+          "genre": "英語",
+          "topic": "【三省堂】令和7年度版 「NEW CROWN」 Lesson 4-3",
+          "subTopic": "単語・語句のまとめ",
+          "tags": [
+            "単語",
+            "意味",
+            "つづり"
+          ],
+          "difficulty": 1,
+          "estimatedSeconds": 60,
+          "questionText": "次の空所に適する英語または日本語を書きなさい。\n・すでに、もう：( ① )\n・recycle：( ② )\n・reduce：( ③ )\n・electronic：( ④ )",
+          "answer": "① already ② 再生利用する、リサイクルする ③ 減らす ④ 電子の",
+          "answerLabels": [
+            "①",
+            "②",
+            "③",
+            "④"
+          ],
+          "explanation": "教科書p.50-51の新出単語・重要表現です[cite: 1]。",
+          "defaultPoints": 11,
+          "originalQuestionText": "次の空所に適する英語または日本語を書きなさい。\n・note：( ① )\n・graph：( ② )\n・産物、製品：( ③ )\n・goods：( ④ )\n・すでに、もう：( ⑤ )\n・地球：( ⑥ )\n・空気、大気：( ⑦ )\n・救う、助ける：( ⑧ )\n・recycle：( ⑨ )\n・reuse：( ⑩ )\n・reduce：( ⑪ )\n・electronic：( ⑫ )",
+          "originalAnswer": "① メモ、記録 ② グラフ ③ product ④ 品物、商品 ⑤ already ⑥ earth ⑦ air ⑧ save ⑨ 再生利用する、リサイクルする ⑩ 再利用する ⑪ 減らす ⑫ 電子の",
+          "selectedSubItemIndices": [
+            4,
+            8,
+            10,
+            11
+          ]
+        },
+        {
+          "id": "imported-json-1789563737391-3",
+          "grade": "中2",
+          "textbook": "東京書籍 新しい数学",
+          "genre": "英語",
+          "topic": "【三省堂】令和7年度版 「NEW CROWN」 Lesson 4-4",
+          "subTopic": "単語・語句のまとめ",
+          "tags": [
+            "単語",
+            "意味",
+            "つづり"
+          ],
+          "difficulty": 1,
+          "estimatedSeconds": 60,
+          "questionText": "次の空所に適する英語または日本語を書きなさい。\n・climate change：( ① )\n・両方の：( ② )\n・even if ...：( ③ )",
+          "answer": "① 気候変動 ② both ③ たとえ…だとしても",
+          "answerLabels": [
+            "①",
+            "②",
+            "③"
+          ],
+          "explanation": "教科書p.52-53の新出単語・重要表現です[cite: 1]。",
+          "defaultPoints": 11,
+          "originalQuestionText": "次の空所に適する英語または日本語を書きなさい。\n・side：( ① )\n・紙：( ② )\n・問題(点)：( ③ )\n・level：( ④ )\n・handout：( ⑤ )\n・汚染：( ⑥ )\n・climate change：( ⑦ )\n・地球温暖化：( ⑧ )\n・上昇、増加：( ⑨ )\n・寄付する：( ⑩ )\n・両方の：( ⑪ )\n・白紙の、何も書いてない：( ⑫ )\n・environmental：( ⑬ )\n・even if ...：( ⑭ )",
+          "originalAnswer": "① 側、面 ② paper ③ issue [problem] ④ 水準、レベル ⑤ 配布物、プリント ⑥ pollution ⑦ 気候変動 ⑧ global warming ⑨ rise ⑩ donate ⑪ both ⑫ blank ⑬ 環境の ⑭ たとえ…だとしても",
+          "originalExplanation": "教科書p.52-53の新出単語・重要表現です[cite: 1]。",
+          "selectedSubItemIndices": [
+            6,
+            10,
+            13
+          ]
+        }
+      ]
+    },
+    {
+      "id": "sec-2",
+      "title": "大問２　【三省堂】令和7年度版 「NEW CROWN」 Lesson 4（文法のまとめ：選択問題）",
+      "targetPoints": 50,
+      "questions": [
+        {
+          "id": "imported-json-1789563737391-20",
+          "grade": "中2",
+          "textbook": "東京書籍 新しい数学",
+          "genre": "英語",
+          "topic": "【三省堂】令和7年度版 「NEW CROWN」 Lesson 4",
+          "subTopic": "文法のまとめ：選択問題",
+          "tags": [
+            "選択問題",
+            "文法総合"
+          ],
+          "difficulty": 2,
+          "estimatedSeconds": 40,
+          "questionText": "次の文の( )内から適するものを選び、記号で答えなさい。\n(1) There (ア am / イ are / ウ is) an apple on the dish.\n(2) We sometimes enjoy (ア play / イ played / ウ playing) soccer.\n(3) There (ア am / イ are / ウ is) some houses around the shrine.\n(4) You (ア have / イ must / ウ should) to wear your uniform today.\n(5) Taking pictures of birds (ア am / イ are / ウ is) fun.",
+          "answer": "(1) ウ (2) ウ (3) イ (4) ア (5) ウ",
+          "explanation": "(1) an apple（単数）なので is (2) enjoy の目的語は動名詞 playing (3) some houses（複数）なので are (4) have to の形 (5) 動名詞主語は単数扱いなので is[cite: 1]。",
+          "defaultPoints": 11
+        }
+      ],
+      "page": 1
+    },
+    {
+      "id": "sec-1789564160333",
+      "title": "大問３　【三省堂】令和7年度版 「NEW CROWN」 Lesson 4・【三省堂】令和7年度版 「NEW CROWN」 Lesson 4-1（文法のまとめ：適語補充・基本文法）",
+      "targetPoints": 20,
+      "questions": [
+        {
+          "id": "imported-json-1789564387935-21",
+          "grade": "中2",
+          "textbook": "東京書籍 新しい数学",
+          "genre": "英語",
+          "topic": "【三省堂】令和7年度版 「NEW CROWN」 Lesson 4",
+          "subTopic": "文法のまとめ：適語補充",
+          "tags": [
+            "適語補充",
+            "文法総合"
+          ],
+          "difficulty": 2,
+          "estimatedSeconds": 45,
+          "questionText": "次の日本文の意味を表すように、空所に適する語を書きなさい。\n(1) あなたはそこへタクシーで行かなくてよいです。\nYou ( ① ) ( ② ) ( ③ ) go there by taxi.\n(2) その庭にはたくさんの花があります。\n( ④ ) ( ⑤ ) many flowers in the garden.\n(3) ピーターは手紙を書くことが好きです。\nPeter ( ⑥ ) ( ⑦ ) letters.\n(4) 女の子たちは先生が来た時、話すのをやめました。\nThe girls ( ⑧ ) ( ⑨ ) when the teacher came.",
+          "answer": "① don't ② have ③ to ④ There ⑤ are ⑥ likes ⑦ writing ⑧ stopped ⑨ talking",
+          "explanation": "(1) don't have to (2) There are (3) likes writing (4) stopped talking[cite: 1]。",
+          "defaultPoints": 11
+        },
+        {
+          "id": "imported-json-1789563737391-4",
+          "grade": "中2",
+          "textbook": "東京書籍 新しい数学",
+          "genre": "英語",
+          "topic": "【三省堂】令和7年度版 「NEW CROWN」 Lesson 4-1",
+          "subTopic": "基本文法",
+          "tags": [
+            "There is/are",
+            "適語補充"
+          ],
+          "difficulty": 1,
+          "estimatedSeconds": 40,
+          "questionText": "次の日本文の意味を表すように、空所に適する語を書きなさい。\n(1) テーブルの上に1本の鉛筆があります。\n( ① ) ( ② ) a pencil ( ③ ) the table.\n(2) この町にはいくつかのカフェがあります。\n( ④ ) ( ⑤ ) some cafes ( ⑥ ) this town.\n(3) いすの上にネコが2匹いますか。――はい、います。\n( ⑦ ) ( ⑧ ) two cats on the chair? ―― Yes, ( ⑨ ) ( ⑩ ).\n(4) その市には動物園がありますか。――いいえ、ありません。\n( ⑪ ) ( ⑫ ) a zoo in the city? ―― No, ( ⑬ ) ( ⑭ ).",
+          "answer": "① There ② is ③ on ④ There ⑤ are ⑥ in ⑦ Are ⑧ there ⑨ there ⑩ are ⑪ Is ⑫ there ⑬ there ⑭ isn't [is not]",
+          "explanation": "単数名詞には There is、複数名詞には There are を用います。疑問文は Is [Are] there 〜? とし、Yes, there is [are]. / No, there isn't [aren't]. で答えます[cite: 1]。",
+          "defaultPoints": 11
+        }
+      ]
+    },
+    {
+      "id": "sec-1789564165419",
+      "title": "大問４　【三省堂】令和7年度版 「NEW CROWN」 Lesson 4-4・【三省堂】令和7年度版 「NEW CROWN」 Lesson 4（表現・整序・文法のまとめ：整序問題）",
+      "targetPoints": 20,
+      "questions": [
+        {
+          "id": "imported-json-1789563737391-18",
+          "grade": "中2",
+          "textbook": "東京書籍 新しい数学",
+          "genre": "英語",
+          "topic": "【三省堂】令和7年度版 「NEW CROWN」 Lesson 4-4",
+          "subTopic": "表現・整序",
+          "tags": [
+            "並べかえ",
+            "接続詞",
+            "不定詞"
+          ],
+          "difficulty": 2,
+          "estimatedSeconds": 40,
+          "questionText": "次の日本文の意味を表すように、( )内の語(句)を並べかえなさい。\n(1) 私は地球温暖化を止めたいので、自転車を使います。\nI use a bike because (global / I / stop / warming / to / want).\n(2) たとえ時間がなくても、あなたは朝食を食べるべきです。\nYou should eat breakfast (don't / if / even / have / you / time).",
+          "answer": "(1) I use a bike because I want to stop global warming.\n(2) You should eat breakfast even if you don't have time.",
+          "explanation": "(1) because I want to stop global warming (2) even if you don't have time[cite: 1]。",
+          "defaultPoints": 11
+        },
+        {
+          "id": "imported-json-1789563737391-22",
+          "grade": "中2",
+          "textbook": "東京書籍 新しい数学",
+          "genre": "英語",
+          "topic": "【三省堂】令和7年度版 「NEW CROWN」 Lesson 4",
+          "subTopic": "文法のまとめ：整序問題",
+          "tags": [
+            "並べかえ",
+            "文法総合"
+          ],
+          "difficulty": 2,
+          "estimatedSeconds": 50,
+          "questionText": "次の日本文の意味を表すように、( )内の語(句)を並べかえなさい。\n(1) 英語を学ぶことは興味深いです。(is / learning / interesting / English).\n(2) あなたは新しいTシャツを買わなければなりません。(new / have / buy / you / a / T-shirt / to).\n(3) いすの上に帽子がありますか。(there / the chair / a cap / is / on)?\n(4) 私の両親は野菜を食べることが好きです。(eating / my parents / vegetables / like).\n(5) 私の姉はそのイヌを散歩させなくてよいです。(to / doesn't / the dog / my sister / walk / have).",
+          "answer": "(1) Learning English is interesting.\n(2) You have to buy a new T-shirt.\n(3) Is there a cap on the chair?\n(4) My parents like eating vegetables.\n(5) My sister doesn't have to walk the dog.",
+          "explanation": "(1) Learning English is ... (2) have to buy (3) Is there a cap on ... (4) like eating (5) doesn't have to walk[cite: 1]。",
+          "defaultPoints": 11
+        }
+      ]
+    }
+  ]
+}
