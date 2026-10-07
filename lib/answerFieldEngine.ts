@@ -144,8 +144,10 @@ export function analyzeAnswerFieldStructure(
       });
     }
 
-    // 2つ以上のブロックに空所記号が存在する場合、または全小問に空所がある場合
-    if (blockWithBlanksCount >= 2 || (blockWithBlanksCount >= 1 && blockWithBlanksCount === parsedSub.items.length)) {
+    // 少なくとも1ブロックが複数空所を持つ場合のみ block-blanks（階層型）と判定する。
+    // 全ブロックが空所1個ずつの場合は、単語リストなど実質フラットなリストのため item-inline（2列可）に委ねる。
+    const hasMultiBlankBlock = blockItems.some(b => b.blankLabels.length >= 2);
+    if (hasMultiBlankBlock && (blockWithBlanksCount >= 2 || (blockWithBlanksCount >= 1 && blockWithBlanksCount === parsedSub.items.length))) {
       const allLabels = blockItems.flatMap(b => b.blankLabels);
       return {
         type: "block-blanks",

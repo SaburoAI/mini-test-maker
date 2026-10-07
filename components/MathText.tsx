@@ -28,7 +28,21 @@ export const MathText: React.FC<MathTextProps> = ({ text, className = "" }) => {
     // 日本の教科書スタイル: 不等号の下の線を省略しない（\leqq, \geqq, ≦, ≧）に正規化
     const preprocessMath = (mathStr: string): string => {
       if (!mathStr) return "";
-      return mathStr
+      // 数式内の日本語は \text{} で包む（KaTeX の unicodeTextInMathMode 警告を防ぐ）。
+      // 既に \text{...} 等の中にある部分はそのまま。
+      const wrapJapanese = (s: string): string =>
+        s
+          .split(/(\\(?:text|textbf|textit|mathrm|mbox)\{[^{}]*\})/)
+          .map((seg, i) =>
+            i % 2 === 1
+              ? seg
+              : seg.replace(
+                  /[぀-ヿ㐀-鿿＀-￯]+/g,
+                  (m) => `\\text{${m}}`
+                )
+          )
+          .join("");
+      return wrapJapanese(mathStr
         .replace(/\\leq(?![a-zA-Z])/g, "\\leqq")
         .replace(/\\le(?![a-zA-Z])/g, "\\leqq")
         .replace(/\\geq(?![a-zA-Z])/g, "\\geqq")
@@ -36,7 +50,7 @@ export const MathText: React.FC<MathTextProps> = ({ text, className = "" }) => {
         .replace(/(?:<=|=<|＜＝|＝＜)/g, "\\leqq ")
         .replace(/(?:>=|=>|＞＝|＝＞)/g, "\\geqq ")
         .replace(/≦/g, "\\leqq ")
-        .replace(/≧/g, "\\geqq ");
+        .replace(/≧/g, "\\geqq "));
     };
 
     // $$ ... $$, \( ... \), $ ... $ を検出する正規表現

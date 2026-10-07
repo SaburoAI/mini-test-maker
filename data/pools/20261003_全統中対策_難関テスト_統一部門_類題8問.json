@@ -1,0 +1,229 @@
+{
+  "id": "bank_zentochu_nankan_unified_8",
+  "name": "全統中対策 難関テスト［統一部門・類題］8問（オリジナル）",
+  "description": "全統中 数学の難関パートで取れる20点ルート（確率・関数・2次方程式・空間図形の問1）の類題8問。各5点＝40点、目安約58分。2問は確率の難関テスト（作成済み）から再掲。解答は検算済みだが、配布前に講師レビューが必要。",
+  "createdAt": "2026-10-03T00:00:00.000Z",
+  "updatedAt": "2026-10-03T00:00:00.000Z",
+  "questions": [
+    {
+      "id": "hk-01",
+      "grade": "中2",
+      "textbook": "全統中対策 難関テスト（オリジナル）",
+      "genre": "数学",
+      "topic": "場合の数と確率",
+      "subTopic": "2個のさいころ・積の条件（書き出し）",
+      "tags": [
+        "全統中対策",
+        "難関テスト",
+        "統一部門",
+        "20点ルート",
+        "オリジナル",
+        "要レビュー"
+      ],
+      "difficulty": 2,
+      "estimatedSeconds": 180,
+      "questionText": "大小2個のさいころを同時に投げるとき、出る目の積が4の倍数になる確率を求めなさい。",
+      "answer": "$\\frac{5}{12}$",
+      "explanation": "全体は36通り。大きいさいころの目ごとに、小さいさいころの目を書き出す。\n大=1：小=4 の1通り\n大=2：小=2,4,6 の3通り（2×2=4、2×4=8、2×6=12）\n大=3：小=4 の1通り\n大=4：小=1〜6 の6通り\n大=5：小=4 の1通り\n大=6：小=2,4,6 の3通り（6×2=12 など）\n合計 $1+3+1+6+1+3=15$ 通り。$\\frac{15}{36}=\\frac{5}{12}$。\n【見直し】約分を忘れない。「4の倍数」は 4 の目を含むか、2か6が2回分（2と2、2と6、6と6）の2パターン。",
+      "defaultPoints": 5,
+      "answerLayout": "stacked"
+    },
+    {
+      "id": "hk-02",
+      "grade": "中3",
+      "textbook": "全統中対策 難関テスト（オリジナル）",
+      "genre": "数学",
+      "topic": "場合の数と確率",
+      "subTopic": "2次方程式と確率（本番型）",
+      "tags": [
+        "全統中対策",
+        "難関テスト",
+        "統一部門",
+        "20点ルート",
+        "オリジナル",
+        "要レビュー"
+      ],
+      "difficulty": 3,
+      "estimatedSeconds": 300,
+      "questionText": "大小2個のさいころを同時に投げ、大きいさいころの出た目を $a$、小さいさいころの出た目を $b$ とする。2次方程式 $x^2-ax+b=0$ の解がどちらも整数となる確率を求めなさい。",
+      "answer": "$\\frac{7}{36}$",
+      "explanation": "解を $m,\\ n$ とすると、解と係数の関係より $m+n=a,\\ mn=b$。$a,\\ b$ は1以上6以下の整数なので、$m,\\ n$ はどちらも正の整数。\n$m\\leqq n$ として、$b=mn\\leqq6$ かつ $a=m+n\\leqq6$ になる組を書き出す。\n(1,1)→(a,b)=(2,1)　(1,2)→(3,2)　(1,3)→(4,3)　(1,4)→(5,4)　(1,5)→(6,5)　(2,2)→(4,4)　(2,3)→(5,6)\n(1,6) は $a=7$ で不適、(2,4) は $b=8$ で不適。条件に合う $(a,\\ b)$ は7通りなので $\\frac{7}{36}$。\n【別解】36通りの $(a,\\ b)$ ごとに $x^2-ax+b=0$ を因数分解できるか調べても同じ結果になる。\n【見直し】$a,\\ b$ が同じ組を重複して数えていないか。(1,1) の組も1通りとして数えているか。",
+      "defaultPoints": 5,
+      "answerLayout": "stacked"
+    },
+    {
+      "id": "hk-03",
+      "grade": "中3",
+      "textbook": "全統中対策 難関テスト（オリジナル）",
+      "genre": "数学",
+      "topic": "関数 y=ax²",
+      "subTopic": "平行四辺形と面積",
+      "tags": [
+        "全統中対策",
+        "難関テスト",
+        "統一部門",
+        "20点ルート",
+        "オリジナル",
+        "要レビュー",
+        "関数",
+        "取る点"
+      ],
+      "difficulty": 3,
+      "estimatedSeconds": 480,
+      "questionText": "放物線 $y=x^2$ 上に2点A、Bがあり、Aの $x$ 座標は $-2$、Bの $x$ 座標は $3$ である。原点をOとする。\n(1) 四角形OABCが平行四辺形になるように点Cをとるとき、点Cの座標を求めなさい。\n(2) 平行四辺形OABCの面積を求めなさい。\n(3) 原点Oを通り、平行四辺形OABCの面積を2等分する直線の式を求めなさい。",
+      "answer": "(1) $(5,\\ 5)$　(2) $30$　(3) $y=3x$",
+      "explanation": "A$(-2,\\ 4)$、B$(3,\\ 9)$。\n(1) 平行四辺形では、O→A と C→B が同じ動きになる。点Aは点Oから $x$ 方向に $-2$、$y$ 方向に $+4$。よって Cは Bからこの動きを引いた点で、$(3-(-2),\\ 9-4)=(5,\\ 5)$。\n(2) 対角線OBで2つの三角形に分けると、△OAB の面積の2倍。△OAB は、直線ABと $y$ 軸の交点を使って求める。直線ABの傾きは $\\frac{9-4}{3-(-2)}=1$ で $y=x+6$、$y$ 軸との交点は $(0,\\ 6)$。△OAB $=\\frac12\\times6\\times(2+3)=15$。平行四辺形は $15\\times2=30$。\n(3) 面積を2等分する直線は、平行四辺形の中心（対角線OBの中点）を通る。中心は $\\left(\\frac32,\\ \\frac92\\right)$。原点とこの点を通るので $y=3x$。\n【取りにいく点】(1) は確実に取る。(2) の「対角線で三角形に分ける」まで気づけると取れる。\n【見直し】(1) の符号（$-2$ を引くので $+2$）。",
+      "defaultPoints": 5,
+      "answerLayout": "stacked",
+      "answerLabels": [
+        "(1) 点Cの座標",
+        "(2) 面積",
+        "(3) 直線の式"
+      ]
+    },
+    {
+      "id": "hk-04",
+      "grade": "中3",
+      "textbook": "全統中対策 難関テスト（オリジナル）",
+      "genre": "数学",
+      "topic": "関数 y=ax²",
+      "subTopic": "等積変形",
+      "tags": [
+        "全統中対策",
+        "難関テスト",
+        "統一部門",
+        "20点ルート",
+        "オリジナル",
+        "要レビュー",
+        "関数",
+        "取る点"
+      ],
+      "difficulty": 3,
+      "estimatedSeconds": 540,
+      "questionText": "放物線 $y=x^2$ 上に2点A、Bがあり、Aの $x$ 座標は $-1$、Bの $x$ 座標は $2$ である。原点をOとする。\n(1) 直線ABの式を求めなさい。\n(2) △OABの面積を求めなさい。\n(3) 放物線上に $x$ 座標が $2$ より大きい点Pをとり、△ABPの面積が △OABの面積の $2$ 倍になるようにする。点Pの座標を求めなさい。",
+      "answer": "(1) $y=x+2$　(2) $3$　(3) $(3,\\ 9)$",
+      "explanation": "A$(-1,\\ 1)$、B$(2,\\ 4)$。\n(1) 傾き $=\\frac{4-1}{2-(-1)}=1$、$y=x+b$ に $(-1,\\ 1)$ を代入して $b=2$。$y=x+2$。\n(2) 直線ABと $y$ 軸の交点を C$(0,\\ 2)$ とすると、△OAB $=\\frac12\\times2\\times(1+2)=3$。\n(3) 点Pの $x$ 座標を $p$ とすると $P(p,\\ p^2)$。△ABP の面積は、点Pと直線 $y=x+2$ の上下の差 $(p^2-(p+2))$ を使って、ABの $x$ の幅 $3$ を掛けた $\\frac12\\times3\\times(p^2-p-2)$ と表せる。これが $3\\times2=6$ に等しいので $p^2-p-2=4$、$p^2-p-6=0$、$(p-3)(p+2)=0$。$p>2$ より $p=3$。P$(3,\\ 9)$。\n【撤退の目安】(3) の「面積を上下の差で表す」が思いつかなければ、(1)(2) の5点を確実に取って先へ進む。\n【見直し】$x$ 座標が $2$ より大きい、という条件で $p=-2$ を捨てたか。",
+      "defaultPoints": 5,
+      "answerLayout": "stacked",
+      "answerLabels": [
+        "(1) 直線ABの式",
+        "(2) 面積",
+        "(3) 点Pの座標"
+      ]
+    },
+    {
+      "id": "hk-05",
+      "grade": "中3",
+      "textbook": "全統中対策 難関テスト（オリジナル）",
+      "genre": "数学",
+      "topic": "2次方程式",
+      "subTopic": "整数の文章題",
+      "tags": [
+        "全統中対策",
+        "難関テスト",
+        "統一部門",
+        "20点ルート",
+        "オリジナル",
+        "要レビュー",
+        "方程式",
+        "取る点"
+      ],
+      "difficulty": 3,
+      "estimatedSeconds": 360,
+      "questionText": "連続する3つの自然数がある。最も小さい数と最も大きい数の積は、中央の数の $4$ 倍より $11$ 大きい。この3つの自然数を求めなさい。",
+      "answer": "$5,\\ 6,\\ 7$",
+      "explanation": "中央の数を $x$ とすると、3つの数は $x-1,\\ x,\\ x+1$。$(x-1)(x+1)=4x+11$。展開して整理すると $x^2-4x-12=0$、$(x-6)(x+2)=0$ より $x=6,\\ -2$。自然数なので $x=6$。3つの数は $5,\\ 6,\\ 7$。\n【検算】$5\\times7=35$、$4\\times6+11=35$。\n【見直し】$x=-2$ を捨てたか。答えは中央の数ではなく3つの数。",
+      "defaultPoints": 5,
+      "answerLayout": "stacked"
+    },
+    {
+      "id": "hk-06",
+      "grade": "中3",
+      "textbook": "全統中対策 難関テスト（オリジナル）",
+      "genre": "数学",
+      "topic": "2次方程式",
+      "subTopic": "動点と面積",
+      "tags": [
+        "全統中対策",
+        "難関テスト",
+        "統一部門",
+        "20点ルート",
+        "オリジナル",
+        "要レビュー",
+        "方程式",
+        "取る点"
+      ],
+      "difficulty": 3,
+      "estimatedSeconds": 480,
+      "questionText": "長方形ABCDで、$AB=12\\,\\mathrm{cm}$、$BC=10\\,\\mathrm{cm}$ である。点PはAを出発してAB上をBまで毎秒 $2\\,\\mathrm{cm}$ の速さで、点QはBを出発してBC上をCまで毎秒 $1\\,\\mathrm{cm}$ の速さで、同時に動く。出発してから $x$ 秒後について、次の問いに答えなさい。ただし、点PがBに着くまでの間を考える。\n(1) △PBQの面積を、$x$ を使った式で表しなさい。\n(2) △PBQの面積が $8\\,\\mathrm{cm}^2$ になるときの $x$ の値をすべて求めなさい。",
+      "answer": "(1) $6x-x^2\\ (\\mathrm{cm}^2)$　(2) $x=2,\\ 4$",
+      "explanation": "(1) $PB=12-2x$、$BQ=x$。△PBQ $=\\frac12\\times(12-2x)\\times x=6x-x^2$。\n(2) $6x-x^2=8$ より $x^2-6x+8=0$、$(x-2)(x-4)=0$ で $x=2,\\ 4$。Pが $B$ に着くのは $x=6$ のときなので、どちらも条件に合う。\n【検算】$x=2$：$PB=8,\\ BQ=2$ で $8$。$x=4$：$PB=4,\\ BQ=4$ で $8$。\n【見直し】2つの解のどちらも変域（$0<x<6$）に入るかを確かめたか。1つだけ答えて終わっていないか。",
+      "defaultPoints": 5,
+      "answerLayout": "stacked",
+      "answerLabels": [
+        "(1) 面積の式",
+        "(2) x の値"
+      ]
+    },
+    {
+      "id": "hk-07",
+      "grade": "中3",
+      "textbook": "全統中対策 難関テスト（オリジナル）",
+      "genre": "数学",
+      "topic": "空間図形",
+      "subTopic": "立方体の切り口",
+      "tags": [
+        "全統中対策",
+        "難関テスト",
+        "統一部門",
+        "20点ルート",
+        "オリジナル",
+        "要レビュー",
+        "空間図形",
+        "取る点"
+      ],
+      "difficulty": 3,
+      "estimatedSeconds": 540,
+      "questionText": "1辺の長さが $6\\,\\mathrm{cm}$ の立方体ABCD-EFGHがある。辺BFの中点をP、辺DHの中点をQとする。3点A、P、Qを通る平面でこの立方体を切る。\n(1) 切り口の図形の名前を答えなさい。\n(2) 切り口の面積を求めなさい。",
+      "answer": "(1) ひし形　(2) $18\\sqrt6\\ \\mathrm{cm}^2$",
+      "explanation": "(1) 平面は点Gも通る。切り口は四角形APGQで、$AP=PG=GQ=QA=\\sqrt{6^2+3^2}=3\\sqrt5$ なので、4辺が等しい四角形（ひし形）。\n(2) 対角線は $AG=6\\sqrt3$（立方体の対角線）、$PQ=6\\sqrt2$（正方形ABCDの対角線 $BD$ と平行で、長さが等しい）。ひし形の面積 $=\\frac12\\times6\\sqrt3\\times6\\sqrt2=18\\sqrt6$。\n【取りにいく点】(1) は切り口の形の判断で取る。(2) の面積は、対角線がわかれば取れる。\n【撤退の目安】切り口がどこを通るか見えなければ、(1) だけでも書いて次へ。\n【見直し】対角線PQの長さ（$\\sqrt{6^2+6^2}$）。",
+      "defaultPoints": 5,
+      "answerLayout": "stacked",
+      "answerLabels": [
+        "(1) 切り口の図形",
+        "(2) 切り口の面積"
+      ],
+      "figureSvg": "<svg viewBox=\"0 0 160 135\" style=\"width:200px;max-width:100%;height:auto\" xmlns=\"http://www.w3.org/2000/svg\"><line x1=\"18.0\" y1=\"112.0\" x2=\"96.0\" y2=\"112.0\" stroke=\"#111\" stroke-width=\"1.2\"/><line x1=\"96.0\" y1=\"112.0\" x2=\"131.1\" y2=\"88.6\" stroke=\"#111\" stroke-width=\"1.2\"/><line x1=\"131.1\" y1=\"88.6\" x2=\"53.1\" y2=\"88.6\" stroke=\"#111\" stroke-width=\"1.2\" stroke-dasharray=\"4 3\"/><line x1=\"53.1\" y1=\"88.6\" x2=\"18.0\" y2=\"112.0\" stroke=\"#111\" stroke-width=\"1.2\" stroke-dasharray=\"4 3\"/><line x1=\"18.0\" y1=\"34.0\" x2=\"96.0\" y2=\"34.0\" stroke=\"#111\" stroke-width=\"1.2\"/><line x1=\"96.0\" y1=\"34.0\" x2=\"131.1\" y2=\"10.6\" stroke=\"#111\" stroke-width=\"1.2\"/><line x1=\"131.1\" y1=\"10.6\" x2=\"53.1\" y2=\"10.6\" stroke=\"#111\" stroke-width=\"1.2\"/><line x1=\"53.1\" y1=\"10.6\" x2=\"18.0\" y2=\"34.0\" stroke=\"#111\" stroke-width=\"1.2\"/><line x1=\"18.0\" y1=\"112.0\" x2=\"18.0\" y2=\"34.0\" stroke=\"#111\" stroke-width=\"1.2\"/><line x1=\"96.0\" y1=\"112.0\" x2=\"96.0\" y2=\"34.0\" stroke=\"#111\" stroke-width=\"1.2\"/><line x1=\"131.1\" y1=\"88.6\" x2=\"131.1\" y2=\"10.6\" stroke=\"#111\" stroke-width=\"1.2\"/><line x1=\"53.1\" y1=\"88.6\" x2=\"53.1\" y2=\"10.6\" stroke=\"#111\" stroke-width=\"1.2\" stroke-dasharray=\"4 3\"/><polygon points=\"18.0,112.0 96.0,73.0 131.1,10.6 53.1,49.6\" fill=\"rgba(0,0,0,.10)\" stroke=\"#111\" stroke-width=\"1.8\"/><text x=\"8.0\" y=\"122.0\" font-size=\"11\" font-family=\"serif\" fill=\"#111\">A</text><text x=\"100.0\" y=\"123.0\" font-size=\"11\" font-family=\"serif\" fill=\"#111\">B</text><text x=\"136.1\" y=\"90.6\" font-size=\"11\" font-family=\"serif\" fill=\"#111\">C</text><text x=\"43.1\" y=\"90.6\" font-size=\"11\" font-family=\"serif\" fill=\"#111\">D</text><text x=\"7.0\" y=\"33.0\" font-size=\"11\" font-family=\"serif\" fill=\"#111\">E</text><text x=\"94.0\" y=\"30.0\" font-size=\"11\" font-family=\"serif\" fill=\"#111\">F</text><text x=\"135.1\" y=\"7.6\" font-size=\"11\" font-family=\"serif\" fill=\"#111\">G</text><text x=\"43.1\" y=\"6.6\" font-size=\"11\" font-family=\"serif\" fill=\"#111\">H</text><text x=\"100.0\" y=\"77.0\" font-size=\"11\" font-family=\"serif\" fill=\"#111\">P</text><text x=\"41.1\" y=\"53.6\" font-size=\"11\" font-family=\"serif\" fill=\"#111\">Q</text></svg>"
+    },
+    {
+      "id": "hk-08",
+      "grade": "中3",
+      "textbook": "全統中対策 難関テスト（オリジナル）",
+      "genre": "数学",
+      "topic": "空間図形",
+      "subTopic": "正四角錐の内部の三角形",
+      "tags": [
+        "全統中対策",
+        "難関テスト",
+        "統一部門",
+        "20点ルート",
+        "オリジナル",
+        "要レビュー",
+        "空間図形",
+        "取る点"
+      ],
+      "difficulty": 3,
+      "estimatedSeconds": 600,
+      "questionText": "すべての辺の長さが $6\\,\\mathrm{cm}$ の正四角錐O-ABCDがある。辺OA、OCの中点をそれぞれM、Nとする。\n(1) この正四角錐の体積を求めなさい。\n(2) △BMNの面積を求めなさい。",
+      "answer": "(1) $36\\sqrt2\\ \\mathrm{cm}^3$　(2) $\\frac{9\\sqrt5}{2}\\ \\mathrm{cm}^2$",
+      "explanation": "(1) 底面の正方形の対角線は $6\\sqrt2$、その半分は $3\\sqrt2$。高さ $=\\sqrt{6^2-(3\\sqrt2)^2}=\\sqrt{18}=3\\sqrt2$。体積 $=\\frac13\\times6^2\\times3\\sqrt2=36\\sqrt2$。\n(2) △OABは正三角形なので、Bから辺OAの中点Mに引いた線分 $BM=3\\sqrt3$。同様に $BN=3\\sqrt3$。中点連結定理より $MN=\\frac12AC=3\\sqrt2$。△BMNは $BM=BN$ の二等辺三角形で、底辺MNの中点をHとすると $BH=\\sqrt{(3\\sqrt3)^2-\\left(\\frac{3\\sqrt2}{2}\\right)^2}=\\sqrt{27-\\frac92}=\\frac{3\\sqrt{10}}{2}$。面積 $=\\frac12\\times3\\sqrt2\\times\\frac{3\\sqrt{10}}{2}=\\frac{9\\sqrt{20}}{4}=\\frac{9\\sqrt5}{2}$。\n【取りにいく点】(1) は確実に取る（大問3の1問目にあたる）。\n【撤退の目安】(2) は、$BM$ が正三角形の中線だと気づけなければ撤退してよい。\n【見直し】(1) の高さと底面の対角線の半分を取り違えていないか。",
+      "defaultPoints": 5,
+      "answerLayout": "stacked",
+      "answerLabels": [
+        "(1) 体積",
+        "(2) △BMNの面積"
+      ],
+      "figureSvg": "<svg viewBox=\"0 0 160 125\" style=\"width:200px;max-width:100%;height:auto\" xmlns=\"http://www.w3.org/2000/svg\"><line x1=\"18.0\" y1=\"105.0\" x2=\"96.0\" y2=\"105.0\" stroke=\"#111\" stroke-width=\"1.2\"/><line x1=\"96.0\" y1=\"105.0\" x2=\"131.1\" y2=\"81.6\" stroke=\"#111\" stroke-width=\"1.2\"/><line x1=\"131.1\" y1=\"81.6\" x2=\"53.1\" y2=\"81.6\" stroke=\"#111\" stroke-width=\"1.2\" stroke-dasharray=\"4 3\"/><line x1=\"53.1\" y1=\"81.6\" x2=\"18.0\" y2=\"105.0\" stroke=\"#111\" stroke-width=\"1.2\" stroke-dasharray=\"4 3\"/><line x1=\"74.5\" y1=\"38.1\" x2=\"18.0\" y2=\"105.0\" stroke=\"#111\" stroke-width=\"1.2\"/><line x1=\"74.5\" y1=\"38.1\" x2=\"96.0\" y2=\"105.0\" stroke=\"#111\" stroke-width=\"1.2\"/><line x1=\"74.5\" y1=\"38.1\" x2=\"131.1\" y2=\"81.6\" stroke=\"#111\" stroke-width=\"1.2\"/><line x1=\"74.5\" y1=\"38.1\" x2=\"53.1\" y2=\"81.6\" stroke=\"#111\" stroke-width=\"1.2\" stroke-dasharray=\"4 3\"/><polygon points=\"96.0,105.0 46.3,71.6 102.8,59.9\" fill=\"rgba(0,0,0,.10)\" stroke=\"#111\" stroke-width=\"1.8\"/><text x=\"71.5\" y=\"34.1\" font-size=\"11\" font-family=\"serif\" fill=\"#111\">O</text><text x=\"8.0\" y=\"115.0\" font-size=\"11\" font-family=\"serif\" fill=\"#111\">A</text><text x=\"100.0\" y=\"116.0\" font-size=\"11\" font-family=\"serif\" fill=\"#111\">B</text><text x=\"136.1\" y=\"84.6\" font-size=\"11\" font-family=\"serif\" fill=\"#111\">C</text><text x=\"50.1\" y=\"95.6\" font-size=\"11\" font-family=\"serif\" fill=\"#111\">D</text><text x=\"34.3\" y=\"73.6\" font-size=\"11\" font-family=\"serif\" fill=\"#111\">M</text><text x=\"106.8\" y=\"61.9\" font-size=\"11\" font-family=\"serif\" fill=\"#111\">N</text></svg>"
+    }
+  ]
+}

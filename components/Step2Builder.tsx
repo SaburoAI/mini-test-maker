@@ -349,12 +349,17 @@ export const Step2Builder: React.FC<Step2BuilderProps> = ({
                                 🔗 {q.mergedQuestions.length}問統合
                               </span>
                             )}
-                            {q.imageUrl && (
+                            {q.imageUrl ? (
                               <span className="text-[8.5px] bg-sky-50 text-sky-700 border border-sky-200 px-1 py-0.2 rounded font-sans flex items-center gap-0.5 shrink-0" title="画像付き問題">
                                 <ImageIcon className="w-2.5 h-2.5 text-sky-600" />
                                 画像
                               </span>
-                            )}
+                            ) : q.hasImagePlaceholder ? (
+                              <span className="text-[8.5px] bg-amber-50 text-amber-800 border border-amber-300 px-1 py-0.2 rounded font-sans flex items-center gap-0.5 shrink-0" title="絵を見て答える問題（画像欄）">
+                                <ImageIcon className="w-2.5 h-2.5 text-amber-600" />
+                                画像欄
+                              </span>
+                            ) : null}
                             {q.audioUrl && (
                               <span className="text-[8.5px] bg-purple-50 text-purple-700 border border-purple-200 px-1 py-0.2 rounded font-sans flex items-center gap-0.5 shrink-0" title="リスニング問題">
                                 <Headphones className="w-2.5 h-2.5 text-purple-600" />

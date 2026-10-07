@@ -228,3 +228,57 @@ export function unmergeQuestion(question: Question): Question[] {
   }
   return [question];
 }
+
+/**
+ * マージされたQuestion群を含む配列を展開し、すべて元のバラバラなQuestion配列に復元する
+ */
+export function unmergeAllQuestions(questions: Question[]): Question[] {
+  const result: Question[] = [];
+  for (const q of questions) {
+    result.push(...unmergeQuestion(q));
+  }
+  return result;
+}
+
+/**
+ * 問題配列をサブ論点（st）や大単元（t）に基づいて大問ごとに自動集約する。
+ * 連続する同一セクションの問題群を1つの大問（枝問形式）にマージする。
+ */
+export function autoGroupAndMergeQuestions(questions: Question[]): Question[] {
+  if (!questions || questions.length <= 1) return questions;
+
+  const groups: Question[][] = [];
+  let currentGroup: Question[] = [];
+  let currentKey = "";
+
+  const getKey = (q: Question): string => {
+    const genre = (q.genre || "").trim();
+    const topic = (q.topic || "").trim();
+    const subTopic = (q.subTopic || "").trim();
+    if (subTopic) return `${genre}__${topic}__${subTopic}`;
+    if (topic) return `${genre}__${topic}`;
+    return q.id;
+  };
+
+  for (const q of questions) {
+    const key = getKey(q);
+    if (currentGroup.length === 0) {
+      currentGroup.push(q);
+      currentKey = key;
+    } else if (key === currentKey) {
+      currentGroup.push(q);
+    } else {
+      groups.push(currentGroup);
+      currentGroup = [q];
+      currentKey = key;
+    }
+  }
+  if (currentGroup.length > 0) {
+    groups.push(currentGroup);
+  }
+
+  return groups.map(group => {
+    if (group.length === 1) return group[0];
+    return mergeQuestions(group);
+  });
+}

@@ -535,9 +535,14 @@ export const SubItemEditorModal: React.FC<SubItemEditorModalProps> = ({
           {/* 3. 枝問リスト一覧（編集 ＆ 選択 ＆ 削除 ＆ 追加） */}
           <div className="space-y-2">
             <div className="flex items-center justify-between">
-              <span className="font-bold text-slate-700 flex items-center gap-1.5">
-                <span>📋 枝問アイテム一覧（自動判定結果の修正・追加・削除）</span>
-              </span>
+              <div>
+                <span className="font-bold text-slate-700 flex items-center gap-1.5">
+                  <span>📋 枝問アイテム一覧（自動判定結果の修正・追加・削除）</span>
+                </span>
+                <p className="text-[10px] text-slate-500 mt-0.5">
+                  ※ 文中で <code className="bg-slate-100 px-1 py-0.2 rounded font-mono text-slate-700">(1)</code> や <code className="bg-slate-100 px-1 py-0.2 rounded font-mono text-slate-700">（１）</code> を参照記号として使いたい場合は、<code className="bg-slate-100 px-1 py-0.2 rounded font-mono text-slate-700">&quot;(1)&quot;</code> や <code className="bg-slate-100 px-1 py-0.2 rounded font-mono text-slate-700">「（１）」</code> で囲むとエスケープされます。
+                </p>
+              </div>
               <div className="flex items-center gap-1.5">
                 <button
                   type="button"

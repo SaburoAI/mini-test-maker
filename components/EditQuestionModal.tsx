@@ -257,6 +257,8 @@ export const EditQuestionModal: React.FC<EditQuestionModalProps> = ({
       tags,
       figureSvg: formData.figureSvg?.trim() || undefined,
       imageUrl: formData.imageUrl?.trim() || undefined,
+      hasImagePlaceholder: formData.hasImagePlaceholder,
+      imagePlaceholderText: formData.imagePlaceholderText?.trim() || undefined,
       audioUrl: formData.audioUrl?.trim() || undefined,
       audioScript: formData.audioScript?.trim() || undefined,
       answerLabels: parsedLabels.length > 0 ? parsedLabels : undefined,
@@ -613,15 +615,41 @@ export const EditQuestionModal: React.FC<EditQuestionModalProps> = ({
 
           {/* 問題文 */}
           <div>
-            <label className="block font-bold text-slate-700 mb-1">
-              問題文 (TeX数式は \( ... \) または $$ ... $$)
-            </label>
+            <div className="flex items-center justify-between mb-1">
+              <label className="font-bold text-slate-700 text-xs">
+                問題文 (TeX数式は \( ... \) または $$ ... $$)
+              </label>
+              <label className="text-[10px] text-slate-600 flex items-center gap-1.5 cursor-pointer bg-slate-100 hover:bg-slate-200 px-2 py-0.5 rounded border border-slate-300 transition">
+                <input
+                  type="checkbox"
+                  checked={isSubItemDisabled}
+                  onChange={e => {
+                    if (e.target.checked) {
+                      handleResetSubItemSplit();
+                    } else {
+                      handleEnableSubItemSplit();
+                    }
+                  }}
+                  className="rounded text-indigo-600 cursor-pointer"
+                />
+                <span className="font-bold">枝問の自動パース・分割をOFF</span>
+              </label>
+            </div>
+            <p className="text-[10px] text-slate-500 mb-1 leading-normal">
+              ※ 文中で <code className="bg-slate-100 px-1 py-0.2 rounded font-mono text-slate-700">(1)</code> や <code className="bg-slate-100 px-1 py-0.2 rounded font-mono text-slate-700">（１）</code> を小問分割させずに使いたい場合は、<code className="bg-slate-100 px-1 py-0.2 rounded font-mono text-slate-700">&quot;(1)&quot;</code> や <code className="bg-slate-100 px-1 py-0.2 rounded font-mono text-slate-700">「（１）」</code> で囲むか、右上の「枝問の自動パース・分割をOFF」にしてください。
+            </p>
             <textarea
               required
               rows={3}
               value={formData.questionText}
-              onChange={e => setFormData({ ...formData, questionText: e.target.value })}
-              className="w-full px-2.5 py-1.5 border border-slate-300 rounded-md bg-white focus:ring-1 focus:ring-indigo-500 focus:outline-none font-serif leading-relaxed"
+              onChange={e => {
+                const val = e.target.value;
+                setFormData(prev => prev ? { ...prev, questionText: val } : null);
+                if (isSubItemDisabled) {
+                  setBaseQuestionText(val);
+                }
+              }}
+              className="w-full px-2.5 py-1.5 border border-slate-300 rounded-md bg-white focus:ring-1 focus:ring-indigo-500 focus:outline-none font-serif leading-relaxed text-xs"
             />
           </div>
 
@@ -727,18 +755,79 @@ export const EditQuestionModal: React.FC<EditQuestionModalProps> = ({
             </div>
           )}
 
-          {/* 画像・イラスト設定（問題ごとのディレクトリ/パス指定 ＆ アップロード） */}
-          <div className="bg-slate-50 p-3 rounded-lg border border-slate-200 space-y-2">
+          {/* 画像・イラスト設定（問題ごとのディレクトリ/パス指定 ＆ アップロード ＆ 画像欄枠） */}
+          <div className="bg-slate-50 p-3 rounded-lg border border-slate-200 space-y-2.5">
             <div className="flex items-center justify-between">
               <label className="font-bold text-slate-700 text-xs flex items-center gap-1.5">
                 <ImageIcon className="w-3.5 h-3.5 text-indigo-600" />
-                問題画像・イラスト (任意: リスニング場面・地図・資料など)
+                問題画像・イラスト・画像欄 (任意: 絵を見て答える問題・リスニング場面・地図等)
               </label>
-              <span className="text-[10px] text-slate-400 font-normal">問題ごとに個別パス・ディレクトリ指定可</span>
+              <span className="text-[10px] text-slate-400 font-normal">画像パス指定 または 画像欄枠表示</span>
+            </div>
+
+            {/* 絵を見て答える問題（画像欄プレースホルダー）のトグル */}
+            <div className="p-2 bg-white rounded border border-slate-200 space-y-1.5">
+              <label className="flex items-center gap-2 cursor-pointer select-none">
+                <input
+                  type="checkbox"
+                  checked={!!formData.hasImagePlaceholder}
+                  onChange={e => {
+                    const checked = e.target.checked;
+                    setFormData({
+                      ...formData,
+                      hasImagePlaceholder: checked ? true : undefined,
+                      imagePlaceholderText: checked ? (formData.imagePlaceholderText || "画像欄") : undefined
+                    });
+                  }}
+                  className="w-3.5 h-3.5 rounded border-slate-300 text-indigo-600 focus:ring-indigo-500 cursor-pointer"
+                />
+                <span className="text-xs font-bold text-slate-700">
+                  🖼️ 絵を見て答える問題（印刷用紙に「画像欄」枠を表示する）
+                </span>
+              </label>
+
+              {formData.hasImagePlaceholder && (
+                <div className="pl-5 pt-1 space-y-1">
+                  <div className="flex items-center gap-2">
+                    <span className="text-[10px] text-slate-500 shrink-0 font-medium">画像欄ラベル:</span>
+                    <input
+                      type="text"
+                      placeholder="例: 画像欄, 公園のイラスト, 時計の絵 など"
+                      value={formData.imagePlaceholderText || ""}
+                      onChange={e => setFormData({ ...formData, imagePlaceholderText: e.target.value })}
+                      className="flex-1 px-2 py-1 border border-slate-300 rounded text-xs focus:ring-1 focus:ring-indigo-500 focus:outline-none bg-slate-50"
+                    />
+                  </div>
+                  <p className="text-[10px] text-slate-400">
+                    ※ 画像ファイルが無くても、印刷用紙に実線/点線の画像枠が確保されます（Mini-JSON "img": "画像欄" に対応）。
+                  </p>
+                </div>
+              )}
+
+              {/* 問題文から絵を見て答える問題であることを検知した場合のクイックサジェスト */}
+              {!formData.hasImagePlaceholder && !formData.imageUrl && /(?:絵|イラスト|図|写真)を見て/i.test(formData.questionText) && (
+                <div className="mt-1 p-1.5 bg-amber-50 border border-amber-200 rounded flex items-center justify-between text-[10.5px] text-amber-800">
+                  <span>💡 問題文に「絵を見て」が含まれています。画像欄枠を有効にしますか？</span>
+                  <button
+                    type="button"
+                    onClick={() => setFormData({
+                      ...formData,
+                      hasImagePlaceholder: true,
+                      imagePlaceholderText: "画像欄"
+                    })}
+                    className="px-2 py-0.5 bg-amber-600 hover:bg-amber-700 text-white rounded font-bold text-[10px] transition cursor-pointer"
+                  >
+                    画像欄を有効化
+                  </button>
+                </div>
+              )}
             </div>
 
             {/* パス/ディレクトリ入力 ＆ ファイル選択 */}
             <div className="space-y-1.5">
+              <div className="flex items-center justify-between">
+                <span className="text-[10.5px] font-semibold text-slate-600">実際の画像ファイル（任意）:</span>
+              </div>
               <div className="flex items-center gap-1.5">
                 <div className="relative flex-1">
                   <input
@@ -787,7 +876,7 @@ export const EditQuestionModal: React.FC<EditQuestionModalProps> = ({
               </p>
 
               {/* プレビュー */}
-              {formData.imageUrl && (
+              {formData.imageUrl ? (
                 <div className="flex items-center gap-3 bg-white p-2 rounded border border-slate-200">
                   {/* eslint-disable-next-line @next/next/no-img-element */}
                   <img
@@ -803,7 +892,22 @@ export const EditQuestionModal: React.FC<EditQuestionModalProps> = ({
                     <p className="text-[10px] text-emerald-600 font-medium">✓ 画像が指定されています（用紙に自動レイアウト）</p>
                   </div>
                 </div>
-              )}
+              ) : formData.hasImagePlaceholder ? (
+                <div className="flex items-center gap-3 bg-amber-50/50 p-2 rounded border border-amber-200">
+                  <div className="w-16 h-14 border-2 border-dashed border-slate-300 rounded flex flex-col items-center justify-center bg-white text-slate-400 shrink-0 select-none">
+                    <ImageIcon className="w-4 h-4 mb-0.5 opacity-60" />
+                    <span className="text-[9px] font-bold">画像欄</span>
+                  </div>
+                  <div className="min-w-0 flex-1">
+                    <p className="text-[11px] font-bold text-amber-900">
+                      ✓ 「{formData.imagePlaceholderText || "画像欄"}」枠を用紙に印刷
+                    </p>
+                    <p className="text-[10px] text-slate-500">
+                      用紙プレビューと印刷時に、イラスト・図版用の枠が自動配置されます。
+                    </p>
+                  </div>
+                </div>
+              ) : null}
             </div>
           </div>
 

@@ -1,0 +1,433 @@
+{
+  "id": "test-default-1",
+  "title": "附属中２年　数学（一次関数）　単元プレテスト",
+  "subject": "数学",
+  "totalTargetPoints": 100,
+  "sections": [
+    {
+      "id": "sec-1789564165419",
+      "title": "大問１　1次関数（1次関数の識別・1次関数の意味）",
+      "targetPoints": 20,
+      "questions": [
+        {
+          "id": "user-q2",
+          "genre": "数学",
+          "topic": "1次関数",
+          "subTopic": "1次関数の識別",
+          "tags": [
+            "中2数学",
+            "1次関数の定義",
+            "式の形"
+          ],
+          "difficulty": 1,
+          "estimatedSeconds": 30,
+          "questionText": "$y$ が $x$ の関数で、次の式で表されるとき、1次関数であるものをすべて選び、記号で答えなさい。[cite: 3]\\nア $y=9x+4$ イ $y=\\frac{12}{x}$ ウ $y=3-x$ エ $y=-1.5x$",
+          "answer": "ア, ウ, エ",
+          "explanation": "1次関数は $y=ax+b$（$a\\neq 0$）の形で表される関数です。ア（$a=9, b=4$）、ウ（$y=-x+3$ より $a=-1, b=3$）、エ（比例は $b=0$ の特別な1次関数で $a=-1.5$）が1次関数です。イは反比例なので1次関数ではありません。",
+          "defaultPoints": 5,
+          "grade": "中2"
+        },
+        {
+          "id": "user-q1",
+          "genre": "数学",
+          "topic": "1次関数",
+          "subTopic": "1次関数の意味",
+          "tags": [
+            "中2数学",
+            "1次関数",
+            "式で表す",
+            "1次関数の判別"
+          ],
+          "difficulty": 1,
+          "estimatedSeconds": 30,
+          "questionText": "150円の箱に、1個70円のお菓子を $x$ 個つめてもらったときの代金を $y$ 円とします。\n(1) $y$ を $x$ の式で表しなさい。\n(2) $y$ は $x$ の1次関数であるかどうか答えなさい。",
+          "answer": "(1) $y$ =70$x$+150 (2) 一次関数である。",
+          "explanation": "代金 $y$ は箱代150円にお菓子代 $70x$ 円を加えたものなので、$y=70x+150$ と表されます。これは $y=ax+b$（$a\\neq 0$）の形をしているため、1次関数といえます。",
+          "defaultPoints": 5,
+          "grade": "中2",
+          "answerLabels": [
+            "(1)",
+            "(2)"
+          ],
+          "originalQuestionText": "150円の箱に、1個70円のお菓子を $x$ 個つめてもらったときの代金を $y$ 円とします。\n(1) $y$ を $x$ の式で表しなさい。\n(2) $y$ は $x$ の1次関数であるかどうか答えなさい。",
+          "originalAnswer": "(1) $y$ =70$x$+150 (2) 一次関数である。"
+        }
+      ],
+      "page": 1
+    },
+    {
+      "id": "sec-1789708272431",
+      "title": "大問２　1次関数（1次関数の意味）",
+      "targetPoints": 20,
+      "questions": [],
+      "page": 1
+    },
+    {
+      "id": "sec-1789707882809",
+      "title": "大問２　1次関数（増加量と変化の割合・変化の割合・増加量の計算）",
+      "targetPoints": 20,
+      "questions": [
+        {
+          "id": "user-q3",
+          "genre": "数学",
+          "topic": "1次関数",
+          "subTopic": "増加量と変化の割合",
+          "tags": [
+            "中2数学",
+            "xの増加量",
+            "yの増加量",
+            "表"
+          ],
+          "difficulty": 1,
+          "estimatedSeconds": 40,
+          "questionText": "関数 $y=3x+1$ において、$x$ の値が $1$ から $5$ まで変化するとき、対応する $y$ の値、および $x$ の増加量と $y$ の増加量をそれぞれ求めなさい。[cite: 3]",
+          "answer": "$x=1$ のとき $y=4$、$x=5$ のとき $y=16$、$x$ の増加量: $4$, $y$ の増加量: $12$",
+          "explanation": "$x=1$ のとき $y=3(1)+1=4$、$x=5$ のとき $y=3(5)+1=16$ です。$x$ の増加量は $5-1=4$、$y$ の増加量は $16-4=12$ となります。",
+          "defaultPoints": 5,
+          "grade": "中2",
+          "answerLayout": "inline"
+        },
+        {
+          "id": "user-q4",
+          "genre": "数学",
+          "topic": "1次関数",
+          "subTopic": "増加量と変化の割合",
+          "tags": [
+            "中2数学",
+            "xの増加量",
+            "yの増加量",
+            "負の傾き"
+          ],
+          "difficulty": 1,
+          "estimatedSeconds": 40,
+          "questionText": "関数 $y=-2x+7$ において、$x$ の値が $-4$ から $-1$ まで変化するとき、対応する $y$ の値、および $x$ の増加量と $y$ の増加量をそれぞれ求めなさい。[cite: 3]",
+          "answer": "$x=-4$ のとき $y=15$、$x=-1$ のとき $y=9$、$x$ の増加量: $3$, $y$ の増加量: $-6$",
+          "explanation": "$x=-4$ のとき $y=-2(-4)+7=15$、$x=-1$ のとき $y=-2(-1)+7=9$ です。$x$ の増加量は $-1-(-4)=3$、$y$ の増加量は $9-15=-6$ となります。",
+          "defaultPoints": 5,
+          "grade": "中2",
+          "answerLayout": "inline"
+        },
+        {
+          "id": "user-q5",
+          "genre": "数学",
+          "topic": "1次関数",
+          "subTopic": "増加量と変化の割合",
+          "tags": [
+            "中2数学",
+            "xの増加量",
+            "yの増加量"
+          ],
+          "difficulty": 1,
+          "estimatedSeconds": 40,
+          "questionText": "関数 $y=-x-4$ において、$x$ の値が $-2$ から $3$ まで変化するとき、対応する $y$ の値、および $x$ の増加量と $y$ の増加量をそれぞれ求めなさい。[cite: 3]",
+          "answer": "$x=-2$ のとき $y=-2$、$x=3$ のとき $y=-7$、$x$ の増加量: $5$, $y$ の増加量: $-5$",
+          "explanation": "$x=-2$ のとき $y=-(-2)-4=-2$、$x=3$ のとき $y=-(3)-4=-7$ です。$x$ の増加量は $3-(-2)=5$、$y$ の増加量は $-7-(-2)=-5$ となります。",
+          "defaultPoints": 5,
+          "grade": "中2",
+          "answerLayout": "inline"
+        },
+        {
+          "id": "user-q6",
+          "genre": "数学",
+          "topic": "1次関数",
+          "subTopic": "変化の割合",
+          "tags": [
+            "中2数学",
+            "変化の割合",
+            "傾き"
+          ],
+          "difficulty": 1,
+          "estimatedSeconds": 20,
+          "questionText": "次の1次関数の変化の割合をそれぞれ答えなさい。[cite: 3]\\n(1) $y=5x-4$\\n(2) $y=-\\frac{1}{6}x+8$",
+          "answer": "(1) $5$ (2) $-\\frac{1}{6}$",
+          "explanation": "1次関数 $y=ax+b$ の変化の割合は一定で、$x$ の係数 $a$ に等しくなります。",
+          "defaultPoints": 5,
+          "grade": "中2",
+          "customLineWidth": 130
+        },
+        {
+          "id": "user-q7",
+          "genre": "数学",
+          "topic": "1次関数",
+          "subTopic": "増加量の計算",
+          "tags": [
+            "中2数学",
+            "変化の割合",
+            "yの増加量"
+          ],
+          "difficulty": 1,
+          "estimatedSeconds": 30,
+          "questionText": "1次関数 $y=-2x+9$ で、次の場合の $y$ の増加量をそれぞれ求めなさい。[cite: 3]\\n(1) $x$ の増加量が $1$ のとき\\n(2) $x$ の増加量が $5$ のとき",
+          "answer": "(1) $-2$ (2) $-10$",
+          "explanation": "($y$ の増加量) = (変化の割合) $\\times$ ($x$ の増加量) です。変化の割合は $-2$ なので、(1) $-2 \\times 1 = -2$、(2) $-2 \\times 5 = -10$ となります。",
+          "defaultPoints": 5,
+          "grade": "中2",
+          "customLineWidth": 110
+        },
+        {
+          "id": "user-q9",
+          "genre": "数学",
+          "topic": "1次関数",
+          "subTopic": "反比例の変化の割合",
+          "tags": [
+            "中1数学",
+            "中2数学",
+            "反比例",
+            "変化の割合"
+          ],
+          "difficulty": 2,
+          "estimatedSeconds": 40,
+          "questionText": "反比例の関係 $y=\\frac{12}{x}$ で、$x$ の値が $3$ から $6$ まで増加したときの変化の割合を求めなさい。[cite: 3]",
+          "answer": "$-\\frac{2}{3}$",
+          "explanation": "$x=3$ のとき $y=\\frac{12}{3}=4$、$x=6$ のとき $y=\\frac{12}{6}=2$ です。$x$ の増加量は $6-3=3$、$y$ の増加量は $2-4=-2$ となるので、変化の割合は $\\frac{-2}{3}=-\\frac{2}{3}$ です。",
+          "defaultPoints": 5,
+          "grade": "中1",
+          "answerAlign": "right",
+          "answerLayout": "inline",
+          "customLineWidth": 130
+        }
+      ],
+      "page": 1
+    },
+    {
+      "id": "sec-1789708006281",
+      "title": "大問３　1次関数（1次関数の変域）",
+      "targetPoints": 20,
+      "questions": [
+        {
+          "id": "user-q13",
+          "genre": "数学",
+          "topic": "1次関数",
+          "subTopic": "1次関数の変域",
+          "tags": [
+            "中2数学",
+            "変域",
+            "グラフ"
+          ],
+          "difficulty": 1,
+          "estimatedSeconds": 30,
+          "questionText": "1次関数 $y=4x-3$ において、$x$ の変域が $1 \\le x \\le 2$ のときの $y$ の変域を求めなさい。[cite: 3]",
+          "answer": "$1 \\le y \\le 5$",
+          "explanation": "傾き $4>0$ より $x$ が増加すると $y$ も増加します。$x=1$ のとき $y=4(1)-3=1$、$x=2$ のとき $y=4(2)-3=5$。よって $1 \\le y \\le 5$ です。",
+          "defaultPoints": 5,
+          "grade": "中2"
+        },
+        {
+          "id": "user-q14",
+          "genre": "数学",
+          "topic": "1次関数",
+          "subTopic": "1次関数の変域",
+          "tags": [
+            "中2数学",
+            "変域",
+            "負の傾き"
+          ],
+          "difficulty": 1,
+          "estimatedSeconds": 30,
+          "questionText": "1次関数 $y=-x+5$ において、$x$ の変域が $-1 \\le x \\le 3$ のときの $y$ の変域を求めなさい。[cite: 3]",
+          "answer": "$2 \\le y \\le 6$",
+          "explanation": "傾き $-1<0$ より $x$ が最大のとき $y$ は最小、$x$ が最小のとき $y$ は最大となります。$x=-1$ のとき $y=-(-1)+5=6$、$x=3$ のとき $y=-(3)+5=2$。よって $2 \\le y \\le 6$ です。",
+          "defaultPoints": 5,
+          "grade": "中2"
+        },
+        {
+          "id": "user-q16",
+          "genre": "数学",
+          "topic": "1次関数",
+          "subTopic": "1次関数の変域",
+          "tags": [
+            "中2数学",
+            "変域",
+            "負の分数傾き"
+          ],
+          "difficulty": 1,
+          "estimatedSeconds": 30,
+          "questionText": "1次関数 $y=-\\frac{3}{2}x-1$ において、$x$ の変域が $-4 \\le x \\le -2$ のときの $y$ の変域を求めなさい。[cite: 3]",
+          "answer": "$2 \\le y \\le 5$",
+          "explanation": "$x=-4$ のとき $y=-\\frac{3}{2}(-4)-1=5$、$x=-2$ のとき $y=-\\frac{3}{2}(-2)-1=2$。よって $2 \\le y \\le 5$ となります。",
+          "defaultPoints": 5,
+          "grade": "中2"
+        }
+      ],
+      "page": 1
+    },
+    {
+      "id": "sec-1789708017897",
+      "title": "大問４　1次関数（直線の式を求める（傾きと1点）・直線の式を求める（変化の割合と1点）・直線の式を求める（平行な直線））",
+      "targetPoints": 20,
+      "questions": [
+        {
+          "id": "user-q18",
+          "genre": "数学",
+          "topic": "1次関数",
+          "subTopic": "直線の式を求める（傾きと1点）",
+          "tags": [
+            "中2数学",
+            "直線の式",
+            "傾きと1点"
+          ],
+          "difficulty": 1,
+          "estimatedSeconds": 30,
+          "questionText": "グラフの傾きが $-5$ で、点 $(1, -2)$ を通る1次関数の式を求めなさい。[cite: 3]",
+          "answer": "$y=-5x+3$",
+          "explanation": "傾きが $-5$ なので $y=-5x+b$。点 $(1, -2)$ を代入して $-2=-5(1)+b \\implies b=3$。よって $y=-5x+3$ です。",
+          "defaultPoints": 5,
+          "grade": "中2",
+          "answerLayout": "inline"
+        },
+        {
+          "id": "user-q21",
+          "genre": "数学",
+          "topic": "1次関数",
+          "subTopic": "直線の式を求める（変化の割合と1点）",
+          "tags": [
+            "中2数学",
+            "直線の式",
+            "変化の割合"
+          ],
+          "difficulty": 1,
+          "estimatedSeconds": 30,
+          "questionText": "変化の割合が $-3$ で、$x=-1$ のとき $y=7$ である1次関数の式を求めなさい。[cite: 3]",
+          "answer": "$y=-3x+4$",
+          "explanation": "変化の割合が傾きを表すので $y=-3x+b$。$x=-1, y=7$ を代入して $7=-3(-1)+b \\implies 7=3+b \\implies b=4$。よって $y=-3x+4$ です。",
+          "defaultPoints": 5,
+          "grade": "中2"
+        },
+        {
+          "id": "user-q23",
+          "genre": "数学",
+          "topic": "1次関数",
+          "subTopic": "直線の式を求める（平行な直線）",
+          "tags": [
+            "中2数学",
+            "直線の式",
+            "平行線"
+          ],
+          "difficulty": 1,
+          "estimatedSeconds": 30,
+          "questionText": "直線 $y=4x-1$ に平行で、点 $(3, 4)$ を通る1次関数の式を求めなさい。[cite: 3]",
+          "answer": "$y=4x-8$",
+          "explanation": "平行な直線は傾きが等しいので傾きは $4$ です。$y=4x+b$ に $(3, 4)$ を代入して $4=4(3)+b \\implies b=-8$。よって $y=4x-8$ です。",
+          "defaultPoints": 5,
+          "grade": "中2",
+          "answerLayout": "inline",
+          "customLineWidth": 190
+        },
+        {
+          "id": "user-q25",
+          "genre": "数学",
+          "topic": "1次関数",
+          "subTopic": "2点を通る直線の式（傾き代入法）",
+          "tags": [
+            "中2数学",
+            "2点を通る直線",
+            "傾き"
+          ],
+          "difficulty": 2,
+          "estimatedSeconds": 45,
+          "questionText": "グラフが2点 $(-2, 1)$, $(3, -4)$ を通る1次関数の式を、傾きを求めてから1点の座標の値を代入する方法で求めなさい。[cite: 3]",
+          "answer": "$x$ の増加量: $5$, $y$ の増加量: $-5$, 式: $y=-x-1$",
+          "explanation": "$x$ の増加量は $3-(-2)=5$、$y$ の増加量は $-4-1=-5$。傾き $a=\\frac{-5}{5}=-1$。$y=-x+b$ に $(-2, 1)$ を代入して $1=-(-2)+b \\implies b=-1$。よって $y=-x-1$ です。",
+          "defaultPoints": 5,
+          "grade": "中2",
+          "answerLayout": "inline",
+          "customLineWidth": 130
+        },
+        {
+          "id": "user-q26",
+          "genre": "数学",
+          "topic": "1次関数",
+          "subTopic": "2点を通る直線の式（連立方程式法）",
+          "tags": [
+            "中2数学",
+            "連立方程式",
+            "直線の式"
+          ],
+          "difficulty": 2,
+          "estimatedSeconds": 45,
+          "questionText": "グラフが2点 $(2, 6)$, $(-1, -6)$ を通る1次関数の式を、連立方程式を利用する方法で求めなさい。[cite: 3]",
+          "answer": "(1) 連立方程式: $\\begin{cases}2a+b=6 \\\\ -a+b=-6\\end{cases}$、式: $y=4x-2$",
+          "explanation": "$y=ax+b$ に各点を代入すると、$2a+b=6$ と $-a+b=-6$ が得られます。上の式から下の式を引くと $3a=12 \\implies a=4$。代入して $b=-2$。よって $y=4x-2$ です。",
+          "defaultPoints": 5,
+          "grade": "中2",
+          "originalQuestionText": "グラフが2点 $(2, 6)$, $(-1, -6)$ を通る1次関数の式を、連立方程式を利用する方法で求めなさい。[cite: 3]\n(1) グラフが2点 $(2, 6)$, $(-1, -6)$ を通る1次関数の式を、連立方程式を利用する方法で求めなさい。[cite: 3]",
+          "originalAnswer": "(1) 連立方程式: $\\begin{cases}2a+b=6 \\\\ -a+b=-6\\end{cases}$、式: $y=4x-2$",
+          "originalExplanation": "$y=ax+b$ に各点を代入すると、$2a+b=6$ と $-a+b=-6$ が得られます。上の式から下の式を引くと $3a=12 \\implies a=4$。代入して $b=-2$。よって $y=4x-2$ です。",
+          "customLineWidth": 190
+        },
+        {
+          "id": "user-q27",
+          "genre": "数学",
+          "topic": "1次関数",
+          "subTopic": "2点を通る直線の式",
+          "tags": [
+            "中2数学",
+            "直線の式",
+            "2点"
+          ],
+          "difficulty": 2,
+          "estimatedSeconds": 40,
+          "questionText": "次の2点 $(-3, 5)$, $(-1, 9)$ を通る1次関数の式を求めなさい。[cite: 3]",
+          "answer": "$y=2x+11$",
+          "explanation": "傾き $a=\\frac{9-5}{-1-(-3)}=\\frac{4}{2}=2$。$y=2x+b$ に $(-1, 9)$ を代入して $9=2(-1)+b \\implies b=11$。よって $y=2x+11$ です。",
+          "defaultPoints": 5,
+          "grade": "中2"
+        },
+        {
+          "id": "user-q33",
+          "genre": "数学",
+          "topic": "1次関数",
+          "subTopic": "2点を通る直線の式",
+          "tags": [
+            "中2数学",
+            "直線の式",
+            "条件から決定"
+          ],
+          "difficulty": 2,
+          "estimatedSeconds": 40,
+          "questionText": "$x=-2$ のとき $y=9$、$x=6$ のとき $y=-11$ である1次関数の式を求めなさい。[cite: 3]",
+          "answer": "$y=-\\frac{5}{2}x+4$",
+          "explanation": "2点 $(-2, 9), (6, -11)$ を通るので、傾き $a=\\frac{-11-9}{6-(-2)}=\\frac{-20}{8}=-\\frac{5}{2}$。$y=-\\frac{5}{2}x+b$ に $(-2, 9)$ を代入して $9=-\\frac{5}{2}(-2)+b \\implies 9=5+b \\implies b=4$。よって $y=-\\frac{5}{2}x+4$ です。",
+          "defaultPoints": 5,
+          "grade": "中2"
+        },
+        {
+          "id": "user-q28",
+          "genre": "数学",
+          "topic": "1次関数",
+          "subTopic": "2点を通る直線の式",
+          "tags": [
+            "中2数学",
+            "直線の式",
+            "2点"
+          ],
+          "difficulty": 2,
+          "estimatedSeconds": 40,
+          "questionText": "次の2点 $(4, 5)$, $(-2, -2)$ を通る1次関数の式を求めなさい。[cite: 3]",
+          "answer": "$y=\\frac{7}{6}x+\\frac{1}{3}$",
+          "explanation": "傾き $a=\\frac{-2-5}{-2-4}=\\frac{-7}{-6}=\\frac{7}{6}$。$y=\\frac{7}{6}x+b$ に $(4, 5)$ を代入して $5=\\frac{7}{6}(4)+b \\implies 5=\\frac{14}{3}+b \\implies b=\\frac{1}{3}$。よって $y=\\frac{7}{6}x+\\frac{1}{3}$ です。",
+          "defaultPoints": 5,
+          "grade": "中2"
+        },
+        {
+          "id": "user-q19",
+          "genre": "数学",
+          "topic": "1次関数",
+          "subTopic": "直線の式を求める（傾きと1点）",
+          "tags": [
+            "中2数学",
+            "直線の式",
+            "分数の傾き"
+          ],
+          "difficulty": 1,
+          "estimatedSeconds": 30,
+          "questionText": "グラフの傾きが $\\frac{3}{4}$ で、点 $(8, -1)$ を通る1次関数の式を求めなさい。[cite: 3]",
+          "answer": "$y=\\frac{3}{4}x-7$",
+          "explanation": "$y=\\frac{3}{4}x+b$ に $(8, -1)$ を代入して $-1=\\frac{3}{4}(8)+b \\implies -1=6+b \\implies b=-7$。よって $y=\\frac{3}{4}x-7$ です。",
+          "defaultPoints": 5,
+          "grade": "中2"
+        }
+      ]
+    }
+  ]
+}

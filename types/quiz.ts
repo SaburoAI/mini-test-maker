@@ -16,7 +16,7 @@ export interface MiniJsonQuestion {
   ly?: "inline" | "stacked" | "same-line"; // 解答欄レイアウト (省略可: inline=横並び短縮, stacked=各小問1行記述, same-line=問題文と同一行インライン)
   e?: string;        // 解説
   svg?: string;      // 幾何図形・座標SVG (<svg>...</svg>)
-  img?: string;      // 画像URL・パス (e.g., "/uploads/images/...")
+  img?: string | boolean; // 画像URL・パス、または画像欄指定 (例: "画像欄", "時計のイラスト", true)
   aud?: string;      // 音声URL・パス (リスニング用)
   as?: string;       // 放送台本・原稿 (教師用プリント用)
   origQ?: string;    // 元の全小問を含む問題文（間引き前の完全版）
@@ -66,6 +66,8 @@ export interface Question {
   explanation: string;
   figureSvg?: string;
   imageUrl?: string;                // 画像URL・ファイルパス (e.g., "/uploads/images/...")
+  hasImagePlaceholder?: boolean;    // 画像欄枠表示フラグ（絵を見て答える問題用プレースホルダー枠）
+  imagePlaceholderText?: string;    // 画像欄の補足説明（例: "画像欄", "公園のイラスト" 等）
   audioUrl?: string;               // 音声URL・ファイルパス (リスニング用)
   audioScript?: string;            // 放送台本・原稿 (生徒用紙非表示・教師用紙に印字)
   defaultPoints: number;

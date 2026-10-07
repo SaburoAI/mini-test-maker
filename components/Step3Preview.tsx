@@ -119,8 +119,8 @@ export const Step3Preview: React.FC<Step3PreviewProps> = ({
     window.print();
   };
 
-  // 各大問をページごとに自動・手動グルーピング
-  const pageMap = groupSectionsByPage(test.sections);
+  // 各大問をページごとに自動・手動グルーピング（用紙サイズ・解答表示モードに合わせた最適分割）
+  const pageMap = groupSectionsByPage(test.sections, { sheetMode, paperMode });
   const totalPages = Math.max(1, ...Array.from(pageMap.keys()));
   const pageNumbers = Array.from(pageMap.keys()).sort((a, b) => a - b);
 
@@ -144,7 +144,7 @@ export const Step3Preview: React.FC<Step3PreviewProps> = ({
     const isFirstPage = page === 1;
 
     return (
-      <div className={`flex flex-col justify-between h-full ${isB4Half ? "overflow-hidden text-[10px]" : "text-[11px]"}`}>
+      <div className={`flex flex-col justify-between h-full ${isB4Half ? "overflow-visible text-[10px]" : "text-[11px]"}`}>
         {/* 上部ヘッダー */}
         <div>
           {isFirstPage ? (
@@ -162,7 +162,7 @@ export const Step3Preview: React.FC<Step3PreviewProps> = ({
                   title="クリックしてタイトルを編集"
                 />
                 <div className={`${isB4Half ? "text-[9px]" : "text-[10px]"} text-slate-700 shrink-0 font-medium space-x-2`}>
-                  <span>時間: 20分</span>
+                  <span>時間: 30分</span>
                   <span>配点: {test.totalTargetPoints}点</span>
                 </div>
               </div>
@@ -203,20 +203,28 @@ export const Step3Preview: React.FC<Step3PreviewProps> = ({
                 このページにはまだ問題がありません。左のプールまたはSTEP 2から問題を追加してください。
               </div>
             ) : (
-              itemsOnThisPage.map(({ section: sec, secIdx }) => {
-                if (sec.questions.length === 0) return null;
+              itemsOnThisPage.map(({ section: sec, secIdx, questions, isContinuation, questionOffset }) => {
+                const activeQuestions = questions || sec.questions;
+                if (activeQuestions.length === 0 && !isContinuation) return null;
                 return (
-                  <div key={sec.id || secIdx} className="question-block">
+                  <div key={`${sec.id || secIdx}-${questionOffset ?? 0}`} className="question-block">
                     {/* 大問見出し（紙面上で直接打ち替え可能 ＆ 論点自動入力 ＆ ページ移動） */}
                     <div className="flex items-baseline justify-between border-b border-slate-800 pb-0.5 mb-1 group/header relative">
-                      <input
-                        type="text"
-                        value={sec.title}
-                        onChange={e => onUpdateSectionTitle(secIdx, e.target.value)}
-                        className="font-bold text-[11px] text-slate-900 tracking-tight font-serif bg-transparent hover:bg-slate-50 focus:bg-white border-b border-dashed border-transparent hover:border-slate-400 focus:border-indigo-600 focus:outline-none w-full py-0.5 transition pr-6"
-                        placeholder="大問タイトルを入力..."
-                        title="クリックして大問名を編集"
-                      />
+                      <div className="flex items-center gap-1.5 min-w-0 flex-1 pr-2">
+                        <input
+                          type="text"
+                          value={sec.title}
+                          onChange={e => onUpdateSectionTitle(secIdx, e.target.value)}
+                          className="font-bold text-[11px] text-slate-900 tracking-tight font-serif bg-transparent hover:bg-slate-50 focus:bg-white border-b border-dashed border-transparent hover:border-slate-400 focus:border-indigo-600 focus:outline-none w-full py-0.5 transition"
+                          placeholder="大問タイトルを入力..."
+                          title="クリックして大問名を編集"
+                        />
+                        {isContinuation && (
+                          <span className="text-[9px] font-bold text-slate-500 bg-slate-100 px-1.5 py-0.2 rounded border border-slate-200 shrink-0 select-none">
+                            （続き）
+                          </span>
+                        )}
+                      </div>
                       <div className="flex items-center gap-1 shrink-0">
                         {onAutoGenerateSectionTitle && (
                           <button
@@ -286,8 +294,8 @@ export const Step3Preview: React.FC<Step3PreviewProps> = ({
                     {/* 各設問（2列モード時は左右2列グリッド、1列モード時は縦並び） */}
                     {(() => {
                       // 自動判定: 全設問が40文字以下かつ画像・図形なし、または明示的に 2col が指定されている場合
-                      const isShortVocabularySection = sec.questions.length >= 2 && sec.questions.every(
-                        q => q.questionText.length <= 42 && !q.figureSvg && !q.imageUrl && !q.audioUrl
+                      const isShortVocabularySection = activeQuestions.length >= 2 && activeQuestions.every(
+                        q => q.questionText.length <= 42 && !q.figureSvg && !q.imageUrl && !q.audioUrl && !q.hasImagePlaceholder
                       );
                       const is2Col = sec.layout === "2col" || (sec.layout !== "1col" && isShortVocabularySection);
 
@@ -299,15 +307,17 @@ export const Step3Preview: React.FC<Step3PreviewProps> = ({
                               : (isB4Half ? "space-y-1" : "space-y-1.5")
                           }
                         >
-                          {sec.questions.map((q, qIdx) => (
-                            <div
-                              key={q.id || `${secIdx}-${qIdx}`}
-                              className={`question-block leading-snug relative group p-1 -m-1 rounded hover:bg-slate-50 transition border border-transparent hover:border-slate-200 ${
-                                isB4Half ? "text-[10px]" : "text-[11px]"
-                              }`}
-                            >
+                          {activeQuestions.map((q, localQIdx) => {
+                            const qIdx = (questionOffset ?? 0) + localQIdx;
+                            return (
+                              <div
+                                key={q.id || `${secIdx}-${qIdx}`}
+                                className={`question-block leading-snug relative group p-1 -m-1 rounded hover:bg-slate-50 transition border border-transparent hover:border-slate-200 ${
+                                  isB4Half ? "text-[10px]" : "text-[11px]"
+                                }`}
+                              >
                           {/* ホバー直接操作ツールバー */}
-                          <div className="no-print preview-action-btn absolute right-1 -top-1.5 hidden group-hover:flex items-center gap-1 bg-white/95 backdrop-blur border border-slate-300 rounded shadow-xs px-1 py-0.5 z-20">
+                          <div className="no-print preview-action-btn absolute right-1 -top-2 hidden group-hover:flex flex-wrap items-center justify-end gap-1 bg-white/95 backdrop-blur border border-slate-300 rounded shadow-md px-1.5 py-0.5 z-30 max-w-[calc(100%-8px)]">
                             <button
                               type="button"
                               onClick={(e) => {
@@ -388,68 +398,76 @@ export const Step3Preview: React.FC<Step3PreviewProps> = ({
                                 <Scissors className="w-3.5 h-3.5" />
                               </button>
                             )}
-                            {/* 解答欄の長さ調整（短縮・延長） */}
-                            {onAdjustAnswerWidth && (
-                              <div className="flex items-center border border-slate-200 rounded px-0.5 bg-slate-50">
-                                <button
-                                  type="button"
-                                  onClick={(e) => {
-                                    e.stopPropagation();
-                                    onAdjustAnswerWidth(secIdx, qIdx, -20);
-                                  }}
-                                  className="text-slate-500 hover:text-slate-800 p-0.5 hover:bg-white rounded transition cursor-pointer"
-                                  title="解答欄の下線を短くする (-20px)"
-                                >
-                                  <Minus className="w-2.5 h-2.5" />
-                                </button>
-                                <span className="text-[8px] font-mono text-slate-400 px-0.5 select-none">幅</span>
-                                <button
-                                  type="button"
-                                  onClick={(e) => {
-                                    e.stopPropagation();
-                                    onAdjustAnswerWidth(secIdx, qIdx, 20);
-                                  }}
-                                  className="text-slate-500 hover:text-slate-800 p-0.5 hover:bg-white rounded transition cursor-pointer"
-                                  title="解答欄の下線を長くする (+20px)"
-                                >
-                                  <Plus className="w-2.5 h-2.5" />
-                                </button>
-                              </div>
-                            )}
-                            {/* 解答欄の横位置切替（右寄せ / 左寄せ / 中央） */}
-                            {onToggleAnswerAlign && (
-                              <button
-                                type="button"
-                                onClick={(e) => {
-                                  e.stopPropagation();
-                                  onToggleAnswerAlign(secIdx, qIdx);
-                                }}
-                                className="text-indigo-600 hover:text-indigo-800 p-1 hover:bg-indigo-50 rounded cursor-pointer transition"
-                                title={`解答欄の配置位置を切替 (現在: ${
-                                  q.answerAlign === "left" ? "左寄せ" : q.answerAlign === "center" ? "中央" : "右寄せ"
-                                })`}
-                              >
-                                {q.answerAlign === "left" ? (
-                                  <AlignLeft className="w-3.5 h-3.5" />
-                                ) : q.answerAlign === "center" ? (
-                                  <AlignCenter className="w-3.5 h-3.5" />
-                                ) : (
-                                  <AlignRight className="w-3.5 h-3.5" />
+
+                            {/* ★ 解答欄編集メニューグループ（幅調整・横位置・レイアウト形式） ★ */}
+                            {(onAdjustAnswerWidth || onToggleAnswerAlign || onToggleAnswerLayout) && (
+                              <div className="flex items-center gap-1 bg-indigo-50/80 border border-indigo-200/90 rounded px-1 py-0.2" title="解答用紙の解答欄編集メニュー">
+                                <span className="text-[8px] font-bold text-indigo-700 select-none mr-0.5">解答欄:</span>
+                                {/* 解答欄の長さ調整（短縮・延長） */}
+                                {onAdjustAnswerWidth && (
+                                  <div className="flex items-center border border-indigo-200 rounded px-0.5 bg-white">
+                                    <button
+                                      type="button"
+                                      onClick={(e) => {
+                                        e.stopPropagation();
+                                        onAdjustAnswerWidth(secIdx, qIdx, -20);
+                                      }}
+                                      className="text-slate-600 hover:text-indigo-700 p-0.5 hover:bg-indigo-50 rounded transition cursor-pointer"
+                                      title="解答欄の下線を短くする (-20px)"
+                                    >
+                                      <Minus className="w-2.5 h-2.5" />
+                                    </button>
+                                    <span className="text-[8px] font-mono text-slate-500 px-0.5 select-none">幅</span>
+                                    <button
+                                      type="button"
+                                      onClick={(e) => {
+                                        e.stopPropagation();
+                                        onAdjustAnswerWidth(secIdx, qIdx, 20);
+                                      }}
+                                      className="text-slate-600 hover:text-indigo-700 p-0.5 hover:bg-indigo-50 rounded transition cursor-pointer"
+                                      title="解答欄の下線を長くする (+20px)"
+                                    >
+                                      <Plus className="w-2.5 h-2.5" />
+                                    </button>
+                                  </div>
                                 )}
-                              </button>
-                            )}
-                            {onToggleAnswerLayout && (
-                              <button
-                                type="button"
-                                onClick={(e) => {
-                                  e.stopPropagation();
-                                  onToggleAnswerLayout(secIdx, qIdx);
-                                }}
-                                className="text-indigo-600 hover:text-indigo-800 p-1 hover:bg-indigo-50 rounded cursor-pointer transition"
-                                title="解答欄の形式を切替（同一行 ⇄ 横並び ⇄ 各問1行記述）"
-                              >
-                                <AlignJustify className="w-3.5 h-3.5" />
-                              </button>
+                                {/* 解答欄の横位置切替（右寄せ / 左寄せ / 中央） */}
+                                {onToggleAnswerAlign && (
+                                  <button
+                                    type="button"
+                                    onClick={(e) => {
+                                      e.stopPropagation();
+                                      onToggleAnswerAlign(secIdx, qIdx);
+                                    }}
+                                    className="text-indigo-600 hover:text-indigo-800 p-1 hover:bg-white rounded cursor-pointer transition border border-transparent hover:border-indigo-200"
+                                    title={`解答欄の配置位置を切替 (現在: ${
+                                      q.answerAlign === "left" ? "左寄せ" : q.answerAlign === "center" ? "中央" : "右寄せ"
+                                    })`}
+                                  >
+                                    {q.answerAlign === "left" ? (
+                                      <AlignLeft className="w-3.5 h-3.5" />
+                                    ) : q.answerAlign === "center" ? (
+                                      <AlignCenter className="w-3.5 h-3.5" />
+                                    ) : (
+                                      <AlignRight className="w-3.5 h-3.5" />
+                                    )}
+                                  </button>
+                                )}
+                                {/* 解答欄の形式切替（同一行 ⇄ 横並び ⇄ 各問1行記述） */}
+                                {onToggleAnswerLayout && (
+                                  <button
+                                    type="button"
+                                    onClick={(e) => {
+                                      e.stopPropagation();
+                                      onToggleAnswerLayout(secIdx, qIdx);
+                                    }}
+                                    className="text-indigo-600 hover:text-indigo-800 p-1 hover:bg-white rounded cursor-pointer transition border border-transparent hover:border-indigo-200"
+                                    title="解答欄の形式を切替（同一行 ⇄ 横並び ⇄ 各問1行記述）"
+                                  >
+                                    <AlignJustify className="w-3.5 h-3.5" />
+                                  </button>
+                                )}
+                              </div>
                             )}
                             {onToggleItemColumns && (
                               <button
@@ -534,7 +552,8 @@ export const Step3Preview: React.FC<Step3PreviewProps> = ({
                             const hasMedia = Boolean(
                               (q.figureSvg && q.figureSvg.trim().length > 0) ||
                               (q.imageUrl && q.imageUrl.trim().length > 0) ||
-                              (q.audioUrl && q.audioUrl.trim().length > 0)
+                              (q.audioUrl && q.audioUrl.trim().length > 0) ||
+                              q.hasImagePlaceholder
                             );
 
                             // 文中の空所記号（行頭の設問番号ではなく、文中の空所 ( ① ) や ( 1 ) 等）を検出
@@ -554,7 +573,7 @@ export const Step3Preview: React.FC<Step3PreviewProps> = ({
                             if (isSameLine) {
                               return (
                                 <div className="space-y-0.5">
-                                  <div className="flex items-baseline justify-between gap-2.5">
+                                  <div className="flex items-baseline justify-between gap-4 sm:gap-6">
                                     {/* 問題番号 + 問題文（同一行） */}
                                     <div className="text-slate-950 font-serif leading-relaxed flex items-baseline gap-1 min-w-0 flex-1">
                                       <span className={`font-bold mr-1 inline-block shrink-0 select-none ${isB4Half ? "text-[10px]" : "text-[11px]"}`}>
@@ -603,8 +622,8 @@ export const Step3Preview: React.FC<Step3PreviewProps> = ({
 
                                     {/* 同一行解答欄（生徒用または教師用） */}
                                     {sheetMode === "student" ? (
-                                      <div className="shrink-0 flex items-baseline gap-1.5 self-center pb-0.5">
-                                        <span className="text-[9.5px] text-slate-600 font-bold shrink-0">
+                                      <div className="shrink-0 flex items-end gap-1.5 self-end pb-0.5">
+                                        <span className="text-[9.5px] text-slate-600 font-bold shrink-0 pb-0.5">
                                           {detectedBlankLabel
                                             ? (isSymbolLabel(detectedBlankLabel) ? detectedBlankLabel : `(${detectedBlankLabel})`)
                                             : subLabels.length === 1 && !isSymbolLabel(subLabels[0])
@@ -612,8 +631,13 @@ export const Step3Preview: React.FC<Step3PreviewProps> = ({
                                             : "答"}
                                         </span>
                                         <div
-                                          className="border-b border-slate-700 h-4 transition-all"
+                                          className="answer-underline border-b border-slate-700 transition-all cursor-pointer hover:border-indigo-600 hover:border-b-2"
                                           style={{ width: `${q.customLineWidth || calculateSameLineAnswerWidth(q.answer, is2Col)}px` }}
+                                          title="クリックで解答欄の形式を切替（同一行 ⇄ 横並び ⇄ 各問1行）/ 上部メニューで幅調整可能"
+                                          onClick={(e) => {
+                                            e.stopPropagation();
+                                            if (onToggleAnswerLayout) onToggleAnswerLayout(secIdx, qIdx);
+                                          }}
                                         />
                                       </div>
                                     ) : (
@@ -714,17 +738,17 @@ export const Step3Preview: React.FC<Step3PreviewProps> = ({
                                           {block.blankLabels.length > 0 && (
                                             <div className={`mt-0.5 ${isB4Half ? "pl-2" : "pl-3"}`}>
                                               {sheetMode === "student" ? (
-                                                <div className="flex flex-wrap items-center gap-x-5 gap-y-1 py-0.5">
+                                                <div className="flex flex-wrap items-end gap-x-5 gap-y-1 py-0.5">
                                                   {block.blankLabels.map((bLbl, blIdx) => {
                                                     const ansText = block.blankAnswerMap.get(bLbl) || "";
                                                     const lineWidth = q.customLineWidth || calculateSubQuestionLineWidth(ansText, block.blankLabels.length, 2);
                                                     return (
-                                                      <div key={blIdx} className="flex items-baseline gap-1.5 text-[10.5px] text-slate-900">
-                                                        <span className="font-bold shrink-0 text-slate-800 min-w-[18px]">
+                                                      <div key={blIdx} className="flex items-end gap-1.5 text-[10.5px] text-slate-900">
+                                                        <span className="font-bold shrink-0 text-slate-800 min-w-[18px] pb-0.5">
                                                           {bLbl}
                                                         </span>
                                                         <div
-                                                          className="border-b border-slate-700 h-4 transition-all inline-block"
+                                                          className="answer-underline border-b border-slate-700 transition-all inline-block"
                                                           style={{ width: `${lineWidth}px` }}
                                                         />
                                                       </div>
@@ -838,19 +862,19 @@ export const Step3Preview: React.FC<Step3PreviewProps> = ({
                                         {parsedSub.items.map((item, itemIdx) => {
                                           const itemLineWidth = q.customLineWidth || calculateSameLineAnswerWidth(item.answerText || "", is2Col || isGrid2Col);
                                           return (
-                                            <div key={itemIdx} className="flex items-baseline justify-between gap-2.5 py-0.5">
+                                            <div key={itemIdx} className="flex items-baseline justify-between gap-4 sm:gap-6 py-0.5">
                                               <div className="text-slate-950 font-serif leading-relaxed flex-1 min-w-0">
                                                 <MathText text={item.promptText || item.rawLine} />
                                               </div>
 
                                               {/* 各行の右隣解答欄 */}
                                               {sheetMode === "student" ? (
-                                                <div className="shrink-0 flex items-baseline gap-1.5 self-center pb-0.5">
-                                                  <span className="text-[9.5px] text-slate-600 font-bold shrink-0">
+                                                <div className="shrink-0 flex items-end gap-1.5 self-end pb-0.5">
+                                                  <span className="text-[9.5px] text-slate-600 font-bold shrink-0 pb-0.5">
                                                     {item.originalLabel}
                                                   </span>
                                                   <div
-                                                    className="border-b border-slate-700 h-4 transition-all"
+                                                    className="answer-underline border-b border-slate-700 transition-all"
                                                     style={{ width: `${itemLineWidth}px` }}
                                                   />
                                                 </div>
@@ -946,20 +970,34 @@ export const Step3Preview: React.FC<Step3PreviewProps> = ({
 
                                       if (layout === "stacked") {
                                         return (
-                                          <div className="mt-2 space-y-1.5 pl-2">
+                                          <div className="mt-2.5 space-y-2 pl-2">
                                             {subLabels.length > 0 ? (
                                               subLabels.map((lbl, lIdx) => (
-                                                <div key={lIdx} className="flex items-baseline gap-1.5 text-[10.5px] text-slate-900">
-                                                  <span className="font-bold shrink-0 text-slate-800 min-w-[26px]">
+                                                <div key={lIdx} className="flex items-end gap-1.5 text-[10.5px] text-slate-900">
+                                                  <span className="font-bold shrink-0 text-slate-800 min-w-[26px] pb-0.5">
                                                     {isSymbolLabel(lbl) ? lbl : `[${lbl}]`}
                                                   </span>
-                                                  <span className="flex-1 border-b border-slate-700 inline-block h-4"></span>
+                                                  <span
+                                                    className="flex-1 answer-underline border-b border-slate-700 cursor-pointer hover:border-indigo-600 hover:border-b-2 transition-all"
+                                                    title="クリックで解答欄の形式を切替（各問1行 ⇄ 同一行 ⇄ 横並び）"
+                                                    onClick={(e) => {
+                                                      e.stopPropagation();
+                                                      if (onToggleAnswerLayout) onToggleAnswerLayout(secIdx, qIdx);
+                                                    }}
+                                                  ></span>
                                                 </div>
                                               ))
                                             ) : (
-                                              <div className="flex items-baseline gap-1.5 text-[10.5px] text-slate-900">
-                                                <span className="font-bold shrink-0 text-slate-800">答</span>
-                                                <span className="flex-1 border-b border-slate-700 inline-block h-4"></span>
+                                              <div className="flex items-end gap-1.5 text-[10.5px] text-slate-900">
+                                                <span className="font-bold shrink-0 text-slate-800 pb-0.5">答</span>
+                                                <span
+                                                    className="flex-1 answer-underline border-b border-slate-700 cursor-pointer hover:border-indigo-600 hover:border-b-2 transition-all"
+                                                    title="クリックで解答欄の形式を切替（各問1行 ⇄ 同一行 ⇄ 横並び）"
+                                                    onClick={(e) => {
+                                                      e.stopPropagation();
+                                                      if (onToggleAnswerLayout) onToggleAnswerLayout(secIdx, qIdx);
+                                                    }}
+                                                  ></span>
                                               </div>
                                             )}
                                           </div>
@@ -986,31 +1024,36 @@ export const Step3Preview: React.FC<Step3PreviewProps> = ({
                                       const alignClass = q.answerAlign === "left" ? "justify-start" : q.answerAlign === "center" ? "justify-center" : "justify-end";
 
                                       return (
-                                        <div className={`pt-1 flex ${alignClass}`}>
+                                        <div className={`pt-2.5 flex ${alignClass}`}>
                                           {subLabels.length > 0 ? (
-                                            <div className={`flex flex-wrap items-center ${alignClass} gap-x-3 gap-y-1.5`}>
-                                              <span className="text-[9.5px] text-slate-600 font-bold shrink-0">答</span>
+                                            <div className={`flex flex-wrap items-end ${alignClass} gap-x-4 gap-y-1.5`}>
+                                              <span className="text-[9.5px] text-slate-600 font-bold shrink-0 pb-0.5">答</span>
                                               {subLabels.map((lbl, lIdx) => {
                                                 const isSymbol = isSymbolLabel(lbl);
 
                                                 return (
-                                                  <div key={lIdx} className="flex items-center gap-1 shrink-0">
-                                                    <span className="text-[10px] font-bold text-slate-800">
+                                                  <div key={lIdx} className="flex items-end gap-1.5 shrink-0">
+                                                    <span className="text-[10px] font-bold text-slate-800 pb-0.5">
                                                       {isSymbol ? lbl : `[${lbl}]`}
                                                     </span>
                                                     <div
-                                                      className="border-b border-slate-700 h-4.5 transition-all"
+                                                      className="answer-underline border-b border-slate-700 transition-all cursor-pointer hover:border-indigo-600 hover:border-b-2"
                                                       style={{ width: `${effectiveWidth}px` }}
+                                                      title="クリックで解答欄の形式を切替（横並び ⇄ 各問1行 ⇄ 同一行）/ 上部メニューで幅調整可能"
+                                                      onClick={(e) => {
+                                                        e.stopPropagation();
+                                                        if (onToggleAnswerLayout) onToggleAnswerLayout(secIdx, qIdx);
+                                                      }}
                                                     />
                                                   </div>
                                                 );
                                               })}
                                             </div>
                                           ) : (
-                                            <div className="flex items-center gap-1.5">
-                                              <span className="text-[9.5px] text-slate-600 font-bold">答</span>
+                                            <div className="flex items-end gap-1.5">
+                                              <span className="text-[9.5px] text-slate-600 font-bold pb-0.5">答</span>
                                               <div
-                                                className="border-b border-slate-700 h-4.5 transition-all"
+                                                className="answer-underline border-b border-slate-700 transition-all"
                                                 style={{ width: `${effectiveWidth}px` }}
                                               />
                                             </div>
@@ -1052,8 +1095,8 @@ export const Step3Preview: React.FC<Step3PreviewProps> = ({
                                   )}
                                 </div>
 
-                                {/* SVG図形 または アップロード画像 */}
-                                {(q.figureSvg || q.imageUrl) && (
+                                {/* SVG図形 または アップロード画像 または 画像欄 */}
+                                {(q.figureSvg || q.imageUrl || q.hasImagePlaceholder) && (
                                   <div className="shrink-0 bg-white p-0.5 rounded border border-slate-100 flex flex-col items-center justify-center gap-1">
                                     {q.figureSvg && (
                                       <div dangerouslySetInnerHTML={{ __html: q.figureSvg }} />
@@ -1066,13 +1109,26 @@ export const Step3Preview: React.FC<Step3PreviewProps> = ({
                                         className="max-h-24 max-w-[130px] object-contain rounded"
                                       />
                                     )}
+                                    {/* 絵を見て答える問題用 画像欄枠 */}
+                                    {q.hasImagePlaceholder && !q.imageUrl && (
+                                      <div className="w-28 h-20 border-2 border-dashed border-slate-400 print:border-slate-600 rounded flex flex-col items-center justify-center bg-slate-50/60 print:bg-white text-slate-500 print:text-slate-700 select-none p-1">
+                                        <ImageIcon className="w-5 h-5 mb-0.5 opacity-60 print:opacity-80" />
+                                        <span className="text-[10px] font-bold tracking-wider">画像欄</span>
+                                        {q.imagePlaceholderText && q.imagePlaceholderText !== "画像欄" && (
+                                          <span className="text-[8px] text-slate-500 print:text-slate-800 mt-0.5 truncate max-w-full text-center px-1 font-sans">
+                                            {q.imagePlaceholderText}
+                                          </span>
+                                        )}
+                                      </div>
+                                    )}
                                   </div>
                                 )}
                               </div>
                             );
                           })()}
                         </div>
-                      ))}
+                      );
+                    })}
                     </div>
                   );
                 })()}

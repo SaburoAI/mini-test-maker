@@ -19,7 +19,11 @@ import {
   Calendar,
   Sparkles,
   ArrowRight,
-  Database
+  Database,
+  History,
+  ShieldAlert,
+  Copy,
+  RotateCcw
 } from "lucide-react";
 import { QuizTest, Question } from "@/types/quiz";
 
@@ -35,6 +39,15 @@ interface TestMeta {
   questionCount: number;
   updatedAt: string;
   createdAt: string;
+}
+
+interface BackupMeta {
+  id: string;
+  filename: string;
+  title: string;
+  updatedAt: string;
+  createdAt: string;
+  questionCount: number;
 }
 
 interface PoolMeta {
@@ -66,7 +79,7 @@ export const StorageManagerModal: React.FC<StorageManagerModalProps> = ({
   onLoadTest,
   onLoadPool
 }) => {
-  const [activeTab, setActiveTab] = useState<"tests" | "pools">("tests");
+  const [activeTab, setActiveTab] = useState<"tests" | "pools" | "backups">("tests");
 
   // テスト管理用ステート
   const [testList, setTestList] = useState<TestMeta[]>([]);
@@ -74,6 +87,11 @@ export const StorageManagerModal: React.FC<StorageManagerModalProps> = ({
   const [testSaveTitle, setTestSaveTitle] = useState(currentTest.title || "");
   const [testSearch, setTestSearch] = useState("");
   const [isSavingTest, setIsSavingTest] = useState(false);
+
+  // バックアップ復元用ステート
+  const [backupList, setBackupList] = useState<BackupMeta[]>([]);
+  const [isLoadingBackups, setIsLoadingBackups] = useState(false);
+  const [backupSearch, setBackupSearch] = useState("");
 
   // 問題プール管理用ステート
   const [poolList, setPoolList] = useState<PoolMeta[]>([]);
@@ -112,6 +130,22 @@ export const StorageManagerModal: React.FC<StorageManagerModalProps> = ({
     }
   }, []);
 
+  // バックアップ一覧取得
+  const fetchBackups = useCallback(async () => {
+    setIsLoadingBackups(true);
+    try {
+      const res = await fetch("/api/storage/tests?backups=true");
+      const data = await res.json();
+      if (res.ok && data.backups) {
+        setBackupList(data.backups);
+      }
+    } catch (err: any) {
+      console.error(err);
+    } finally {
+      setIsLoadingBackups(false);
+    }
+  }, []);
+
   // 問題プール一覧取得
   const fetchPools = useCallback(async () => {
     setIsLoadingPools(true);
@@ -136,17 +170,24 @@ export const StorageManagerModal: React.FC<StorageManagerModalProps> = ({
     if (isOpen) {
       setTestSaveTitle(currentTest.title || "小テスト");
       fetchTests();
+      fetchBackups();
       fetchPools();
     }
-  }, [isOpen, currentTest.title, fetchTests, fetchPools]);
+  }, [isOpen, currentTest.title, fetchTests, fetchBackups, fetchPools]);
 
   if (!isOpen) return null;
 
-  // --- テストの保存 ---
-  const handleSaveTest = async () => {
+  // --- テストの保存 (mode: "new" | "overwrite") ---
+  const handleSaveTest = async (mode: "new" | "overwrite" = "new", targetFilename?: string) => {
     if (!testSaveTitle.trim()) {
       showToast("テスト名を入力してください", "error");
       return;
+    }
+
+    if (mode === "overwrite") {
+      const confirmTarget = targetFilename ? `ファイル「${targetFilename}」` : `現在のテスト`;
+      const ok = window.confirm(`${confirmTarget}を上書き保存しますか？\n（直前の内容はバックアップに自動退避され、後から復元できます）`);
+      if (!ok) return;
     }
 
     setIsSavingTest(true);
@@ -159,13 +200,18 @@ export const StorageManagerModal: React.FC<StorageManagerModalProps> = ({
       const res = await fetch("/api/storage/tests", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ test: testToSave })
+        body: JSON.stringify({
+          test: testToSave,
+          saveMode: mode,
+          filename: targetFilename
+        })
       });
       const data = await res.json();
 
       if (res.ok && data.success) {
         showToast(data.message || "テストを保存しました", "success");
         fetchTests();
+        fetchBackups();
       } else {
         showToast(data.error || "テストの保存に失敗しました", "error");
       }
@@ -174,6 +220,37 @@ export const StorageManagerModal: React.FC<StorageManagerModalProps> = ({
       showToast("保存リクエストに失敗しました", "error");
     } finally {
       setIsSavingTest(false);
+    }
+  };
+
+  // --- バックアップからの復元 ---
+  const handleRestoreBackup = async (backupFilename: string, backupTitle: string) => {
+    const ok = window.confirm(`バックアップ「${backupTitle}」からテストを復元しますか？\n（新規の復元テストとして追加・呼び出されます）`);
+    if (!ok) return;
+
+    try {
+      const res = await fetch("/api/storage/tests", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          action: "restore",
+          backupFilename
+        })
+      });
+      const data = await res.json();
+
+      if (res.ok && data.success && data.test) {
+        onLoadTest(data.test);
+        showToast(data.message || "バックアップから復元しました", "success");
+        fetchTests();
+        fetchBackups();
+        onClose();
+      } else {
+        showToast(data.error || "復元に失敗しました", "error");
+      }
+    } catch (err: any) {
+      console.error(err);
+      showToast("復元リクエストに失敗しました", "error");
     }
   };
 
@@ -202,7 +279,7 @@ export const StorageManagerModal: React.FC<StorageManagerModalProps> = ({
   // --- テストの削除 ---
   const handleDeleteTest = async (testMeta: TestMeta, e: React.MouseEvent) => {
     e.stopPropagation();
-    const ok = window.confirm(`保存されたテスト「${testMeta.title}」(${testMeta.filename}) を削除しますか？`);
+    const ok = window.confirm(`保存されたテスト「${testMeta.title}」(${testMeta.filename}) を削除しますか？\n（削除前に自動でバックアップに退避されます）`);
     if (!ok) return;
 
     try {
@@ -212,8 +289,9 @@ export const StorageManagerModal: React.FC<StorageManagerModalProps> = ({
       const data = await res.json();
 
       if (res.ok && data.success) {
-        showToast(`テストを削除しました`, "success");
+        showToast(`テストを削除しました（バックアップから復元可能）`, "success");
         fetchTests();
+        fetchBackups();
       } else {
         showToast(data.error || "削除に失敗しました", "error");
       }
@@ -358,6 +436,11 @@ export const StorageManagerModal: React.FC<StorageManagerModalProps> = ({
     t.grade.toLowerCase().includes(testSearch.toLowerCase())
   );
 
+  const filteredBackups = backupList.filter(b =>
+    b.title.toLowerCase().includes(backupSearch.toLowerCase()) ||
+    b.filename.toLowerCase().includes(backupSearch.toLowerCase())
+  );
+
   const filteredPools = poolList.filter(p =>
     p.name.toLowerCase().includes(poolSearch.toLowerCase()) ||
     (p.description && p.description.toLowerCase().includes(poolSearch.toLowerCase())) ||
@@ -452,6 +535,23 @@ export const StorageManagerModal: React.FC<StorageManagerModalProps> = ({
               {poolList.length}
             </span>
           </button>
+          <button
+            type="button"
+            onClick={() => setActiveTab("backups")}
+            className={`flex items-center gap-2 px-4 py-2.5 rounded-t-lg font-bold text-xs cursor-pointer transition border-t border-x ${
+              activeTab === "backups"
+                ? "bg-white text-amber-700 border-slate-200 border-b-white -mb-px shadow-xs"
+                : "text-slate-600 hover:text-slate-900 border-transparent hover:bg-slate-100/80"
+            }`}
+          >
+            <History className="w-4 h-4 text-amber-600" />
+            <span>🛡️ バックアップ履歴（復元）</span>
+            {backupList.length > 0 && (
+              <span className="bg-amber-100 text-amber-800 text-[10px] px-1.5 py-0.2 rounded-full font-mono">
+                {backupList.length}
+              </span>
+            )}
+          </button>
         </div>
 
         {/* メインコンテンツ */}
@@ -470,41 +570,54 @@ export const StorageManagerModal: React.FC<StorageManagerModalProps> = ({
                     </span>
                     <div>
                       <h4 className="font-bold text-slate-800 text-xs flex items-center gap-2">
-                        <span>現在作成中のテストを保存</span>
+                        <span>現在作成中のテストを保存（複数保存・名前分け対応）</span>
                         <span className="text-[10px] font-normal text-slate-500 bg-white border border-slate-200 px-1.5 py-0.2 rounded">
                           全 {currentTest.sections.reduce((s, sec) => s + sec.questions.length, 0)}問 / {currentTest.totalTargetPoints}点
                         </span>
                       </h4>
                       <p className="text-[10px] text-slate-500">
-                        大問構成・配点・小問選択・用紙レイアウトを含む完全なテストデータをファイル保存します
+                        「新規テストとして保存」で名前ごとに別ファイルで何個でも保存できます。上書き保存時は直前の内容が自動バックアップされます。
                       </p>
                     </div>
                   </div>
                 </div>
 
-                <div className="flex items-center gap-2.5">
-                  <div className="flex-1">
+                <div className="flex items-center gap-2 flex-wrap sm:flex-nowrap">
+                  <div className="flex-1 min-w-[200px]">
                     <input
                       type="text"
-                      placeholder="テスト名を入力 (例: 2026年9月 中2数学 1次関数基礎小テスト)..."
+                      placeholder="テスト名を入力 (例: 2026年9月 中2数学 1次関数基礎テスト)..."
                       value={testSaveTitle}
                       onChange={e => setTestSaveTitle(e.target.value)}
                       className="w-full px-3 py-2 border border-slate-300 rounded-lg bg-white text-xs text-slate-800 font-semibold focus:ring-2 focus:ring-indigo-500 focus:outline-none"
                     />
                   </div>
-                  <button
-                    type="button"
-                    onClick={handleSaveTest}
-                    disabled={isSavingTest}
-                    className="px-4 py-2 bg-indigo-600 hover:bg-indigo-500 text-white rounded-lg text-xs font-bold flex items-center gap-1.5 cursor-pointer shadow-xs transition shrink-0 disabled:opacity-50"
-                  >
-                    {isSavingTest ? (
-                      <RefreshCw className="w-3.5 h-3.5 animate-spin" />
-                    ) : (
+                  <div className="flex items-center gap-2 shrink-0">
+                    <button
+                      type="button"
+                      onClick={() => handleSaveTest("new")}
+                      disabled={isSavingTest}
+                      className="px-3.5 py-2 bg-emerald-600 hover:bg-emerald-500 text-white rounded-lg text-xs font-bold flex items-center gap-1.5 cursor-pointer shadow-xs transition disabled:opacity-50"
+                      title="入力したテスト名で新しいテストとして保存（複数作成・別名保存）"
+                    >
+                      {isSavingTest ? (
+                        <RefreshCw className="w-3.5 h-3.5 animate-spin" />
+                      ) : (
+                        <Plus className="w-3.5 h-3.5" />
+                      )}
+                      <span>新規テストとして保存</span>
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => handleSaveTest("overwrite")}
+                      disabled={isSavingTest}
+                      className="px-3 py-2 bg-slate-700 hover:bg-slate-800 text-white rounded-lg text-xs font-bold flex items-center gap-1.5 cursor-pointer shadow-xs transition disabled:opacity-50"
+                      title="既存の同名テストまたは現在のテストを上書き保存（自動バックアップ退避）"
+                    >
                       <Save className="w-3.5 h-3.5" />
-                    )}
-                    <span>名前を付けて保存</span>
-                  </button>
+                      <span>上書き保存</span>
+                    </button>
+                  </div>
                 </div>
               </div>
 
@@ -593,10 +706,19 @@ export const StorageManagerModal: React.FC<StorageManagerModalProps> = ({
 
                         {/* アクションボタン */}
                         <div className="pt-2 border-t border-slate-100 flex items-center justify-between">
-                          <div className="text-[9px] text-slate-400 truncate max-w-[140px]" title={test.filename}>
+                          <div className="text-[9px] text-slate-400 truncate max-w-[120px]" title={test.filename}>
                             {test.filename}
                           </div>
                           <div className="flex items-center gap-1.5">
+                            <button
+                              type="button"
+                              onClick={() => handleSaveTest("overwrite", test.filename)}
+                              className="px-2 py-1 bg-amber-50 hover:bg-amber-100 text-amber-800 border border-amber-300 rounded-lg text-[10px] font-bold flex items-center gap-1 cursor-pointer transition"
+                              title="現在の作成内容でこのテストファイルを上書き保存（直前の内容はバックアップされます）"
+                            >
+                              <Save className="w-3 h-3 text-amber-600" />
+                              <span>上書き</span>
+                            </button>
                             <button
                               type="button"
                               onClick={e => handleDownloadTestJson(test, e)}
@@ -609,14 +731,14 @@ export const StorageManagerModal: React.FC<StorageManagerModalProps> = ({
                               type="button"
                               onClick={e => handleDeleteTest(test, e)}
                               className="p-1 text-slate-400 hover:text-rose-600 hover:bg-rose-50 rounded transition cursor-pointer"
-                              title="このテストを削除"
+                              title="このテストを削除（バックアップ退避あり）"
                             >
                               <Trash2 className="w-3.5 h-3.5" />
                             </button>
                             <button
                               type="button"
                               onClick={() => handleLoadTest(test)}
-                              className="px-2.5 py-1 bg-indigo-600 hover:bg-indigo-500 text-white rounded-lg text-[10.5px] font-bold flex items-center gap-1 cursor-pointer shadow-2xs transition ml-1"
+                              className="px-2.5 py-1 bg-indigo-600 hover:bg-indigo-500 text-white rounded-lg text-[10.5px] font-bold flex items-center gap-1 cursor-pointer shadow-2xs transition ml-0.5"
                             >
                               <span>開く</span>
                               <ArrowRight className="w-3 h-3" />
@@ -817,6 +939,115 @@ export const StorageManagerModal: React.FC<StorageManagerModalProps> = ({
                   </div>
                 )}
               </div>
+            </div>
+          )}
+
+          {/* =========================================================================
+              タブ3: バックアップ履歴（復元）
+             ========================================================================= */}
+          {activeTab === "backups" && (
+            <div className="space-y-4">
+              <div className="bg-gradient-to-br from-amber-50/70 to-orange-50/50 border border-amber-200 rounded-xl p-4 shadow-xs">
+                <div className="flex items-center gap-2">
+                  <span className="p-1.5 bg-amber-600 text-white rounded-lg shadow-2xs">
+                    <History className="w-4 h-4" />
+                  </span>
+                  <div>
+                    <h4 className="font-bold text-slate-800 text-xs flex items-center gap-2">
+                      <span>自動バックアップ履歴 ＆ 復元機能</span>
+                      <span className="text-[10px] font-bold text-amber-800 bg-amber-100 border border-amber-200 px-1.5 py-0.2 rounded font-mono">
+                        {backupList.length} 件保持
+                      </span>
+                    </h4>
+                    <p className="text-[10px] text-slate-600">
+                      テストの上書き保存時や削除時に、直前状態が自動的にここに退避されます。いつでも過去のバージョンから新規テストとして復元・呼び出しが可能です。
+                    </p>
+                  </div>
+                </div>
+              </div>
+
+              <div className="flex items-center justify-between gap-4 flex-wrap">
+                <div className="flex items-center gap-2">
+                  <FolderOpen className="w-4 h-4 text-slate-600" />
+                  <h4 className="font-bold text-slate-800 text-xs">
+                    退避済みバックアップ一覧（data/tests/backups/）
+                  </h4>
+                  <button
+                    type="button"
+                    onClick={fetchBackups}
+                    className="p-1 text-slate-400 hover:text-slate-700 rounded hover:bg-slate-100 transition cursor-pointer"
+                    title="一覧を更新"
+                  >
+                    <RefreshCw className={`w-3.5 h-3.5 ${isLoadingBackups ? "animate-spin" : ""}`} />
+                  </button>
+                </div>
+
+                <div className="relative w-64">
+                  <Search className="w-3.5 h-3.5 text-slate-400 absolute left-2.5 top-2.5" />
+                  <input
+                    type="text"
+                    placeholder="バックアップを検索..."
+                    value={backupSearch}
+                    onChange={e => setBackupSearch(e.target.value)}
+                    className="w-full pl-8 pr-3 py-1.5 text-[11px] border border-slate-200 rounded-lg bg-slate-50 focus:bg-white focus:ring-1 focus:ring-amber-500 focus:outline-none"
+                  />
+                </div>
+              </div>
+
+              {isLoadingBackups ? (
+                <div className="py-12 text-center text-slate-400 text-xs flex flex-col items-center gap-2">
+                  <RefreshCw className="w-5 h-5 animate-spin text-amber-500" />
+                  <span>バックアップ履歴を読み込み中...</span>
+                </div>
+              ) : filteredBackups.length === 0 ? (
+                <div className="py-10 text-center text-slate-400 bg-slate-50 border border-dashed border-slate-200 rounded-xl text-xs space-y-1">
+                  <History className="w-6 h-6 mx-auto text-slate-300" />
+                  <p className="font-semibold text-slate-600">バックアップ履歴はありません</p>
+                  <p className="text-[10px] text-slate-400">
+                    テストを上書き保存または削除すると、自動的に直前バージョンがここに退避されます
+                  </p>
+                </div>
+              ) : (
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+                  {filteredBackups.map(backup => (
+                    <div
+                      key={backup.filename}
+                      className="bg-white border border-slate-200 hover:border-amber-300 hover:shadow-md rounded-xl p-3.5 transition flex flex-col justify-between group space-y-3"
+                    >
+                      <div className="space-y-1.5">
+                        <div className="flex items-start justify-between gap-2">
+                          <h5 className="font-bold text-slate-800 text-xs leading-snug group-hover:text-amber-700 transition">
+                            {backup.title}
+                          </h5>
+                          <span className="text-[10px] font-bold bg-amber-50 text-amber-800 px-1.5 py-0.5 rounded border border-amber-200 shrink-0">
+                            {backup.questionCount}問
+                          </span>
+                        </div>
+
+                        <div className="flex items-center gap-1 text-[9.5px] text-slate-400 font-mono">
+                          <Calendar className="w-3 h-3 text-slate-300" />
+                          <span>退避日時: {new Date(backup.updatedAt).toLocaleString("ja-JP")}</span>
+                        </div>
+                      </div>
+
+                      <div className="pt-2 border-t border-slate-100 flex items-center justify-between">
+                        <div className="text-[9px] text-slate-400 truncate max-w-[140px]" title={backup.filename}>
+                          {backup.filename}
+                        </div>
+                        <button
+                          type="button"
+                          onClick={() => handleRestoreBackup(backup.filename, backup.title)}
+                          className="px-3 py-1 bg-amber-600 hover:bg-amber-500 text-white rounded-lg text-[10.5px] font-bold flex items-center gap-1 cursor-pointer shadow-2xs transition"
+                          title="このバックアップからテストを復元し、現在編集中のテストとして読み込みます"
+                        >
+                          <RotateCcw className="w-3 h-3" />
+                          <span>この版を復元</span>
+                        </button>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              )}
             </div>
           )}
         </div>

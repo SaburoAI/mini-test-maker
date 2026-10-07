@@ -37,6 +37,49 @@ export interface ParseSubItemsResult {
 }
 
 /**
+ * クォート（"" や ”” や 「」 など）やバックスラッシュでエスケープされた小問記号を退避・復元するユーティリティ
+ * 枝問自動検出時に、文脈中で引用・言及された "(1)" や "（１）" を小問区切りと誤認させないための機構
+ */
+export function maskEscapedSubLabels(text: string): {
+  maskedText: string;
+  restore: (str: string) => string;
+} {
+  if (!text) return { maskedText: "", restore: (s: string) => s };
+
+  const placeholders: Map<string, string> = new Map();
+  let counter = 0;
+
+  const replaceWithPlaceholder = (raw: string) => {
+    const key = `__ESCAPED_SUBITEM_${counter++}__`;
+    placeholders.set(key, raw);
+    return key;
+  };
+
+  // 1. クォートまたはカギ括弧で囲まれた小問記号（例: "(1)", "（１）", "①", “（１）”, 「(1)」, 『①』, `(1)` 等）
+  let result = text.replace(
+    /(["“”「『`])\s*([（\(][0-9０-９]+[）\)]|[①-⑳])\s*(["“”」』`])/g,
+    (match) => replaceWithPlaceholder(match)
+  );
+
+  // 2. バックスラッシュによるエスケープ（例: \(1\), \（１\）等）
+  result = result.replace(
+    /\\([（\(][0-9０-９]+[）\)]|[①-⑳])/g,
+    (match) => replaceWithPlaceholder(match)
+  );
+
+  const restore = (str: string): string => {
+    if (!str || placeholders.size === 0) return str;
+    let restored = str;
+    placeholders.forEach((val, key) => {
+      restored = restored.replaceAll(key, val);
+    });
+    return restored;
+  };
+
+  return { maskedText: result, restore };
+}
+
+/**
  * 全角数字を半角数字に変換
  */
 export function toHalfWidthNumber(str: string): string {
@@ -151,7 +194,9 @@ function parseAnswerBySubItems(answerStr: string, totalItems: number): Map<numbe
  * 1行の中にインラインで (1) ... (2) ... または （１）... （２）... が含まれている場合に複数行へ分割
  */
 function splitInlineSubItems(text: string): string[] {
-  const norm = normalizeNewlines(text);
+  // エスケープされた小問表記を一時退避
+  const { maskedText, restore } = maskEscapedSubLabels(text);
+  const norm = normalizeNewlines(maskedText);
   const rawLines = norm.split("\n");
   const resultLines: string[] = [];
 
@@ -170,7 +215,7 @@ function splitInlineSubItems(text: string): string[] {
       const firstIndex = matches[0].index ?? 0;
       if (firstIndex > 0) {
         const lead = trimmed.substring(0, firstIndex).trim();
-        if (lead) resultLines.push(lead);
+        if (lead) resultLines.push(restore(lead));
       }
 
       for (let i = 0; i < matches.length; i++) {
@@ -179,12 +224,12 @@ function splitInlineSubItems(text: string): string[] {
         const start = currentMatch.index ?? 0;
         const end = nextMatch ? (nextMatch.index ?? trimmed.length) : trimmed.length;
         const itemStr = trimmed.substring(start, end).trim();
-        if (itemStr) resultLines.push(itemStr);
+        if (itemStr) resultLines.push(restore(itemStr));
       }
       continue;
     }
 
-    resultLines.push(trimmed);
+    resultLines.push(restore(trimmed));
   }
 
   return resultLines;
@@ -203,12 +248,16 @@ export function parseSubItems(
     return { hasSubItems: false, leadInText: questionText || "", items: [], labelType: "paren" };
   }
 
-  // 改行コード正規化およびインライン小問の行分割
-  const rawLines = splitInlineSubItems(questionText);
+  // クォートやカギ括弧でエスケープされた記号を一時退避
+  const { maskedText: maskedQuestion, restore: restoreQuestion } = maskEscapedSubLabels(questionText);
+  const { maskedText: maskedAnswer, restore: restoreAnswer } = maskEscapedSubLabels(answerText);
+
+  // 改行コード正規化およびインライン小問の行分割（分割関数内でもエスケープを考慮）
+  const rawLines = splitInlineSubItems(maskedQuestion);
   const items: ParsedSubItem[] = [];
 
   // 解答を小問ごとに分解
-  const answerMap = parseAnswerBySubItems(answerText, rawLines.length);
+  const answerMap = parseAnswerBySubItems(maskedAnswer, rawLines.length);
 
   let detectedType: SubItemLabelType = "paren";
   const nonItemLines: string[] = [];
@@ -230,14 +279,16 @@ export function parseSubItems(
       }
       const num = parseInt(toHalfWidthNumber(parenStartMatch[2]), 10);
       const label = isFull ? `（${toFullWidthNumber(num)}）` : `(${num})`;
+      const rawPrompt = parenStartMatch[3].trim();
+      const rawAns = answerMap.get(items.length) || answerMap.get(num - 1);
       items.push({
         index: items.length,
-        rawLine: line,
+        rawLine: restoreQuestion(line),
         originalNumber: num,
         originalLabel: label,
         labelType: isFull ? "fullParen" : "paren",
-        promptText: parenStartMatch[3].trim(),
-        answerText: answerMap.get(items.length) || answerMap.get(num - 1)
+        promptText: restoreQuestion(rawPrompt),
+        answerText: rawAns ? restoreAnswer(rawAns) : undefined
       });
       continue;
     }
@@ -249,14 +300,16 @@ export function parseSubItems(
       detectedType = "circled";
       const char = circledStartMatch[1];
       const num = CIRCLED_NUMBERS.indexOf(char) + 1;
+      const rawPrompt = circledStartMatch[2].trim();
+      const rawAns = answerMap.get(items.length) || answerMap.get((num > 0 ? num : items.length + 1) - 1);
       items.push({
         index: items.length,
-        rawLine: line,
+        rawLine: restoreQuestion(line),
         originalNumber: num > 0 ? num : items.length + 1,
         originalLabel: char,
         labelType: "circled",
-        promptText: circledStartMatch[2].trim(),
-        answerText: answerMap.get(items.length) || answerMap.get((num > 0 ? num : items.length + 1) - 1)
+        promptText: restoreQuestion(rawPrompt),
+        answerText: rawAns ? restoreAnswer(rawAns) : undefined
       });
       continue;
     }
@@ -269,14 +322,15 @@ export function parseSubItems(
       detectedType = "circled";
       const circledChar = bulletCircledMatch[2];
       const num = CIRCLED_NUMBERS.indexOf(circledChar) + 1;
+      const rawAns = answerMap.get(items.length) || answerMap.get((num > 0 ? num : items.length + 1) - 1);
       items.push({
         index: items.length,
-        rawLine: line,
+        rawLine: restoreQuestion(line),
         originalNumber: num > 0 ? num : items.length + 1,
         originalLabel: circledChar,
         labelType: "circled",
-        promptText: line,
-        answerText: answerMap.get(items.length) || answerMap.get((num > 0 ? num : items.length + 1) - 1)
+        promptText: restoreQuestion(line),
+        answerText: rawAns ? restoreAnswer(rawAns) : undefined
       });
       continue;
     }
@@ -290,27 +344,28 @@ export function parseSubItems(
       detectedType = isFull ? "fullParen" : "paren";
       const num = parseInt(toHalfWidthNumber(bulletParenMatch[2]), 10);
       const label = isFull ? `（${toFullWidthNumber(num)}）` : `(${num})`;
+      const rawAns = answerMap.get(items.length) || answerMap.get(num - 1);
       items.push({
         index: items.length,
-        rawLine: line,
+        rawLine: restoreQuestion(line),
         originalNumber: num,
         originalLabel: label,
         labelType: detectedType,
-        promptText: line,
-        answerText: answerMap.get(items.length) || answerMap.get(num - 1)
+        promptText: restoreQuestion(line),
+        answerText: rawAns ? restoreAnswer(rawAns) : undefined
       });
       continue;
     }
 
     // 小問より前にある行は「導入文」
     if (!foundFirstItem) {
-      nonItemLines.push(line);
+      nonItemLines.push(restoreQuestion(line));
     } else {
       // 小問の途中で継続行（複数行にまたがる小問文など）がある場合
       if (items.length > 0) {
         const lastItem = items[items.length - 1];
-        lastItem.promptText += "\n" + line;
-        lastItem.rawLine += "\n" + line;
+        lastItem.promptText += "\n" + restoreQuestion(line);
+        lastItem.rawLine += "\n" + restoreQuestion(line);
       }
     }
   }
@@ -413,23 +468,29 @@ export function reconstructQuestionWithSelectedSubItems(
       const prefixBullet = item.rawLine.startsWith("・") ? "・" : "";
       let cleanPrompt = (item.promptText || "").trim();
 
-      // promptText の行頭にもし重複して旧ラベルや新ラベルが付いていれば除去
+      // promptText の行頭にもし重複して旧ラベルや新ラベルが付いていれば除去（エスケープされていないもののみ）
       cleanPrompt = cleanPrompt.replace(/^(?:[（\(][0-9０-９]+[）\)]|[①-⑳]|[0-9]+[\.．])\s*/, "");
 
       // promptText 内に旧番号と一致する空所がある場合（例: ": ( 3 )" や ": ( ③ )"）は新番号に連動置換
+      // ※ただしエスケープされた "(1)" や "（１）" 等は置換しないよう保護
       const origNum = item.originalNumber;
       if (origNum && origNum > 0) {
+        const { maskedText: maskedPrompt, restore: restorePrompt } = maskEscapedSubLabels(cleanPrompt);
+        let updatedPrompt = maskedPrompt;
+
         // ( 3 ) または (3) または （３）
         const origNumPattern = new RegExp(`([（\\(]\\s*)${origNum}(\\s*[）\\)])`, "g");
         const newNumPart = labelType === "fullParen" ? toFullWidthNumber(newNum) : String(newNum);
-        cleanPrompt = cleanPrompt.replace(origNumPattern, `$1${newNumPart}$2`);
+        updatedPrompt = updatedPrompt.replace(origNumPattern, `$1${newNumPart}$2`);
 
         // 丸数字 ③
         if (origNum <= 20) {
           const origCircled = CIRCLED_NUMBERS[origNum - 1];
           const newCircled = newNum <= 20 ? CIRCLED_NUMBERS[newNum - 1] : `(${newNum})`;
-          cleanPrompt = cleanPrompt.replaceAll(origCircled, newCircled);
+          updatedPrompt = updatedPrompt.replaceAll(origCircled, newCircled);
         }
+
+        cleanPrompt = restorePrompt(updatedPrompt);
       }
 
       newLine = `${prefixBullet}${newLabel} ${cleanPrompt}`;

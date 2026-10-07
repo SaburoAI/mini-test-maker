@@ -4,8 +4,10 @@ import React, { useState, useEffect, useMemo, useCallback } from "react";
 import { Question, QuizTest, TestSection, AppSettings } from "@/types/quiz";
 import {
   loadQuestionPool,
+  loadQuestionPoolAsync,
   saveQuestionPool,
   loadCurrentTest,
+  loadCurrentTestAsync,
   saveCurrentTest,
   loadAppSettings,
   saveAppSettings,
@@ -78,8 +80,11 @@ export default function Home() {
     }
   }, [test?.title]);
 
-  // 初回マウント時に LocalStorage からロード
+  // 初回マウント時に LocalStorage から即時ロードし、IndexedDB の大容量データがあれば非同期で補完
   useEffect(() => {
+    let isCancelled = false;
+
+    // 1. まずは localStorage から即時ロード (画面のちらつき防止)
     const loadedPool = loadQuestionPool();
     const loadedTest = loadCurrentTest();
     const loadedSettings = loadAppSettings();
@@ -101,6 +106,33 @@ export default function Home() {
     setTest(loadedTest);
     setSettings(loadedSettings);
     setIsLoaded(true);
+
+    // 2. IndexedDB から最新・大容量プールとテストをロード (LocalStorage の容量制限で保存できなかったデータも復元)
+    Promise.all([loadQuestionPoolAsync(), loadCurrentTestAsync()]).then(([idbPool, idbTest]) => {
+      if (isCancelled) return;
+
+      if (idbPool && idbPool.length > loadedPool.length) {
+        setPool(idbPool);
+      }
+
+      if (idbTest && idbTest.sections && idbTest.sections.length > 0) {
+        const normalizedSections = idbTest.sections.map(s => ({
+          ...s,
+          title: s.title
+            ? s.title.replace(/^大問([0-9０-９]+)[ ]+/g, (_, n) => {
+                const fullN = n.replace(/[0-9]/g, (d: string) => String.fromCharCode(d.charCodeAt(0) + 0xFEE0));
+                return `大問${fullN}　`;
+              })
+            : s.title
+        }));
+        // 既存より詳細な情報があれば反映
+        setTest(prev => (prev ? { ...prev, ...idbTest, sections: normalizedSections } : idbTest));
+      }
+    });
+
+    return () => {
+      isCancelled = true;
+    };
   }, []);
 
   // pool 変更時の自動保存
@@ -1117,7 +1149,13 @@ export default function Home() {
             textbook: mergedTextbook,
             grade: mergedGrade,
             explanation: mergedExplanation,
-            figureSvg: mergedSvg
+            figureSvg: mergedSvg,
+            originalQuestionText: newQ.originalQuestionText || existing.originalQuestionText,
+            originalAnswer: newQ.originalAnswer || existing.originalAnswer,
+            originalExplanation: newQ.originalExplanation || existing.originalExplanation,
+            selectedSubItemIndices: newQ.selectedSubItemIndices !== undefined ? newQ.selectedSubItemIndices : existing.selectedSubItemIndices,
+            isSubItemDisabled: newQ.isSubItemDisabled !== undefined ? newQ.isSubItemDisabled : existing.isSubItemDisabled,
+            answerLabels: newQ.answerLabels || existing.answerLabels
           };
           mergedCount++;
         } else {

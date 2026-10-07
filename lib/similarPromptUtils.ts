@@ -48,7 +48,7 @@ ${question.questionText}
 ${question.answer}
 ${question.answerLabels && question.answerLabels.length > 0 ? `- 複数解答欄項目: ${question.answerLabels.join(", ")}` : ""}
 ${question.answerLayout ? `- 解答欄形式: ${question.answerLayout}` : ""}
-${question.imageUrl ? `- 画像URL: ${question.imageUrl}` : ""}
+${question.imageUrl ? `- 画像URL: ${question.imageUrl}` : (question.hasImagePlaceholder ? `- 画像: 絵を見て答える問題（「${question.imagePlaceholderText || '画像欄'}」枠あり）` : "")}
 ${question.audioUrl ? `- 音声URL: ${question.audioUrl}` : ""}
 ${question.audioScript ? `- 放送台本（スクリプト）:\n${question.audioScript}` : ""}
 
@@ -57,7 +57,8 @@ ${variationInstruction}
 - 数式は必ず TeX 形式（インライン数式は $ ... $、独立した数式は $$ ... $$）で厳密に記述してください。
 - 複数の要素を同時に答える問題の場合は、"al": ["項目1", "項目2"] のように解答欄ラベル配列を明示してください。
 - 英文記述や並べ替え、記述文など解答が1文以上で長い場合は "ly": "stacked"、英単語テストや短答問題で問題文と解答欄を同一行に並べたい場合は "ly": "same-line" を指定してください。
-- 英語リスニング問題等で放送原稿がある場合は、"as": "放送台本・スクリプト原稿" を記述してください（教師用解答プリントに自動印字されます）。※画像や音声のファイルパスはアプリ上で問題ごとに手動設定するため、JSON内への画像・音声パス出力は不要です。
+- 絵を見て答える問題（イラスト・場面・地図・写真等を参照して答える問題）の場合は、"img": "画像欄"（または "img": "時計のイラスト" 等の絵の説明）を指定してください（用紙に画像枠が自動生成されます）。
+- 英語リスニング問題等で放送原稿がある場合は、"as": "放送台本・スクリプト原稿" を記述してください（教師用解答プリントに自動印字されます）。
 - 各問題の解説（"e"）も簡潔に記述してください。
 
 ### 【出力フォーマット】
@@ -78,7 +79,7 @@ ${variationInstruction}
     "a": "作成した解答",
     "al": ${question.answerLabels && question.answerLabels.length > 0 ? JSON.stringify(question.answerLabels) : '["解答1", "解答2"] // 複数解答時のみ'},
     "ly": "${question.answerLayout || 'inline'}",
-    "e": "作成した解説"${question.audioScript ? `,\n    "as": "作成したリスニング放送台本・スクリプト"` : ""}
+    "e": "作成した解説"${question.hasImagePlaceholder || question.imageUrl ? `,\n    "img": "${question.imageUrl || question.imagePlaceholderText || '画像欄'}"` : ""}${question.audioScript ? `,\n    "as": "作成したリスニング放送台本・スクリプト"` : ""}
   }
 ]
 \`\`\`

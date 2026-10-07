@@ -1,0 +1,1249 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>AI ミニテストメーカー (Mini Test Maker) - 利用マニュアル</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&family=Zen+Kaku+Gothic+New:wght@400;500;700;900&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg: #f8fafc;
+      --surface: #ffffff;
+      --surface-sub: #f1f5f9;
+      --border: #e2e8f0;
+      --border-focus: #cbd5e1;
+      --text-main: #0f172a;
+      --text-muted: #475569;
+      --text-soft: #64748b;
+      --primary: #4f46e5;
+      --primary-hover: #4338ca;
+      --primary-light: #eef2ff;
+      --primary-border: #c7d2fe;
+      --emerald: #059669;
+      --emerald-light: #ecfdf5;
+      --amber: #d97706;
+      --amber-light: #fffbeb;
+      --rose: #e11d48;
+      --rose-light: #fff1f2;
+      --code-bg: #0f172a;
+      --code-text: #e2e8f0;
+      --sidebar-width: 280px;
+      --radius-sm: 6px;
+      --radius-md: 10px;
+      --radius-lg: 14px;
+      --shadow-sm: 0 1px 2px rgba(0,0,0,0.05);
+      --shadow-md: 0 4px 6px -1px rgba(0,0,0,0.07), 0 2px 4px -2px rgba(0,0,0,0.05);
+      --shadow-lg: 0 10px 15px -3px rgba(0,0,0,0.08), 0 4px 6px -4px rgba(0,0,0,0.04);
+    }
+
+    @media (prefers-color-scheme: dark) {
+      :root:not([data-theme="light"]) {
+        --bg: #090d16;
+        --surface: #0f172a;
+        --surface-sub: #1e293b;
+        --border: #334155;
+        --border-focus: #475569;
+        --text-main: #f8fafc;
+        --text-muted: #cbd5e1;
+        --text-soft: #94a3b8;
+        --primary: #6366f1;
+        --primary-hover: #818cf8;
+        --primary-light: #1e1b4b;
+        --primary-border: #3730a3;
+        --emerald: #10b981;
+        --emerald-light: #064e3b;
+        --amber: #f59e0b;
+        --amber-light: #451a03;
+        --rose: #f43f5e;
+        --rose-light: #4c0519;
+        --code-bg: #020617;
+        --code-text: #f1f5f9;
+      }
+    }
+
+    [data-theme="dark"] {
+      --bg: #090d16;
+      --surface: #0f172a;
+      --surface-sub: #1e293b;
+      --border: #334155;
+      --border-focus: #475569;
+      --text-main: #f8fafc;
+      --text-muted: #cbd5e1;
+      --text-soft: #94a3b8;
+      --primary: #6366f1;
+      --primary-hover: #818cf8;
+      --primary-light: #1e1b4b;
+      --primary-border: #3730a3;
+      --emerald: #10b981;
+      --emerald-light: #064e3b;
+      --amber: #f59e0b;
+      --amber-light: #451a03;
+      --rose: #f43f5e;
+      --rose-light: #4c0519;
+      --code-bg: #020617;
+      --code-text: #f1f5f9;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: 'Zen Kaku Gothic New', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", sans-serif;
+      background-color: var(--bg);
+      color: var(--text-main);
+      line-height: 1.75;
+      font-size: 15px;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    /* Layout */
+    .app-container {
+      display: flex;
+      min-height: 100vh;
+    }
+
+    /* Sidebar Navigation */
+    .sidebar {
+      width: var(--sidebar-width);
+      background: var(--surface);
+      border-right: 1px solid var(--border);
+      position: sticky;
+      top: 0;
+      height: 100vh;
+      overflow-y: auto;
+      padding: 24px 16px;
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+      shrink-0: 0;
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding-bottom: 16px;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .brand-icon {
+      width: 38px;
+      height: 38px;
+      background: linear-gradient(135deg, var(--primary), #8b5cf6);
+      border-radius: var(--radius-md);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: white;
+      font-weight: 800;
+      font-size: 18px;
+      box-shadow: 0 4px 10px rgba(79, 70, 229, 0.3);
+    }
+
+    .brand-title {
+      font-weight: 800;
+      font-size: 16px;
+      line-height: 1.2;
+      color: var(--text-main);
+    }
+
+    .brand-version {
+      font-size: 11px;
+      font-weight: 600;
+      color: var(--primary);
+      background: var(--primary-light);
+      padding: 2px 6px;
+      border-radius: 999px;
+      display: inline-block;
+      margin-top: 4px;
+    }
+
+    .nav-list {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+
+    .nav-link {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 8px 12px;
+      color: var(--text-muted);
+      text-decoration: none;
+      font-size: 13.5px;
+      font-weight: 500;
+      border-radius: var(--radius-sm);
+      transition: all 0.15s ease;
+    }
+
+    .nav-link:hover {
+      background: var(--surface-sub);
+      color: var(--text-main);
+    }
+
+    .nav-link.active {
+      background: var(--primary-light);
+      color: var(--primary);
+      font-weight: 700;
+    }
+
+    .nav-section-title {
+      font-size: 11px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      color: var(--text-soft);
+      padding: 12px 12px 4px;
+    }
+
+    /* Main Content Area */
+    .main-content {
+      flex: 1;
+      max-width: 980px;
+      padding: 40px 48px 100px;
+      margin: 0 auto;
+    }
+
+    /* Top Bar Actions */
+    .top-actions {
+      display: flex;
+      justify-content: flex-end;
+      gap: 10px;
+      margin-bottom: 24px;
+    }
+
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 8px 16px;
+      font-size: 13px;
+      font-weight: 600;
+      border-radius: var(--radius-sm);
+      cursor: pointer;
+      border: 1px solid transparent;
+      transition: all 0.15s ease;
+      text-decoration: none;
+    }
+
+    .btn-outline {
+      background: var(--surface);
+      border-color: var(--border);
+      color: var(--text-muted);
+    }
+
+    .btn-outline:hover {
+      background: var(--surface-sub);
+      color: var(--text-main);
+      border-color: var(--border-focus);
+    }
+
+    .btn-primary {
+      background: var(--primary);
+      color: white;
+      box-shadow: var(--shadow-sm);
+    }
+
+    .btn-primary:hover {
+      background: var(--primary-hover);
+    }
+
+    /* Hero Header */
+    .hero {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-lg);
+      padding: 36px;
+      margin-bottom: 40px;
+      box-shadow: var(--shadow-sm);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .hero::before {
+      content: "";
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 4px;
+      background: linear-gradient(90deg, #4f46e5, #06b6d4, #10b981);
+    }
+
+    .hero-tag {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 12px;
+      font-weight: 700;
+      color: var(--primary);
+      background: var(--primary-light);
+      border: 1px solid var(--primary-border);
+      padding: 4px 10px;
+      border-radius: 999px;
+      margin-bottom: 16px;
+    }
+
+    .hero h1 {
+      font-size: 28px;
+      font-weight: 900;
+      letter-spacing: -0.02em;
+      margin-bottom: 12px;
+      color: var(--text-main);
+    }
+
+    .hero p {
+      font-size: 16px;
+      color: var(--text-muted);
+      line-height: 1.6;
+      max-width: 800px;
+    }
+
+    /* Typography & Sections */
+    h2 {
+      font-size: 22px;
+      font-weight: 800;
+      letter-spacing: -0.01em;
+      margin: 48px 0 20px;
+      padding-bottom: 10px;
+      border-bottom: 2px solid var(--border);
+      color: var(--text-main);
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    h2 .section-num {
+      background: var(--primary-light);
+      color: var(--primary);
+      width: 30px;
+      height: 30px;
+      border-radius: var(--radius-sm);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 14px;
+      font-weight: 800;
+    }
+
+    h3 {
+      font-size: 18px;
+      font-weight: 700;
+      margin: 32px 0 14px;
+      color: var(--text-main);
+    }
+
+    h4 {
+      font-size: 15px;
+      font-weight: 700;
+      margin: 20px 0 10px;
+      color: var(--text-main);
+    }
+
+    p {
+      margin-bottom: 14px;
+      color: var(--text-muted);
+    }
+
+    ul, ol {
+      margin: 10px 0 20px 24px;
+      color: var(--text-muted);
+    }
+
+    li {
+      margin-bottom: 8px;
+    }
+
+    /* Cards & Grids */
+    .grid-3 {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+      gap: 16px;
+      margin: 20px 0;
+    }
+
+    .card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-md);
+      padding: 20px;
+      box-shadow: var(--shadow-sm);
+    }
+
+    .card-title {
+      font-size: 15px;
+      font-weight: 700;
+      color: var(--text-main);
+      margin-bottom: 8px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .card p {
+      font-size: 13.5px;
+      margin-bottom: 0;
+    }
+
+    /* Visual Architecture Flow */
+    .flow-diagram {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-lg);
+      padding: 24px;
+      margin: 24px 0;
+      box-shadow: var(--shadow-sm);
+    }
+
+    .flow-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr 1fr;
+      gap: 16px;
+      position: relative;
+    }
+
+    .flow-step {
+      background: var(--surface-sub);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-md);
+      padding: 16px;
+    }
+
+    .flow-step-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 12px;
+      padding-bottom: 8px;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .flow-badge {
+      font-size: 11px;
+      font-weight: 800;
+      padding: 3px 8px;
+      border-radius: var(--radius-sm);
+      color: white;
+    }
+
+    .badge-step1 { background: #2563eb; }
+    .badge-step2 { background: #4f46e5; }
+    .badge-step3 { background: #059669; }
+
+    .flow-step-title {
+      font-size: 13px;
+      font-weight: 700;
+      color: var(--text-main);
+    }
+
+    .flow-step ul {
+      margin: 0;
+      padding-left: 18px;
+      font-size: 12.5px;
+    }
+
+    .flow-step li {
+      margin-bottom: 4px;
+    }
+
+    /* Tables */
+    .table-container {
+      overflow-x: auto;
+      margin: 20px 0 30px;
+      border: 1px solid var(--border);
+      border-radius: var(--radius-md);
+      background: var(--surface);
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 13.5px;
+      text-align: left;
+    }
+
+    th {
+      background: var(--surface-sub);
+      padding: 12px 16px;
+      font-weight: 700;
+      color: var(--text-main);
+      border-bottom: 1px solid var(--border);
+    }
+
+    td {
+      padding: 12px 16px;
+      border-bottom: 1px solid var(--border);
+      color: var(--text-muted);
+      vertical-align: top;
+    }
+
+    tr:last-child td {
+      border-bottom: none;
+    }
+
+    /* Code Blocks */
+    .code-wrapper {
+      position: relative;
+      margin: 16px 0 24px;
+      border-radius: var(--radius-md);
+      overflow: hidden;
+      background: var(--code-bg);
+      border: 1px solid var(--border);
+    }
+
+    .code-header {
+      background: rgba(255, 255, 255, 0.05);
+      border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+      padding: 8px 16px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 12px;
+      color: #94a3b8;
+    }
+
+    .copy-btn {
+      background: rgba(255, 255, 255, 0.1);
+      border: none;
+      color: #e2e8f0;
+      padding: 4px 10px;
+      font-size: 11px;
+      border-radius: var(--radius-sm);
+      cursor: pointer;
+      transition: background 0.15s ease;
+    }
+
+    .copy-btn:hover {
+      background: rgba(255, 255, 255, 0.2);
+    }
+
+    pre {
+      padding: 16px;
+      overflow-x: auto;
+      font-family: 'JetBrains Mono', Consolas, Monaco, monospace;
+      font-size: 13px;
+      line-height: 1.6;
+      color: var(--code-text);
+    }
+
+    code {
+      font-family: 'JetBrains Mono', Consolas, Monaco, monospace;
+      font-size: 13px;
+    }
+
+    p code, li code, td code {
+      background: var(--surface-sub);
+      border: 1px solid var(--border);
+      color: var(--primary);
+      padding: 2px 6px;
+      border-radius: 4px;
+      font-size: 12.5px;
+    }
+
+    /* Alert Banners */
+    .alert {
+      display: flex;
+      gap: 14px;
+      padding: 16px 20px;
+      border-radius: var(--radius-md);
+      margin: 20px 0;
+      border: 1px solid transparent;
+      font-size: 14px;
+    }
+
+    .alert-tip {
+      background: var(--primary-light);
+      border-color: var(--primary-border);
+      color: var(--primary);
+    }
+
+    .alert-tip .alert-content {
+      color: var(--text-main);
+    }
+
+    .alert-important {
+      background: var(--emerald-light);
+      border-color: #a7f3d0;
+      color: var(--emerald);
+    }
+
+    .alert-important .alert-content {
+      color: var(--text-main);
+    }
+
+    .alert-icon {
+      font-size: 20px;
+      shrink-0: 0;
+    }
+
+    /* Feature Badge */
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      padding: 2px 8px;
+      font-size: 11px;
+      font-weight: 700;
+      border-radius: 4px;
+    }
+
+    .badge-green { background: #dcfce7; color: #15803d; }
+    .badge-amber { background: #fef3c7; color: #b45309; }
+    .badge-red { background: #fee2e2; color: #b91c1c; }
+    .badge-indigo { background: #e0e7ff; color: #4338ca; }
+
+    /* Footer */
+    footer {
+      margin-top: 80px;
+      padding-top: 24px;
+      border-top: 1px solid var(--border);
+      text-align: center;
+      font-size: 13px;
+      color: var(--text-soft);
+    }
+
+    /* Responsive */
+    @media (max-width: 900px) {
+      .app-container {
+        flex-direction: column;
+      }
+      .sidebar {
+        width: 100%;
+        height: auto;
+        position: relative;
+        border-right: none;
+        border-bottom: 1px solid var(--border);
+      }
+      .main-content {
+        padding: 24px 20px;
+      }
+      .flow-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    /* Print Styles */
+    @media print {
+      .sidebar, .top-actions, .copy-btn {
+        display: none !important;
+      }
+      .main-content {
+        max-width: 100% !important;
+        padding: 0 !important;
+      }
+      body {
+        background: white !important;
+        color: black !important;
+      }
+      .hero, .card, .flow-diagram, .table-container, .code-wrapper {
+        border: 1px solid #ccc !important;
+        box-shadow: none !important;
+      }
+    }
+  </style>
+</head>
+<body>
+
+<div class="app-container">
+  <!-- Sidebar Navigation -->
+  <aside class="sidebar">
+    <div class="brand">
+      <div class="brand-icon">M</div>
+      <div>
+        <div class="brand-title">AI ミニテストメーカー</div>
+        <span class="brand-version">v1.0 (Next.js 16)</span>
+      </div>
+    </div>
+
+    <div class="nav-section-title">メニュー</div>
+    <ul class="nav-list">
+      <li><a href="#overview" class="nav-link">🌟 システム概要と特長</a></li>
+      <li><a href="#quickstart" class="nav-link">⚡ クイックスタート</a></li>
+      <li><a href="#workflow" class="nav-link">📐 画面構成とワークフロー</a></li>
+      <li><a href="#step1" class="nav-link">🔍 STEP 1: 問題を探す</a></li>
+      <li><a href="#step2" class="nav-link">⚙️ STEP 2: テスト編成</a></li>
+      <li><a href="#step3" class="nav-link">🖨️ STEP 3: 完成プレビュー</a></li>
+      <li><a href="#ai-integration" class="nav-link">🤖 外部AI連携 & Mini-JSON</a></li>
+      <li><a href="#spreadsheet" class="nav-link">📊 スプレッドシート連携</a></li>
+      <li><a href="#multimedia" class="nav-link">📐 数式・図形・マルチメディア</a></li>
+      <li><a href="#print-tips" class="nav-link">📄 印刷・PDF出力設定</a></li>
+      <li><a href="#faq" class="nav-link">❓ よくある質問 (FAQ)</a></li>
+    </ul>
+
+    <div style="margin-top: auto; padding-top: 20px; border-top: 1px solid var(--border);">
+      <button class="btn btn-outline" style="width: 100%; justify-content: center;" onclick="toggleDarkMode()">
+        🌓 表示テーマ切替
+      </button>
+    </div>
+  </aside>
+
+  <!-- Main Content -->
+  <main class="main-content">
+    <div class="top-actions">
+      <button class="btn btn-outline" onclick="window.print()">
+        🖨️ マニュアルを印刷 / PDF保存
+      </button>
+      <a href="README.md" class="btn btn-primary">
+        📄 Markdown版 (README.md)
+      </a>
+    </div>
+
+    <!-- Hero Banner -->
+    <header class="hero">
+      <div class="hero-tag">Official Documentation &amp; User Manual</div>
+      <h1>AI ミニテストメーカー (Mini Test Maker)</h1>
+      <p>
+        学校・学習塾・各種教育機関における「毎日の小テスト作りに追われる時間」を極限まで削減。
+        <strong>20分で完結する日常小テスト（確認テスト・朝テスト・単元チェック）を最短工数で作成・印刷・スプレッドシート連携するWebアプリケーション</strong>です。
+      </p>
+    </header>
+
+    <!-- Section 1: 概要と特長 -->
+    <section id="overview">
+      <h2><span class="section-num">1</span> システムの概要と特長</h2>
+      <p>
+        小テスト作成の最大の課題は、「問題文を手打ちする手間」「レイアウト調整に奪われる時間」「配点計算の煩雑さ」です。本アプリはこれらの課題を以下のコア思想によって解決します。
+      </p>
+
+      <div class="grid-3">
+        <div class="card">
+          <div class="card-title">🎯 選択と微調整だけに集中</div>
+          <p>白紙から打つのではなく、AIが蓄積した問題ストックから自動充填し、気になる箇所だけを「スワップ」「手直し」「削除」します。</p>
+        </div>
+        <div class="card">
+          <div class="card-title">📐 A4縦2段組 WYSIWYG</div>
+          <p>画面右側のプレビューがそのまま紙面に印刷。生徒用（解答下線）と教師用（赤字解答・解説枠）をワンクリックで切り替え可能です。</p>
+        </div>
+        <div class="card">
+          <div class="card-title">🧮 100点スマート配点エンジン</div>
+          <p>問題を削除・追加・差し替えても、ボタンひとつで均等自動割り付け。余り点数も自動按分し、ジャスト100点をキープします。</p>
+        </div>
+        <div class="card">
+          <div class="card-title">🔤 TeX数式 ＆ SVGベクター図形</div>
+          <p>数式は LaTeX / KaTeX でレンダリング。幾何図形・グラフは SVG ベクターコードとして保持するため、拡大印刷しても線が劣化しません。</p>
+        </div>
+        <div class="card">
+          <div class="card-title">⚡ トークン最小化「Mini-JSON」</div>
+          <p>外部LLM（ChatGPT, Claude, Gemini）の消費トークン数とレスポンス時間を40〜50%削減する専用の短縮キースキーマを採用。</p>
+        </div>
+        <div class="card">
+          <div class="card-title">🎧 英語リスニング & 放送台本</div>
+          <p>音声ファイル再生に加え、放送スクリプトを設定可能。生徒用紙では非表示、模範解答付きプリントにのみ台本枠が印字されます。</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- Section 2: クイックスタート -->
+    <section id="quickstart">
+      <h2><span class="section-num">2</span> クイックスタート（導入・起動方法）</h2>
+      <p>Node.js がインストールされた環境であれば、以下の3ステップですぐに起動できます。</p>
+
+      <div class="code-wrapper">
+        <div class="code-header">
+          <span>Bash / PowerShell</span>
+          <button class="copy-btn" onclick="copyCode(this)">コピー</button>
+        </div>
+        <pre><code># 1. リポジトリのディレクトリへ移動
+cd mini-test-maker
+
+# 2. 依存パッケージのインストール
+pnpm install
+# 3. ローカル開発サーバーの起動
+pnpm dev</code></pre>
+      </div>
+
+      <p>起動後、ブラウザで <code>http://localhost:3000</code> にアクセスすると、初期データが読み込まれた状態で即座にテスト作成を開始できます。</p>
+
+      <div class="table-container">
+        <table>
+          <thead>
+            <tr>
+              <th>コマンド</th>
+              <th>用途・説明</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><code>pnpm dev</code></td>
+              <td>開発モードでローカルサーバーを起動（変更が即時反映されます）</td>
+            </tr>
+            <tr>
+              <td><code>pnpm build</code></td>
+              <td>本番環境向けの最適化ビルドを生成</td>
+            </tr>
+            <tr>
+              <td><code>pnpm start</code></td>
+              <td>ビルド済みの本番サーバーを起動</td>
+            </tr>
+            <tr>
+              <td><code>pnpm lint</code></td>
+              <td>ESLint によるコード解析と構文チェックを実行</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <!-- Section 3: 画面構成と基本ワークフロー -->
+    <section id="workflow">
+      <h2><span class="section-num">3</span> 画面構成と基本ワークフロー</h2>
+      <p>本システムは、視線と作業の流れに沿った<strong>左から右へ流れる3カラム（ペイン）構造</strong>を採用しています。</p>
+
+      <div class="flow-diagram">
+        <div class="flow-grid">
+          <div class="flow-step">
+            <div class="flow-step-header">
+              <span class="flow-badge badge-step1">STEP 1</span>
+              <span class="flow-step-title">問題を探す（プール）</span>
+            </div>
+            <ul>
+              <li>学年・教科・単元での絞り込み</li>
+              <li>#タグフィルター（#頻出・#基礎）</li>
+              <li>あいまいキーワード検索</li>
+              <li>自作問題の新規作成</li>
+              <li>外部AI用「類題生成プロンプト」作成</li>
+              <li>「+大問1」「+大問2」へ即座投入</li>
+            </ul>
+          </div>
+
+          <div class="flow-step">
+            <div class="flow-step-header">
+              <span class="flow-badge badge-step2">STEP 2</span>
+              <span class="flow-step-title">テスト編成（スロット）</span>
+            </div>
+            <ul>
+              <li>⚡️ 空枠への一括自動充填</li>
+              <li>🧮 100点自動配点エンジン</li>
+              <li>🔄 スワップ（同単元の別候補に置換）</li>
+              <li>✏️ インライン手直し（文・解答・配点）</li>
+              <li>🗑️ 削除（配点即時再計算）</li>
+              <li>✂️ 大問分割 / 🔗 設問マージ</li>
+              <li>✨ 大問タイトルのAI自動推論</li>
+            </ul>
+          </div>
+
+          <div class="flow-step">
+            <div class="flow-step-header">
+              <span class="flow-badge badge-step3">STEP 3</span>
+              <span class="flow-step-title">完成プレビュー &amp; 印刷</span>
+            </div>
+            <ul>
+              <li>A4縦2段組 リアルタイムWYSIWYG</li>
+              <li>👨‍🎓 生徒用問題 / 👨‍🏫 模範解答付 切替</li>
+              <li>解答下線レイアウト最適化（横/縦/同一行）</li>
+              <li>下線幅の微調整（＋/ー）</li>
+              <li>プレビュー上でのダイレクト編集</li>
+              <li>🖨️ ワンクリック印刷 / PDF出力連動</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Section 4: STEP 1 詳細操作 -->
+    <section id="step1">
+      <h2><span class="section-num">4-1</span> STEP 1: 問題を探す・ストックする（問題プール）</h2>
+      <p>蓄積された問題バンクから目的の問題を素早く探し出し、テストに投入します。</p>
+
+      <h3>1. 多階層フィルター &amp; タグ絞り込み</h3>
+      <ul>
+        <li><strong>学年（Grade）:</strong> 「中1」「中2」「高1」など対象学年を選択。</li>
+        <li><strong>教科・ジャンル（Genre）:</strong> 「数学」「理科」「英語」などのタブで切り替え。</li>
+        <li><strong>単元（Topic）:</strong> メイン単元ごとの問題数がバッジ表示され、クリックで単元抽出。</li>
+        <li><strong>タグ（#Tags）:</strong> 「#頻出」「#基礎」「#計算力」「#入試過去問」などのタグをクリックしてAND/OR検索。</li>
+      </ul>
+
+      <h3>2. あいまい検索（Fuzzy Search）</h3>
+      <p>上部の検索窓に文字を入力すると、問題文、サブ論点、タグ、模範解答を対象に高速インクリメンタル検索が行われます。</p>
+
+      <h3>3. 問題カードの主要アクション</h3>
+      <ul>
+        <li><strong>「+ 大問1」「+ 大問2」ボタン:</strong> 該当の大問の末尾にワンタップで追加。</li>
+        <li><strong>「+ 新大問として追加」:</strong> この問題を第1問とする新しい大問セクションを即座に作成。</li>
+        <li><strong>「👁️ 解答表示」:</strong> カード上で正解と解説のプレビューをオン/オフ。</li>
+        <li><strong>「✨ 類題」ボタン:</strong> この問題の構造をもとに、ChatGPTやClaudeで類題を作成するためのプロンプトをワンクリック生成。</li>
+        <li><strong>「小問 / 枝問」ボタン:</strong> （1）（2）（3）などの枝問を含む問題から、必要な小問だけを間引いて選択できる「枝問エディタ」を起動。</li>
+        <li><strong>「✏️ 編集」:</strong> 問題文、解答、解説、配点、タグ、SVG図形、画像、リスニング音声台本を編集。</li>
+        <li><strong>「🗑️ 削除」:</strong> プールから削除。誤って削除しても、画面下のトーストからワンクリックで「元に戻す（復元）」が可能です。</li>
+      </ul>
+    </section>
+
+    <!-- Section 5: STEP 2 詳細操作 -->
+    <section id="step2">
+      <h2><span class="section-num">4-2</span> STEP 2: テストを編成・調整する（スロット管理）</h2>
+      <p>テスト全体の大問枠組み、問題スロットの配置、配点の自動均等計算を行います。</p>
+
+      <h3>1. ⚡️ 一括自動充填</h3>
+      <p>まだ空きがあるスロットや大問枠に対し、選択中のジャンルに合致する問題をプールから自動配備します。</p>
+
+      <h3>2. 🧮 スマート配点エンジン（100点自動調整）</h3>
+      <p>
+        総設問数に応じて、合計がジャスト<strong>100点</strong>になるよう自動均等配分します。余りが出た場合は難易度の高い問題へ自動按分されます。
+      </p>
+      <div style="display: flex; gap: 12px; margin: 12px 0;">
+        <span class="badge badge-green">🟩 100 / 100点 (ジャスト一致)</span>
+        <span class="badge badge-amber">🟨 92 / 100点 (点数不足)</span>
+        <span class="badge badge-red">🟥 108 / 100点 (点数超過)</span>
+      </div>
+
+      <h3>3. 各問題スロットのアクション</h3>
+      <ul>
+        <li><strong>🔄 スワップ（差し替え）:</strong> 同一単元・タグを持つ別の問題候補にワンクリック置換。</li>
+        <li><strong>✏️ インライン編集:</strong> テスト用紙限定で問題文や配点を直接手直し。</li>
+        <li><strong>🗑️ 削除:</strong> スロットから問題を除外。配点は自動的に再計算が促されます。</li>
+        <li><strong>✂️ 大問分割（Split）:</strong> その問題の位置で大問を2つに切り離し。</li>
+        <li><strong>🔗 設問マージ:</strong> 連続する小問同士を1つの大問・長文問題枠に統合。</li>
+        <li><strong>⬆️ / ⬇️ 並び替え:</strong> 出題順を上下に入れ替え。</li>
+      </ul>
+
+      <h3>4. 大問セクションのカスタマイズ</h3>
+      <ul>
+        <li><strong>大問タイトル編集:</strong> 「大問１　2次関数の変域」など自由に編集。</li>
+        <li><strong>✨ AIタイトル推論:</strong> 収録されている問題の内容から、最適な大問名をワンクリックで自動推論。</li>
+        <li><strong>📄 ページ配置指定:</strong> 「P.1」「P.2」「新ページとして追加」により印刷時の改ページ位置を制御。</li>
+        <li><strong>↩️ Undo（元に戻す）:</strong> 直前の操作はヘッダーまたは <code>Ctrl+Z</code> で巻き戻し可能。</li>
+      </ul>
+    </section>
+
+    <!-- Section 6: STEP 3 詳細操作 -->
+    <section id="step3">
+      <h2><span class="section-num">4-3</span> STEP 3: 完成プレビュー・印刷（WYSIWYG &amp; 印刷エンジン）</h2>
+      <p>A4縦2段組（実寸比率 210mm × 297mm）で実際のテスト用紙をリアルタイム確認します。</p>
+
+      <h3>1. 表示モードの切り替え</h3>
+      <div class="grid-3">
+        <div class="card">
+          <div class="card-title">👨‍🎓 生徒用問題用紙</div>
+          <p>問題文、図形、配点、解答記入用の下線（アンダーライン）を表示。リスニング放送台本は自動非表示になります。</p>
+        </div>
+        <div class="card">
+          <div class="card-title">👨‍🏫 模範解答付用紙（教師・採点用）</div>
+          <p>解答下線に赤字で正解が印字され、各問に詳細な解説枠と配点が表示。リスニング放送原稿も印字されます。</p>
+        </div>
+      </div>
+
+      <h3>2. 解答欄レイアウトの自動＆手動最適化</h3>
+      <div class="table-container">
+        <table>
+          <thead>
+            <tr>
+              <th>レイアウト形式</th>
+              <th>適した出題パターン</th>
+              <th>特徴</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><code>inline</code>（横並び短答）</td>
+              <td>記号選択、短い数値、英単語</td>
+              <td>正解の文字数に応じた下線幅を自動計算。紙面高さをコンパクトに抑制</td>
+            </tr>
+            <tr>
+              <td><code>stacked</code>（1行記述）</td>
+              <td>英作文、数学の途中式、論述記述</td>
+              <td>生徒が余裕を持って記入できるよう、各問ごとに十分な記入スペースを確保</td>
+            </tr>
+            <tr>
+              <td><code>same-line</code>（問題同一行）</td>
+              <td>1行で完結する計算問題、漢字</td>
+              <td>問題文の真横の余白に解答下線を配置し、極限まで行数を節約</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <h3>3. 解答欄の微調整ツール</h3>
+      <ul>
+        <li><strong>下線幅の微調整（＋ / ー ボタン）:</strong> 各問題のツールバーから下線長さを自由に伸縮可能。</li>
+        <li><strong>揃え位置の変更:</strong> 左寄せ、中央揃え、右寄せを切り替え可能。</li>
+        <li><strong>2列グリッド（英単語モード）:</strong> 単語テストや計算ドリル向けに、設問を左右2列にレイアウト。</li>
+      </ul>
+    </section>
+
+    <!-- Section 7: 外部AI連携 & Mini-JSON -->
+    <section id="ai-integration">
+      <h2><span class="section-num">5</span> 外部AI連携とデータインポート / エクスポート</h2>
+      <p>
+        ChatGPT / Claude / Gemini Web版などの生成AIを活用し、教材や過去問テキストから一撃で小テストデータを作成できます。
+      </p>
+
+      <h3>Mini-JSON 仕様（トークン最小化短縮スキーマ）</h3>
+      <p>外部LLMの生成トークン数とレスポンス時間を40〜50%削減する短縮キースキーマです。</p>
+
+      <div class="code-wrapper">
+        <div class="code-header">
+          <span>Mini-JSON 配列の例 (JSON)</span>
+          <button class="copy-btn" onclick="copyCode(this)">コピー</button>
+        </div>
+        <pre><code>[
+  {
+    "g": "数学",
+    "t": "円周角の定理",
+    "st": "中心角と円周角の関係",
+    "tg": ["頻出", "図形", "中3"],
+    "d": 2,
+    "s": 90,
+    "q": "下の図において、点\\( O \\)を中心とする円の円周上に点\\( A, B, C \\)がある。\\( \\angle BAC = 42^\\circ \\)のとき、\\( \\angle BOC \\)の大きさを求めよ。",
+    "a": "\\( \\angle BOC = 84^\\circ \\)",
+    "e": "円周角の定理より、中心角の大きさは円周角の大きさの2倍であるため、\\( 42^\\circ \\times 2 = 84^\\circ \\)。",
+    "svg": "&lt;svg viewBox='0 0 150 120'&gt;...&lt;/svg&gt;"
+  }
+]</code></pre>
+      </div>
+
+      <div class="table-container">
+        <table>
+          <thead>
+            <tr>
+              <th>キー</th>
+              <th>項目名</th>
+              <th>型</th>
+              <th>説明</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr><td><code>g</code></td><td>Genre</td><td>string</td><td>教科・大ジャンル（<code>数学</code>, <code>英語</code>, <code>理科</code> 等）</td></tr>
+            <tr><td><code>t</code></td><td>Topic</td><td>string</td><td>メイン単元（<code>二次方程式</code>, <code>不定詞</code> 等）</td></tr>
+            <tr><td><code>st</code></td><td>Sub-Topic</td><td>string</td><td>サブ論点・解法パターン（<code>解の公式</code>, <code>名詞的用法</code> 等）</td></tr>
+            <tr><td><code>tg</code></td><td>Tags</td><td>string[]</td><td>属性タグ（<code>["頻出", "基礎", "定期テスト"]</code> 等）</td></tr>
+            <tr><td><code>d</code></td><td>Difficulty</td><td>1 | 2 | 3</td><td>難易度（1: 基礎, 2: 標準, 3: 発展）</td></tr>
+            <tr><td><code>s</code></td><td>Seconds</td><td>number</td><td>目安解答秒数（小テストの時間積算に使用）</td></tr>
+            <tr><td><code>q</code></td><td>Question</td><td>string</td><td>問題文（LaTeX数式記法 <code>\( ... \)</code> に対応）</td></tr>
+            <tr><td><code>a</code></td><td>Answer</td><td>string</td><td>模範解答</td></tr>
+            <tr><td><code>al</code></td><td>Answer Labels</td><td>string[]?</td><td>複数解答欄ラベル（<code>["xの値", "yの値"]</code> 等・省略可）</td></tr>
+            <tr><td><code>ly</code></td><td>Layout</td><td>string?</td><td>解答欄レイアウト（<code>inline</code>, <code>stacked</code>, <code>same-line</code>・省略可）</td></tr>
+            <tr><td><code>e</code></td><td>Explanation</td><td>string?</td><td>模範解説（省略可）</td></tr>
+            <tr><td><code>svg</code></td><td>SVG Figure</td><td>string?</td><td>幾何図形・グラフのベクター座標コード（任意）</td></tr>
+            <tr><td><code>img</code></td><td>Image URL</td><td>string?</td><td>問題画像のURLまたはローカルパス（任意）</td></tr>
+            <tr><td><code>aud</code></td><td>Audio URL</td><td>string?</td><td>リスニング音声ファイルのURLまたはパス（任意）</td></tr>
+            <tr><td><code>as</code></td><td>Audio Script</td><td>string?</td><td>リスニング放送台本（生徒用紙では非表示、教師用紙に印字）</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <h3>外部AI用コピペプロンプト標準テンプレート</h3>
+      <p>以下のプロンプトをそのままChatGPT等のAIに貼り付けて指示を出してください。</p>
+
+      <div class="code-wrapper">
+        <div class="code-header">
+          <span>AIプロンプト用指示文 (Markdown)</span>
+          <button class="copy-btn" onclick="copyCode(this)">コピー</button>
+        </div>
+        <pre><code>以下の教材内容から、20分小テスト用の良問を抽出し、以下の短縮JSON配列形式（Mini-JSON）のみを出力してください。前置きや解説文は一切不要です。
+
+[
+  {
+    "g": "教科",
+    "t": "メイン単元",
+    "st": "サブ論点",
+    "tg": ["頻出", "基礎"],
+    "d": 2,
+    "s": 90,
+    "q": "問題文（数式は \\( ... \\) で記述）",
+    "a": "模範解答",
+    "e": "解説",
+    "svg": "&lt;svg&gt;...&lt;/svg&gt;（図形問題の場合のみ・不要なら省略）"
+  }
+]
+
+【作成条件】
+1. 数式・記号・英文字変数は必ずLaTeX記法 \\( ... \\) を使用してください。
+2. 難易度(d)は 1(基本), 2(標準), 3(発展) を設定してください。
+3. 20分テストを想定し、目安解答秒数(s)を正確に見積もってください。</code></pre>
+      </div>
+    </section>
+
+    <!-- Section 8: スプレッドシート連携 -->
+    <section id="spreadsheet">
+      <h2><span class="section-num">6</span> スプレッドシート連携とデータ保存</h2>
+
+      <h3>1. Googleスプレッドシート / Excel からの取込</h3>
+      <p>
+        ヘッダーの「取込 / インポート」をクリックし、「スプレッドシート / TSV」タブを選択。
+        表計算ソフトの行データをコピーして貼り付けるだけで一括インポートできます。
+      </p>
+
+      <h3>2. TSVエクスポート（スプレッドシートへ出力）</h3>
+      <p>
+        ヘッダーの「TSV出力」ボタンをクリックすると、現在のテスト問題（またはプール全体）がクリップボードにコピーされます。
+        スプレッドシートを開いて <code>Ctrl+V</code> を押すだけでテーブルとして貼り付けられます。
+      </p>
+
+      <h3>3. データの保存・呼出</h3>
+      <ul>
+        <li><strong>ブラウザ自動保存:</strong> 作業中のデータは <code>LocalStorage</code> にリアルタイム保存されます。</li>
+        <li><strong>プロジェクト内（<code>data/</code>）保存:</strong> ヘッダーの「保存・呼出」から名前を付けてJSONファイルとして保存・呼び出しが可能です。</li>
+      </ul>
+    </section>
+
+    <!-- Section 9: 数式・図形・マルチメディア -->
+    <section id="multimedia">
+      <h2><span class="section-num">7</span> 数式・図形・マルチメディア記法</h2>
+
+      <h3>1. LaTeX数式記法（KaTeX）</h3>
+      <p>インライン数式は <code>\( ... \)</code> で囲みます。</p>
+      <ul>
+        <li>二次方程式: <code>\( 2x^2 + 5x - 1 = 0 \)</code></li>
+        <li>解の公式: <code>\( x = \frac{-b \pm \sqrt{b^2 - 4ac}}{2a} \)</code></li>
+        <li>角度: <code>\( \angle ABC = 75^\circ \)</code></li>
+      </ul>
+
+      <h3>2. SVGベクター図形</h3>
+      <p>
+        <code>svg</code> プロパティに <code>&lt;svg viewBox="0 0 160 120"&gt;...&lt;/svg&gt;</code> を指定します。
+        ベクター座標データとしてレンダリングされるため、印刷時にも線や文字が美しく鮮明に出力されます。
+      </p>
+
+      <h3>3. 英語リスニング音声 &amp; 放送台本</h3>
+      <p>
+        <code>aud</code> に音声ファイルパス、<code>as</code> に放送台本テキストを設定。
+        生徒用プリントでは台本は完全に隠され、模範解答付き（教師用）プリントにのみ「放送台本枠」として印字されます。
+      </p>
+    </section>
+
+    <!-- Section 10: 印刷・PDF出力設定 -->
+    <section id="print-tips">
+      <h2><span class="section-num">8</span> 印刷・PDF出力のベストプラクティス</h2>
+      <p>Google Chrome または Microsoft Edge での印刷時に、最も綺麗な仕上がりを得るための推奨設定です。</p>
+
+      <div class="table-container">
+        <table>
+          <thead>
+            <tr>
+              <th>印刷設定項目</th>
+              <th>推奨設定値</th>
+              <th>理由</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><strong>送信先</strong></td>
+              <td>PDFに保存 / お使いのプリンター</td>
+              <td>PDFとして保存すればそのまま配布・保管可能</td>
+            </tr>
+            <tr>
+              <td><strong>レイアウト</strong></td>
+              <td>縦</td>
+              <td>A4縦2段組に最適化されています</td>
+            </tr>
+            <tr>
+              <td><strong>用紙サイズ</strong></td>
+              <td>A4</td>
+              <td>用紙サイズ基準（210mm × 297mm）</td>
+            </tr>
+            <tr>
+              <td><strong>余白</strong></td>
+              <td><span class="badge badge-indigo">なし (推奨)</span></td>
+              <td>アプリ側で厳密に15mmの印刷余白を自動確保しているため</td>
+            </tr>
+            <tr>
+              <td><strong>倍率（拡大/縮小）</strong></td>
+              <td>既定 (100%)</td>
+              <td>原寸で印刷</td>
+            </tr>
+            <tr>
+              <td><strong>背景のグラフィック</strong></td>
+              <td><span class="badge badge-green">オン（チェック）</span></td>
+              <td>大問の網掛け背景や解答欄の罫線を出力するため</td>
+            </tr>
+            <tr>
+              <td><strong>ヘッダーとフッター</strong></td>
+              <td>オフ（チェックを外す）</td>
+              <td>URLや日時などのブラウザ余白印字を非表示にするため</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="alert alert-tip">
+        <div class="alert-icon">💡</div>
+        <div class="alert-content">
+          <strong>PDFファイル名の自動連動:</strong><br>
+          アプリ上で設定した「テスト名」がブラウザの印刷保存ダイアログのデフォルトファイル名に自動的に反映されます。保存時にファイル名を打ち直す必要がありません。
+        </div>
+      </div>
+    </section>
+
+    <!-- Section 11: FAQ -->
+    <section id="faq">
+      <h2><span class="section-num">9</span> よくある質問 (FAQ)</h2>
+
+      <h3>Q. 印刷するとどうしても2ページ目にわずかにはみ出してしまいます。</h3>
+      <p>
+        ブラウザ印刷ダイアログの「余白」設定が「なし」になっているか確認してください。「既定」になっているとブラウザ側の余白が二重に付与され、改ページが発生することがあります。<br>
+        また、問題スロットの解答欄レイアウトを <code>stacked</code> から <code>inline</code> または <code>same-line</code> に変更することで紙面高さを節約できます。
+      </p>
+
+      <h3>Q. 問題文の中の数式が表示されず、生の文字列のままになります。</h3>
+      <p>
+        数式が <code>\( ... \)</code> で囲まれているか確認してください。ドル記号 <code>$ ... $</code> ではなくバックスラッシュ括弧を使用することで、安定してKaTeXレンダリングされます。
+      </p>
+
+      <h3>Q. ブラウザを閉じたりキャッシュを削除したらデータはどうなりますか？</h3>
+      <p>
+        ブラウザを閉じるだけではデータは保持されます（LocalStorage）。ただし、ブラウザ履歴・Cookieの全削除を行うと初期化されるため、大切なテストデータはヘッダーの「保存・呼出」からファイル保存するか、「JSON出力」でバックアップしておくことをお勧めします。
+      </p>
+    </section>
+
+    <footer>
+      <p>© 2026 AI Mini Test Maker Project. Designed for Educators.</p>
+    </footer>
+  </main>
+</div>
+
+<script>
+  // ダークモード切替
+  function toggleDarkMode() {
+    const current = document.documentElement.getAttribute('data-theme');
+    if (current === 'dark') {
+      document.documentElement.setAttribute('data-theme', 'light');
+    } else {
+      document.documentElement.setAttribute('data-theme', 'dark');
+    }
+  }
+
+  // コードコピー機能
+  function copyCode(btn) {
+    const pre = btn.closest('.code-wrapper').querySelector('pre code');
+    if (!pre) return;
+    navigator.clipboard.writeText(pre.innerText).then(() => {
+      const orig = btn.innerText;
+      btn.innerText = 'コピー完了!';
+      btn.style.background = '#059669';
+      setTimeout(() => {
+        btn.innerText = orig;
+        btn.style.background = '';
+      }, 2000);
+    });
+  }
+
+  // スクロールに応じたナビゲーションアクティブ化
+  window.addEventListener('scroll', () => {
+    const sections = document.querySelectorAll('section');
+    const scrollPos = window.scrollY + 120;
+
+    sections.forEach(section => {
+      const top = section.offsetTop;
+      const height = section.offsetHeight;
+      const id = section.getAttribute('id');
+      if (scrollPos >= top && scrollPos < top + height) {
+        document.querySelectorAll('.nav-link').forEach(link => {
+          link.classList.remove('active');
+          if (link.getAttribute('href') === '#' + id) {
+            link.classList.add('active');
+          }
+        });
+      }
+    });
+  });
+</script>
+
+</body>
+</html>

@@ -19,7 +19,9 @@ export const DEFAULT_TAG_MASTER: string[] = [
   "文章題",
   "中2数学",
   "1次関数",
-  "平行と合同"
+  "平行と合同",
+  "中2英語",
+  "英語"
 ];
 
 export const DEFAULT_APP_SETTINGS: AppSettings = {
@@ -65,8 +67,11 @@ export function saveAppSettings(settings: AppSettings): void {
   }
 }
 
+import { getFromIdb, setToIdb } from "./idb";
+
 /**
- * ローカルストレージから問題プールを取得
+ * ローカルストレージおよびIndexedDBから問題プールを取得
+ * (localStorage から同期で即座に返しつつ、IndexedDB により最新・大量のデータがあればマージ/採用)
  */
 export function loadQuestionPool(): Question[] {
   if (typeof window === "undefined") return INITIAL_QUESTION_POOL;
@@ -90,14 +95,49 @@ export function loadQuestionPool(): Question[] {
 }
 
 /**
- * ローカルストレージへ問題プールを保存
+ * IndexedDBから最新の問題プールを非同期で取得
+ */
+export async function loadQuestionPoolAsync(): Promise<Question[]> {
+  if (typeof window === "undefined") return INITIAL_QUESTION_POOL;
+  try {
+    const idbPool = await getFromIdb<Question[]>(STORAGE_KEY_POOL);
+    if (idbPool && Array.isArray(idbPool) && idbPool.length > 0) {
+      return idbPool.map(q => {
+        if (q.grade) return q;
+        const inferred = inferGrade({ tg: q.tags, t: q.topic, q: q.questionText });
+        return { ...q, grade: inferred || "中2" };
+      });
+    }
+  } catch (err) {
+    console.warn("IndexedDB loadQuestionPoolAsync fallback to localStorage:", err);
+  }
+  return loadQuestionPool();
+}
+
+/**
+ * 問題プールを IndexedDB と localStorage の両方に並行保存
+ * - IndexedDB: 容量制限なし (数百MB可)。全データを確実に保存。
+ * - localStorage: 5MBの制限があるため、超えた場合は安全にスキップし警告を表示。
  */
 export function saveQuestionPool(pool: Question[]): void {
   if (typeof window === "undefined") return;
+
+  // 1. IndexedDB への永続保存 (非同期・大容量対応)
+  setToIdb(STORAGE_KEY_POOL, pool).catch(err => {
+    console.error("Failed to save pool to IndexedDB:", err);
+  });
+
+  // 2. localStorage への並行保存 (容量オーバー時は安全にキャッチ)
   try {
     localStorage.setItem(STORAGE_KEY_POOL, JSON.stringify(pool));
-  } catch (err) {
-    console.error("Failed to save pool to localStorage:", err);
+  } catch (err: any) {
+    if (err?.name === "QuotaExceededError" || err?.code === 22 || err?.code === 1014) {
+      console.warn(
+        "localStorage の容量上限(約5MB)を超過したため、LocalStorage への書き込みをスキップし IndexedDB に退避しました。"
+      );
+    } else {
+      console.error("Failed to save pool to localStorage:", err);
+    }
   }
 }
 
@@ -128,14 +168,49 @@ export function loadCurrentTest(): QuizTest {
 }
 
 /**
- * ローカルストレージへ作成中テストを保存
+ * IndexedDBから最新の作成中テストを非同期で取得
+ */
+export async function loadCurrentTestAsync(): Promise<QuizTest> {
+  if (typeof window === "undefined") return INITIAL_TEST;
+  try {
+    const idbTest = await getFromIdb<QuizTest>(STORAGE_KEY_TEST);
+    if (idbTest && idbTest.sections) {
+      const updatedSections = idbTest.sections.map(sec => ({
+        ...sec,
+        questions: sec.questions.map(q =>
+          q.id === "seed-q1" ? { ...q, figureSvg: INITIAL_QUESTION_POOL[0].figureSvg } : q
+        )
+      }));
+      return { ...idbTest, sections: updatedSections };
+    }
+  } catch (err) {
+    console.warn("IndexedDB loadCurrentTestAsync fallback to localStorage:", err);
+  }
+  return loadCurrentTest();
+}
+
+/**
+ * 作成中テストを IndexedDB と localStorage の両方に並行保存
  */
 export function saveCurrentTest(test: QuizTest): void {
   if (typeof window === "undefined") return;
+
+  // 1. IndexedDB への永続保存 (非同期・大容量対応)
+  setToIdb(STORAGE_KEY_TEST, test).catch(err => {
+    console.error("Failed to save test to IndexedDB:", err);
+  });
+
+  // 2. localStorage への並行保存 (容量オーバー時は安全にキャッチ)
   try {
     localStorage.setItem(STORAGE_KEY_TEST, JSON.stringify(test));
-  } catch (err) {
-    console.error("Failed to save test to localStorage:", err);
+  } catch (err: any) {
+    if (err?.name === "QuotaExceededError" || err?.code === 22 || err?.code === 1014) {
+      console.warn(
+        "localStorage の容量上限を超過したため、テストを IndexedDB のみに保存しました。"
+      );
+    } else {
+      console.error("Failed to save test to localStorage:", err);
+    }
   }
 }
 
@@ -192,7 +267,7 @@ export function exportQuestionsToTsv(questions: Question[]): string {
     (q.answer || "").replace(/\r?\n/g, "\\n"),
     (q.explanation || "").replace(/\r?\n/g, "\\n"),
     (q.figureSvg || "").replace(/\r?\n/g, " "),
-    q.imageUrl || "",
+    q.imageUrl || (q.hasImagePlaceholder ? (q.imagePlaceholderText || "画像欄") : ""),
     q.audioUrl || "",
     (q.audioScript || "").replace(/\r?\n/g, "\\n")
   ]);
@@ -247,7 +322,19 @@ export function importQuestionsFromTsv(tsvText: string, fallbackMeta?: { grade?:
     const answer = (cols[colOffset + 7] || "").replace(/\\n/g, "\n");
     const explanation = (cols[colOffset + 8] || "").replace(/\\n/g, "\n");
     const figureSvg = cols[colOffset + 9]?.trim() || undefined;
-    const imageUrl = cols[colOffset + 10]?.trim() || undefined;
+    const rawImage = cols[colOffset + 10]?.trim() || undefined;
+    let imageUrl: string | undefined = undefined;
+    let hasImagePlaceholder: boolean | undefined = undefined;
+    let imagePlaceholderText: string | undefined = undefined;
+    if (rawImage) {
+      const isActualUrl = /^(https?:\/\/|\/|data:image\/|[a-zA-Z0-9_-]+\.(png|jpe?g|svg|webp|gif))/i.test(rawImage);
+      if (isActualUrl) {
+        imageUrl = rawImage;
+      } else {
+        hasImagePlaceholder = true;
+        imagePlaceholderText = rawImage;
+      }
+    }
     const audioUrl = cols[colOffset + 11]?.trim() || undefined;
     const audioScript = cols[colOffset + 12] ? cols[colOffset + 12].replace(/\\n/g, "\n").trim() : undefined;
 
@@ -268,6 +355,8 @@ export function importQuestionsFromTsv(tsvText: string, fallbackMeta?: { grade?:
       explanation,
       figureSvg,
       imageUrl,
+      hasImagePlaceholder,
+      imagePlaceholderText,
       audioUrl,
       audioScript,
       defaultPoints: difficulty === 3 ? 12 : (difficulty === 2 ? 10 : 8)
@@ -296,7 +385,7 @@ export function exportQuestionsToMiniJson(questions: Question[], metadata?: Mini
     ly: q.answerLayout && q.answerLayout !== "auto" ? q.answerLayout : undefined,
     e: q.explanation || undefined,
     svg: q.figureSvg || undefined,
-    img: q.imageUrl || undefined,
+    img: q.imageUrl || (q.hasImagePlaceholder ? (q.imagePlaceholderText || "画像欄") : undefined),
     aud: q.audioUrl || undefined,
     as: q.audioScript || undefined,
     origQ: q.originalQuestionText || undefined,
@@ -372,6 +461,31 @@ export function importQuestionsFromMiniJson(
       itemTags = Array.from(set);
     }
 
+    // 画像欄・画像URLの解析
+    let imageUrl: string | undefined = undefined;
+    let hasImagePlaceholder: boolean | undefined = undefined;
+    let imagePlaceholderText: string | undefined = undefined;
+
+    if (item.img !== undefined && item.img !== null) {
+      if (typeof item.img === "boolean") {
+        if (item.img) {
+          hasImagePlaceholder = true;
+          imagePlaceholderText = "画像欄";
+        }
+      } else if (typeof item.img === "string") {
+        const trimmed = item.img.trim();
+        if (trimmed.length > 0) {
+          const isActualUrl = /^(https?:\/\/|\/|data:image\/|[a-zA-Z0-9_-]+\.(png|jpe?g|svg|webp|gif))/i.test(trimmed);
+          if (isActualUrl) {
+            imageUrl = trimmed;
+          } else {
+            hasImagePlaceholder = true;
+            imagePlaceholderText = trimmed;
+          }
+        }
+      }
+    }
+
     return {
       id: `imported-json-${Date.now()}-${idx}`,
       grade,
@@ -388,7 +502,9 @@ export function importQuestionsFromMiniJson(
       answerLayout: item.ly === "inline" || item.ly === "stacked" || item.ly === "same-line" ? item.ly : undefined,
       explanation: item.e || "",
       figureSvg: item.svg || undefined,
-      imageUrl: item.img || undefined,
+      imageUrl,
+      hasImagePlaceholder,
+      imagePlaceholderText,
       audioUrl: item.aud || undefined,
       audioScript: item.as || undefined,
       defaultPoints: item.d === 3 ? 12 : (item.d === 2 ? 10 : 8),

@@ -45,6 +45,18 @@
   100% { background-color: transparent; transform: scale(1); }
 }
 
+/* 解答欄の下線スタイル（画面・印刷時ともに文字の底辺/ベースラインに明示的に下線として配置） */
+.answer-underline {
+  display: inline-block !important;
+  border-bottom: 1.5px solid #334155 !important;
+  height: 1.1em !important;
+  min-height: 1.1em !important;
+  vertical-align: bottom !important;
+  align-self: flex-end !important;
+  margin-bottom: 2px !important;
+  box-sizing: border-box !important;
+}
+
 /* 印刷時のCSS（複数ページ対応 ＆ 2in1・B4印刷最適化） */
 @media print {
   @page {
@@ -64,10 +76,21 @@
     print-color-adjust: exact !important;
   }
 
-  /* 親コンテナのスクロールや切り捨て（overflow: hidden）を根こそぎ解除 */
-  body, main, div, section, article {
+  /* 印刷時は外枠コンテナのスクロールやoverflow制限を解除（全divへのheight:autoは下線を破壊するためhtml/body/mainに限定） */
+  html, body, main {
     overflow: visible !important;
     height: auto !important;
+  }
+
+  .answer-underline {
+    display: inline-block !important;
+    border-bottom: 1.5px solid #0f172a !important;
+    height: 1.1em !important;
+    min-height: 1.1em !important;
+    vertical-align: bottom !important;
+    align-self: flex-end !important;
+    margin-bottom: 2px !important;
+    box-sizing: border-box !important;
   }
 
   .no-print, .preview-action-btn {
@@ -111,8 +134,8 @@
     min-width: 364mm !important;
     max-width: 364mm !important;
     min-height: 257mm !important;
-    height: 257mm !important;
-    max-height: 257mm !important;
+    height: auto !important;
+    max-height: none !important;
     margin: 0 auto !important;
     padding: 7mm 8mm !important;
     box-shadow: none !important;

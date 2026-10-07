@@ -290,6 +290,46 @@ function runTests() {
     }
   }
 
+  // テスト: エスケープ機能のテスト（"" や 「」 で囲まれた (1) や （１） が分割されないこと）
+  console.log(`\n--- Testing: Escaped SubItem Labels ("(1)", "（１）", 「(1)」) ---`);
+  {
+    const escapedSingleQ = `問題文の中に引用 "(1)" や "（１）"、および「(2)」が含まれていますが、これは枝問ではありません。`;
+    const parsedSingle = parseSubItems(escapedSingleQ, "解答");
+    if (!parsedSingle.hasSubItems && parsedSingle.items.length === 0) {
+      console.log(`  PASS: Escaped "(1)" inside single question is NOT parsed as subitems!`);
+      passedCount++;
+    } else {
+      console.error(`  FAIL: Escaped "(1)" was erroneously parsed as subitems! count: ${parsedSingle.items.length}`);
+      failedCount++;
+    }
+
+    // 枝問プロンプト内にエスケープされた "(1)" がある場合
+    const escapedSubItemText = `次の問いに答えよ。
+(1) x の値を求めよ。
+(2) "(1)" の結果を用いて y の値を求めよ。`;
+    const parsedSub = parseSubItems(escapedSubItemText, "(1) 5 (2) 10");
+    if (parsedSub.hasSubItems && parsedSub.items.length === 2 && parsedSub.items[1].promptText.includes('"(1)"')) {
+      console.log(`  PASS: Escaped "(1)" in subitem prompt is preserved: "${parsedSub.items[1].promptText}"`);
+      passedCount++;
+    } else {
+      console.error(`  FAIL: Escaped "(1)" was not preserved properly!`, parsedSub.items);
+      failedCount++;
+    }
+
+    // disabled フラグのテスト
+    const disabledText = `次の問いに答えよ。
+(1) 最初の問題
+(2) 次の問題`;
+    const parsedDisabled = parseSubItems(disabledText, "(1) A (2) B", "", true);
+    if (!parsedDisabled.hasSubItems && parsedDisabled.items.length === 0) {
+      console.log(`  PASS: disabled = true correctly bypassed subitem parsing!`);
+      passedCount++;
+    } else {
+      console.error(`  FAIL: disabled = true did not bypass subitem parsing!`);
+      failedCount++;
+    }
+  }
+
   console.log(`\n=== [TEST SUMMARY] ===`);
   console.log(`Passed: ${passedCount}, Failed: ${failedCount}`);
   if (failedCount > 0) {

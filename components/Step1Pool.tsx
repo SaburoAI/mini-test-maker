@@ -536,12 +536,17 @@ export const Step1Pool: React.FC<Step1PoolProps> = ({
 
                 {/* タグ一覧 ＆ メディアバッジ */}
                 <div className="flex items-center gap-1 flex-wrap">
-                  {q.imageUrl && (
+                  {q.imageUrl ? (
                     <span className="text-[8.5px] bg-sky-50 text-sky-700 border border-sky-200 px-1 py-0.2 rounded flex items-center gap-0.5 font-sans font-medium" title="画像付き問題">
                       <ImageIcon className="w-2.5 h-2.5 text-sky-600" />
                       画像
                     </span>
-                  )}
+                  ) : q.hasImagePlaceholder ? (
+                    <span className="text-[8.5px] bg-amber-50 text-amber-800 border border-amber-300 px-1 py-0.2 rounded flex items-center gap-0.5 font-sans font-medium" title="絵を見て答える問題（画像欄）">
+                      <ImageIcon className="w-2.5 h-2.5 text-amber-600" />
+                      画像欄
+                    </span>
+                  ) : null}
                   {q.audioUrl && (
                     <span className="text-[8.5px] bg-purple-50 text-purple-700 border border-purple-200 px-1 py-0.2 rounded flex items-center gap-0.5 font-sans font-medium" title="リスニング問題">
                       <Headphones className="w-2.5 h-2.5 text-purple-600" />
@@ -572,7 +577,7 @@ export const Step1Pool: React.FC<Step1PoolProps> = ({
                   <div className="flex-1">
                     <MathText text={q.questionText} />
                   </div>
-                  {(q.figureSvg || q.imageUrl) && (
+                  {(q.figureSvg || q.imageUrl || q.hasImagePlaceholder) && (
                     <div className="shrink-0 bg-slate-50 border border-slate-100 rounded p-1 flex flex-col items-center justify-center gap-1">
                       {q.figureSvg && (
                         <div dangerouslySetInnerHTML={{ __html: q.figureSvg }} />
@@ -584,6 +589,12 @@ export const Step1Pool: React.FC<Step1PoolProps> = ({
                           alt="問題画像"
                           className="w-16 h-12 object-contain rounded bg-white"
                         />
+                      )}
+                      {q.hasImagePlaceholder && !q.imageUrl && (
+                        <div className="w-16 h-12 border border-dashed border-slate-300 rounded flex flex-col items-center justify-center bg-white text-slate-400 select-none p-0.5">
+                          <ImageIcon className="w-3.5 h-3.5 mb-0.5 opacity-60" />
+                          <span className="text-[8.5px] font-bold">画像欄</span>
+                        </div>
                       )}
                     </div>
                   )}

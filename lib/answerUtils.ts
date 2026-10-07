@@ -225,18 +225,18 @@ export function calculateSubQuestionLineWidth(
   const charCount = cleanAns.length;
 
   if (charCount > 0) {
-    // 1文字あたり約14pxを加算（全角・半角混在に対応）
-    const calculated = 56 + charCount * 14;
-    return Math.max(80, Math.min(260, calculated));
+    // 1文字あたり約15pxを加算。最小幅を120pxに拡大し、余裕を持って記入できるサイズに調整
+    const calculated = 80 + charCount * 15;
+    return Math.max(120, Math.min(290, calculated));
   }
 
   // 解答が空（生徒用問題用紙）時のフォールバック
   if (totalCount <= 2) {
-    return maxLabelLength > 4 ? 120 : 140; // 約120〜140px
+    return maxLabelLength > 4 ? 150 : 175; // 約150〜175px
   } else if (totalCount <= 4) {
-    return maxLabelLength > 4 ? 100 : 115; // 約100〜115px
+    return maxLabelLength > 4 ? 130 : 145; // 約130〜145px
   } else {
-    return maxLabelLength > 4 ? 80 : 95;   // 約80〜95px（旧56pxから大幅底上げ）
+    return maxLabelLength > 4 ? 110 : 125; // 約110〜125px
   }
 }
 
@@ -247,9 +247,9 @@ export function calculateSingleAnswerLineWidth(answerText: string = ""): number 
   const cleanAns = answerText.trim();
   const charCount = cleanAns.length;
   if (charCount > 0) {
-    return Math.max(140, Math.min(320, 80 + charCount * 13));
+    return Math.max(165, Math.min(340, 95 + charCount * 14));
   }
-  return 140; // 旧112px（w-28）から140pxへ拡大
+  return 165; // 140pxから165pxへ拡大
 }
 
 /**
@@ -351,14 +351,14 @@ export function calculateSameLineAnswerWidth(answerText: string = "", is2Col: bo
   const charCount = cleanAns.length;
   if (is2Col) {
     if (charCount > 0) {
-      return Math.max(90, Math.min(150, 60 + charCount * 9));
+      return Math.max(115, Math.min(185, 75 + charCount * 11));
     }
-    return 110;
+    return 135;
   } else {
     if (charCount > 0) {
-      return Math.max(130, Math.min(240, 80 + charCount * 11));
+      return Math.max(155, Math.min(270, 95 + charCount * 13));
     }
-    return 150;
+    return 175;
   }
 }
 
