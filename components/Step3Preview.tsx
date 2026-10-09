@@ -162,7 +162,7 @@ export const Step3Preview: React.FC<Step3PreviewProps> = ({
                   title="クリックしてタイトルを編集"
                 />
                 <div className={`${isB4Half ? "text-[9px]" : "text-[10px]"} text-slate-700 shrink-0 font-medium space-x-2`}>
-                  <span>時間: 30分</span>
+                  <span>時間: {test.timeLimitMinutes ?? 30}分</span>
                   <span>配点: {test.totalTargetPoints}点</span>
                 </div>
               </div>
@@ -175,7 +175,7 @@ export const Step3Preview: React.FC<Step3PreviewProps> = ({
                   <span>氏名: _________________________</span>
                 </div>
                 <div className={`font-bold border border-slate-400 px-2 py-0.5 rounded ${isB4Half ? "text-[10px]" : "text-[11px]"}`}>
-                  得点: ______ / 100
+                  得点: ______ / {test.totalTargetPoints ?? 100}
                 </div>
               </div>
             </div>
